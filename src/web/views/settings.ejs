@@ -173,11 +173,16 @@
         </div>
 
         <!-- Data for JS -->
+        <!-- Data Injection for JS (clean separation to avoid Linter errors) -->
+        <script id="server-data-roles" type="application/json"><%- JSON.stringify(roles || []) %></script>
+        <script id="server-data-emojis" type="application/json"><%- JSON.stringify(emojis || []) %></script>
+        <script id="server-data-mode" type="application/json"><%- JSON.stringify(mode) %></script>
+
         <script>
-            // Data Injection from Server
-            const ROLES = <% - JSON.stringify(roles || []) %>;
-            const EMOJIS = <% - JSON.stringify(emojis || []) %>;
-            const MODE = '<%= mode %>';
+            // Read data from DOM
+            const ROLES = JSON.parse(document.getElementById('server-data-roles').textContent);
+            const EMOJIS = JSON.parse(document.getElementById('server-data-emojis').textContent);
+            const MODE = JSON.parse(document.getElementById('server-data-mode').textContent);
             let rowCount = 0;
 
             function addRoleRow() {
