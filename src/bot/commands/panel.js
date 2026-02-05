@@ -14,7 +14,10 @@ module.exports = {
         const settings = db.prepare('SELECT ticket_categories FROM settings WHERE guild_id = ?').get(guild.id);
         let categories = [];
         if (settings && settings.ticket_categories) {
-            try { categories = JSON.parse(settings.ticket_categories); } catch (e) { }
+            try {
+                const parsed = JSON.parse(settings.ticket_categories);
+                if (Array.isArray(parsed)) categories = parsed;
+            } catch (e) { }
         }
 
         const embed = new EmbedBuilder()

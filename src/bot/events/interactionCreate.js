@@ -43,7 +43,9 @@ module.exports = {
         } catch (error) {
             logger.error('Interaction Error: ' + error.message);
             if (interaction.deferred || interaction.replied) {
-                await interaction.followUp({ content: 'Generic Error!', ephemeral: true }).catch(() => { });
+                await interaction.followUp({ content: '❌ 發生錯誤 (Error): ' + error.message, ephemeral: true }).catch(() => { });
+            } else {
+                await interaction.reply({ content: '❌ 發生錯誤 (Error): ' + error.message, ephemeral: true }).catch(() => { });
             }
         }
     },
