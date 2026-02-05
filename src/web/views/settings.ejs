@@ -169,6 +169,52 @@
                             </form>
                         </div>
 
+                        <!-- Module 3: Welcome System -->
+                        <div class="card" style="display: block;">
+                            <div
+                                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                                <h3 style="margin:0;"><i class="fa-solid fa-door-open" style="color: #00ff9d;"></i> 歡迎系統
+                                </h3>
+                            </div>
+
+                            <form action="/dashboard/settings" method="POST">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
+                                <input type="hidden" name="action" value="update_welcome">
+
+                                <div class="form-group">
+                                    <label style="display:flex; align-items:center; cursor:pointer;">
+                                        <input type="checkbox" name="welcome_enabled" value="1" <%=typeof settings
+                                            !=='undefined' && settings && settings.welcome_enabled ? 'checked' : '' %>
+                                        style="width:auto; margin-right:10px;">
+                                        啟用歡迎訊息
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>發送頻道</label>
+                                    <select name="welcome_channel_id">
+                                        <option value="">-- 請選擇頻道 --</option>
+                                        <% channels.forEach(channel=> { %>
+                                            <option value="<%= channel.id %>" <%=typeof settings !=='undefined' &&
+                                                settings && settings.welcome_channel_id===channel.id ? 'selected' : ''
+                                                %>># <%= channel.name %>
+                                            </option>
+                                            <% }); %>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>歡迎訊息</label>
+                                    <textarea name="welcome_message" rows="3"
+                                        style="width:100%; padding:1rem; background:rgba(0,0,0,0.3); border:1px solid var(--border-color); border-radius:10px; color:#fff;"
+                                        placeholder="Welcome {user} to {server}! (支援變數: {user}, {server}, {memberCount})"><%= typeof settings !== 'undefined' && settings && settings.welcome_message ? settings.welcome_message : '' %></textarea>
+                                </div>
+
+                                <button type="submit" class="btn-submit"
+                                    style="background:var(--accent-color); width:100%;">儲存設定</button>
+                            </form>
+                        </div>
+
                     </div>
                     <% } %>
         </div>

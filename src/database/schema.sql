@@ -22,6 +22,9 @@ CREATE TABLE IF NOT EXISTS tickets (
 CREATE TABLE IF NOT EXISTS settings (
     guild_id TEXT PRIMARY KEY,
     log_channel_id TEXT,
+    welcome_enabled INTEGER DEFAULT 0,
+    welcome_channel_id TEXT,
+    welcome_message TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

@@ -105,13 +105,17 @@ router.get('/settings', (req, res) => {
             identifier: `<${e.animated ? 'a' : ''}:${e.name}:${e.id}>`
         }));
 
+        // Fetch Guild Settings from DB
+        const settings = db.prepare('SELECT * FROM settings WHERE guild_id = ?').get(guildId);
+
         return res.render('settings', {
             user: req.user,
             mode: 'guild',
             guild: guild,
             channels: channels,
             roles: roles,
-            emojis: emojis
+            emojis: emojis,
+            settings: settings || {} // Pass empty obj if null
         });
     }
 
@@ -178,6 +182,24 @@ router.post('/settings', async (req, res) => {
                 .setFooter({ text: `共 ${rolesData.length} 個身分組可供領取` });
 
             await channel.send({ embeds: [embed], components: components });
+        }
+
+        else if (action === 'update_welcome') {
+            const { welcome_enabled, welcome_channel_id, welcome_message } = req.body;
+            // welcome_enabled is '1' if checked, or undefined if unchecked (standard HTML form behavior)
+            const isEnabled = welcome_enabled ? 1 : 0;
+
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, welcome_enabled, welcome_channel_id, welcome_message, updated_at)
+                VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                welcome_enabled = excluded.welcome_enabled,
+                welcome_channel_id = excluded.welcome_channel_id,
+                welcome_message = excluded.welcome_message,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+
+            stmt.run(guild_id, isEnabled, welcome_channel_id, welcome_message);
         }
 
         res.redirect(`/dashboard/settings?guild_id=${guild_id}`);
