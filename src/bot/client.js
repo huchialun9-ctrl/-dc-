@@ -4,6 +4,7 @@ const path = require('path');
 const logger = require('../core/logger');
 
 const GiveawayService = require('./services/giveawayService');
+const EarthquakeService = require('./services/earthquakeService');
 
 const client = new Client({
     intents: [
@@ -12,12 +13,13 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildPresences,
-        GatewayIntentBits.GuildMessageReactions // Needed for reroll/picking winners
+        GatewayIntentBits.GuildMessageReactions
     ]
 });
 
 client.commands = new Collection();
 client.giveawayService = new GiveawayService(client);
+client.earthquakeService = new EarthquakeService(client);
 
 // Load Commands
 const commandsPath = path.join(__dirname, 'commands');

@@ -57,6 +57,13 @@ CREATE TABLE IF NOT EXISTS voice_channels (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS earthquake_subs (
+    guild_id TEXT PRIMARY KEY,
+    channel_id TEXT NOT NULL,
+    min_intensity INTEGER DEFAULT 3, -- Minimum intensity to notify (0-7)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS activity_logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id TEXT,

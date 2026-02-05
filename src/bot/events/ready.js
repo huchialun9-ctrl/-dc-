@@ -12,5 +12,9 @@ module.exports = {
             client.giveawayService.init();
             logger.info('GiveawayService initialized.');
         }
+
+        if (client.earthquakeService) {
+            client.earthquakeService.init();
+        }
     },
 };
