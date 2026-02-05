@@ -29,7 +29,6 @@ const config = {
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: false,
     savePreviousSongs: true,
-    nsfw: true, // Allow age-restricted content (requires cookies)
     plugins: [
         new YtDlpPlugin({
             update: false
