@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>排行榜 - <%= guild.name %>
+    </title>
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <link rel="stylesheet" href="/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(88, 101, 242, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(244, 127, 255, 0.15) 0%, transparent 40%);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .guild-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 3px solid var(--accent-color);
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .rank-card {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .rank-card:hover {
+            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .rank-num {
+            font-size: 1.5rem;
+            font-weight: 800;
+            width: 40px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-right: 1rem;
+        }
+
+        .rank-1 .rank-num {
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .rank-2 .rank-num {
+            color: #C0C0C0;
+        }
+
+        .rank-3 .rank-num {
+            color: #CD7F32;
+        }
+
+        .user-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-tag {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .level-info {
+            text-align: right;
+        }
+
+        .level-badge {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 0.3rem;
+        }
+
+        .xp-text {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <% if (guild.icon) { %>
+                <img class="guild-icon" src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.png"
+                    alt="Guild Icon">
+                <% } else { %>
+                    <div class="guild-icon"
+                        style="background: #333; margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                        <%= guild.name.charAt(0) %>
+                    </div>
+                    <% } %>
+                        <h1>
+                            <%= guild.name %> 排行榜
+                        </h1>
+                        <p style="color: var(--text-secondary);">Top 50 Most Active Members</p>
+        </div>
+
+        <div class="leaderboard-list">
+            <% if (leaderboard.length===0) { %>
+                <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                    尚無數據，快去聊天吧！
+                </div>
+                <% } %>
+
+                    <% leaderboard.forEach(user=> { %>
+                        <div class="rank-card rank-<%= user.rank %>">
+                            <div class="rank-num">
+                                <% if (user.rank===1) { %><i class="fa-solid fa-crown"></i>
+                                    <% } else { %>
+                                        <%= user.rank %>
+                                            <% } %>
+                            </div>
+                            <div class="user-info">
+                                <img class="user-avatar" src="<%= user.avatar %>" alt="Avatar">
+                                <div class="user-tag">
+                                    <%= user.username %>
+                                </div>
+                            </div>
+                            <div class="level-info">
+                                <div class="level-badge">Lv. <%= user.level %>
+                                </div>
+                                <div class="xp-text">
+                                    <%= user.xp %> XP
+                                </div>
+                            </div>
+                        </div>
+                        <% }); %>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="/dashboard/settings?guild_id=<%= guild.id %>"
+                style="color: var(--text-secondary); text-decoration: none;">
+                <i class="fa-solid fa-arrow-left"></i> 返回控制台
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>

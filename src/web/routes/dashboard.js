@@ -224,10 +224,77 @@ router.post('/settings', async (req, res) => {
             stmt.run(guild_id, blockLinks, badWords);
         }
 
+        else if (action === 'update_leveling') {
+            const { leveling_enabled } = req.body;
+            const enabled = leveling_enabled ? 1 : 0;
+
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, leveling_enabled, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                leveling_enabled = excluded.leveling_enabled,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+
+            stmt.run(guild_id, enabled);
+        }
+
         res.redirect(`/dashboard/settings?guild_id=${guild_id}`);
     } catch (error) {
         console.error('Settings Action Error:', error);
         res.status(500).send(`Error: ${error.message}`);
+    }
+});
+
+// Leaderboard Public Route
+router.get('/leaderboard/:guild_id', async (req, res) => {
+    const guildId = req.params.guild_id;
+    const client = require('../../bot/client');
+
+    try {
+        // Validation: Check if guild exists/bot is in it
+        const guild = client.guilds.cache.get(guildId);
+        if (!guild) return res.status(404).send('Guild not found or Bot not added.');
+
+        // Fetch Top 50 Users
+        const leaderboard = db.prepare('SELECT user_id, xp, level FROM levels WHERE guild_id = ? ORDER BY xp DESC LIMIT 50').all(guildId);
+
+        // Enrich with User Data (Username, Avatar)
+        // Note: Doing this sequentially might be slow if many users, but fine for 50. Promise.all better.
+        const enrichedLeaderboard = await Promise.all(leaderboard.map(async (entry, index) => {
+            let userTag = 'Unknown User';
+            let avatarUrl = 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+            try {
+                // Try to fetch from cache first, then API
+                let user = client.users.cache.get(entry.user_id);
+                if (!user) {
+                    user = await client.users.fetch(entry.user_id).catch(() => null);
+                }
+
+                if (user) {
+                    userTag = user.username;
+                    avatarUrl = user.displayAvatarURL({ extension: 'png', size: 64 });
+                }
+            } catch (e) { }
+
+            return {
+                rank: index + 1,
+                username: userTag,
+                avatar: avatarUrl,
+                level: entry.level,
+                xp: entry.xp
+            };
+        }));
+
+        res.render('leaderboard', {
+            guild: guild,
+            leaderboard: enrichedLeaderboard
+        });
+
+    } catch (error) {
+        console.error('Leaderboard Error:', error);
+        res.status(500).send('Server Error');
     }
 });
 
