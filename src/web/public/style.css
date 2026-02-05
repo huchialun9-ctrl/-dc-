@@ -25,17 +25,39 @@
   --font-heading: 'Outfit', 'Noto Sans TC', sans-serif;
   --font-body: 'Inter', 'Noto Sans TC', sans-serif;
 
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+  /* Gradient Colors */
+  --gradient-1: rgba(88, 101, 242, 0.08);
+  /* Discord Blurple Low Opacity */
+  --gradient-2: rgba(245, 158, 11, 0.05);
+  /* Amber Low Opacity */
 }
 
 [data-theme="light"] {
-  /* Optional: Keep light theme accessible but better */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f4f4f5;
-  --bg-sidebar: #f8fafc;
-  --bg-card: #ffffff;
-  /* ... logic for toggle if it exists */
+  /* Premium Light Theme */
+  --bg-primary: #f8fafc;
+  /* Slate 50 */
+  --bg-secondary: #ffffff;
+  --bg-sidebar: rgba(255, 255, 255, 0.9);
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --bg-hover: rgba(0, 0, 0, 0.05);
+
+  --text-primary: #1e293b;
+  /* Slate 800 */
+  --text-secondary: #64748b;
+  /* Slate 500 */
+  --text-muted: #94a3b8;
+
+  --border-color: rgba(0, 0, 0, 0.06);
+  --glass-border: 1px solid rgba(0, 0, 0, 0.06);
+
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+
+  /* Light Theme Gradients (More vibrant for light) */
+  --gradient-1: rgba(59, 130, 246, 0.1);
+  /* Blue */
+  --gradient-2: rgba(245, 158, 11, 0.1);
+  /* Orange */
 }
 
 * {
@@ -46,10 +68,10 @@ body {
   margin: 0;
   font-family: var(--font-body);
   background-color: var(--bg-primary);
-  /* Deep Space Gradient */
+  /* Dynamic Premium Gradient */
   background-image:
-    radial-gradient(circle at 15% 50%, rgba(88, 101, 242, 0.08), transparent 40%),
-    radial-gradient(circle at 85% 30%, rgba(245, 158, 11, 0.05), transparent 40%);
+    radial-gradient(circle at 15% 50%, var(--gradient-1), transparent 40%),
+    radial-gradient(circle at 85% 30%, var(--gradient-2), transparent 40%);
   color: var(--text-primary);
   display: flex;
   height: 100vh;
