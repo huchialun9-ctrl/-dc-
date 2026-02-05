@@ -18,6 +18,9 @@ const client = new Client({
     ]
 });
 
+const { DisTube } = require('distube');
+const { YtDlpPlugin } = require('@distube/yt-dlp');
+
 const config = {
     ffmpeg: {
         path: require('ffmpeg-static') // Explicitly set FFmpeg path
