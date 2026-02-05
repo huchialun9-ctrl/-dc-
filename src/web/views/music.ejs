@@ -173,13 +173,19 @@
                         <div class="controls">
                             <button class="btn-control" onclick="doAction('stop')" title="Stop"><i
                                     class="fa-solid fa-stop"></i></button>
-                            <button class="btn-control btn-play"
-                                onclick="doAction('<%= isPlaying ? 'pause' : 'resume' %>')">
-                                <i class="fa-solid fa-<%= isPlaying ? 'pause' : 'play' %>"
-                                    style="margin-left: <%= isPlaying ? '0' : '5px' %>"></i>
-                            </button>
-                            <button class="btn-control" onclick="doAction('skip')" title="Skip"><i
-                                    class="fa-solid fa-forward"></i></button>
+
+                            <% if (isPlaying) { %>
+                                <button class="btn-control btn-play" onclick="doAction('pause')">
+                                    <i class="fa-solid fa-pause"></i>
+                                </button>
+                                <% } else { %>
+                                    <button class="btn-control btn-play" onclick="doAction('resume')">
+                                        <i class="fa-solid fa-play" style="margin-left: 5px;"></i>
+                                    </button>
+                                    <% } %>
+
+                                        <button class="btn-control" onclick="doAction('skip')" title="Skip"><i
+                                                class="fa-solid fa-forward"></i></button>
                         </div>
 
                         <div class="volume-slider">
