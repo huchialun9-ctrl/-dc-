@@ -138,13 +138,24 @@ router.get('/settings', async (req, res) => {
         // Fetch Custom Commands
         const customCommands = db.prepare('SELECT * FROM custom_commands WHERE guild_id = ? ORDER BY created_at DESC').all(guildId);
 
+        // Parse Ticket Categories
+        let ticketCategories = [];
+        try {
+            if (settings && settings.ticket_categories) {
+                ticketCategories = JSON.parse(settings.ticket_categories);
+            }
+        } catch (e) {
+            console.error('Failed to parse ticket categories', e);
+        }
+
         return res.render('settings', {
             user: req.user,
             mode: 'guild',
             guild: guild,
             channels: channels,
             settings: settings || {},
-            customCommands: customCommands || []
+            customCommands: customCommands || [],
+            ticketCategories: ticketCategories
         });
     }
 
@@ -239,6 +250,54 @@ router.post('/settings', async (req, res) => {
             stmt.run(guild_id, enabled);
         }
 
+        else if (action === 'add_ticket_category') {
+            const { cat_label, cat_desc, cat_emoji } = req.body;
+
+            // Get current settings
+            const currentSettings = db.prepare('SELECT ticket_categories FROM settings WHERE guild_id = ?').get(guild_id);
+            let categories = [];
+            if (currentSettings && currentSettings.ticket_categories) {
+                try { categories = JSON.parse(currentSettings.ticket_categories); } catch (e) { }
+            }
+
+            // Create new category object
+            // Generate a simple value key
+            const value = 'cat_' + Date.now();
+            categories.push({
+                label: cat_label,
+                description: cat_desc,
+                emoji: cat_emoji,
+                value: value
+            });
+
+            // Save back
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, ticket_categories, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                ticket_categories = excluded.ticket_categories,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+            stmt.run(guild_id, JSON.stringify(categories));
+        }
+
+        else if (action === 'delete_ticket_category') {
+            const { cat_value } = req.body;
+
+            const currentSettings = db.prepare('SELECT ticket_categories FROM settings WHERE guild_id = ?').get(guild_id);
+            let categories = [];
+            if (currentSettings && currentSettings.ticket_categories) {
+                try { categories = JSON.parse(currentSettings.ticket_categories); } catch (e) { }
+            }
+
+            categories = categories.filter(c => c.value !== cat_value);
+
+            const stmt = db.prepare(`
+                UPDATE settings SET ticket_categories = ?, updated_at = CURRENT_TIMESTAMP WHERE guild_id = ?
+            `);
+            stmt.run(JSON.stringify(categories), guild_id);
+        }
+
         res.redirect(`/dashboard/settings?guild_id=${guild_id}`);
     } catch (error) {
         console.error('Settings Action Error:', error);
@@ -295,6 +354,45 @@ router.get('/leaderboard/:guild_id', async (req, res) => {
     } catch (error) {
         console.error('Leaderboard Error:', error);
         res.status(500).send('Server Error');
+    }
+});
+
+// Transcript List Route
+router.get('/transcripts/:guild_id', async (req, res) => {
+    const guildId = req.params.guild_id;
+    const client = require('../../bot/client');
+
+    try {
+        const guild = client.guilds.cache.get(guildId);
+        if (!guild) return res.status(404).send('Guild not found');
+
+        const transcripts = db.prepare('SELECT id, channel_name, user_id, closed_at FROM ticket_transcripts WHERE guild_id = ? ORDER BY closed_at DESC LIMIT 50').all(guildId);
+
+        // Enrich user names? maybe later. keeping it fast.
+
+        res.render('transcripts', {
+            guild: guild,
+            transcripts: transcripts
+        });
+    } catch (error) {
+        console.error('Transcript List Error:', error);
+        res.status(500).send('Error');
+    }
+});
+
+// View Specific Transcript
+router.get('/transcripts/:guild_id/:ticket_id', async (req, res) => {
+    const { guild_id, ticket_id } = req.params;
+    try {
+        const transcript = db.prepare('SELECT html_content FROM ticket_transcripts WHERE id = ? AND guild_id = ?').get(ticket_id, guild_id);
+
+        if (!transcript) return res.status(404).send('Transcript not found');
+
+        // Serve raw HTML
+        res.send(transcript.html_content);
+    } catch (error) {
+        console.error('Transcript View Error:', error);
+        res.status(500).send('Error');
     }
 });
 

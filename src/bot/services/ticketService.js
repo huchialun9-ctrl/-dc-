@@ -17,26 +17,47 @@ class TicketService {
                 db.prepare("UPDATE tickets SET status = 'closed', closed_at = CURRENT_TIMESTAMP WHERE id = ?").run(existingTicket.id);
             }
 
-            // Category configuration
-            let categoryName = 'Support Tickets';
-            let formattedCategory = 'Support';
-            switch (categoryType) {
-                case 'tech': categoryName = 'Technical Support'; formattedCategory = 'Technical'; break;
-                case 'billing': categoryName = 'Billing Support'; formattedCategory = 'Billing'; break;
-                case 'report': categoryName = 'Reports'; formattedCategory = 'Report'; break;
+            // Load Guild Settings to check for Custom Categories
+            const settings = db.prepare('SELECT ticket_categories FROM settings WHERE guild_id = ?').get(guild.id);
+            let categories = [];
+            if (settings && settings.ticket_categories) {
+                try { categories = JSON.parse(settings.ticket_categories); } catch (e) { }
+            }
+
+            // Determine Category Name using Custom or Default
+            let categoryName = 'Support Tickets'; // Discord Category Channel Name
+            let formattedCategory = 'General Support'; // Display Name
+
+            // Check if matches custom category
+            const customCat = categories.find(c => c.value === categoryType);
+            if (customCat) {
+                categoryName = customCat.label + ' Tickets'; // e.g. "VIP Support Tickets"
+                formattedCategory = customCat.label;
+            } else {
+                // Fallback Defaults
+                switch (categoryType) {
+                    case 'tech': categoryName = 'Technical Support'; formattedCategory = 'Technical'; break;
+                    case 'billing': categoryName = 'Billing Support'; formattedCategory = 'Billing'; break;
+                    case 'report': categoryName = 'Reports'; formattedCategory = 'Report'; break;
+                }
             }
 
             // Find/Create Discord Category
+            // logic: Try to find a Discord Category Channel that contains the name (flexible) or just "Zenith Tickets"
+            // For simplicity, let's group all custom tickets under "Zenith Tickets" or specific if possible.
+            // Current user code tries to find exact name `categoryName`.
+
             let parentCategory = guild.channels.cache.find(c => c.name === categoryName && c.type === ChannelType.GuildCategory);
             // Fallback
             if (!parentCategory) {
+                // If specific category not found, try generic
                 parentCategory = guild.channels.cache.find(c => c.name === 'Zenith Tickets' && c.type === ChannelType.GuildCategory);
                 if (!parentCategory) {
                     parentCategory = await guild.channels.create({ name: 'Zenith Tickets', type: ChannelType.GuildCategory });
                 }
             }
 
-            const channelName = `${categoryType}-${user.username}`;
+            const channelName = `${formattedCategory}-${user.username}`.toLowerCase().replace(/[^a-z0-9]/g, '-');
 
             const ticketChannel = await guild.channels.create({
                 name: channelName,
@@ -58,7 +79,7 @@ class TicketService {
 
             // Send Initial Message
             const embed = new EmbedBuilder()
-                .setTitle(`Ticket: ${formattedCategory} Issue`)
+                .setTitle(`Ticket: ${formattedCategory}`)
                 .setDescription(`Hello ${user}, thank you for contacting support.\n\n**Category:** ${formattedCategory}\nOur team will be with you shortly.`)
                 .setColor('#2ecc71')
                 .setTimestamp();
@@ -94,6 +115,13 @@ class TicketService {
             const htmlContent = generateHTML(sortedMessages, channel.name);
             const buffer = Buffer.from(htmlContent, 'utf-8');
             const attachment = new AttachmentBuilder(buffer, { name: `transcript-${channel.name}.html` });
+
+            // SAVE TRANSCRIPT TO DB (NEW)
+            try {
+                db.prepare("INSERT INTO ticket_transcripts (channel_name, guild_id, user_id, html_content) VALUES (?, ?, ?, ?)").run(channel.name, channel.guild.id, user.id, htmlContent);
+            } catch (err) {
+                logger.error(`Failed to save transcript to DB: ${err.message}`);
+            }
 
             // Send to User
             try {
