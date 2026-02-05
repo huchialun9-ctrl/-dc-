@@ -17,14 +17,23 @@ router.get('/callback', passport.authenticate('discord', {
     res.redirect('/dashboard');
 });
 
-router.get('/invite', (req, res) => {
-    let inviteUrl = `https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=8&response_type=code&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}&integration_type=0&scope=identify+guilds.members.read+guilds.join+email+guilds+guilds.channels.read+bot+applications.commands+applications.entitlements+presences.write`;
+// Invite Bot Support (Securely generates state)
+router.get('/invite', (req, res, next) => {
+    // Determine options based on query
+    const options = {
+        scope: ['identify', 'guilds', 'bot', 'applications.commands', 'applications.entitlements'],
+        permissions: 8
+    };
 
+    // If guild_id is present, we try to pass it to Discord.
+    // Note: passport-discord may strictly filter options, so this depends on the library version.
+    // If it doesn't work, the user simply has to select the server manually, which is acceptable.
     if (req.query.guild_id) {
-        inviteUrl += `&guild_id=${req.query.guild_id}&disable_guild_select=true`;
+        options.guildId = req.query.guild_id;
+        options.disableGuildSelect = true;
     }
 
-    res.redirect(inviteUrl);
+    passport.authenticate('discord', options)(req, res, next);
 });
 
 router.get('/privacy', (req, res) => {
