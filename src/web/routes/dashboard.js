@@ -135,13 +135,16 @@ router.get('/settings', async (req, res) => {
         // Fetch Guild Settings from DB
         const settings = db.prepare('SELECT * FROM settings WHERE guild_id = ?').get(guildId);
 
+        // Fetch Custom Commands
+        const customCommands = db.prepare('SELECT * FROM custom_commands WHERE guild_id = ? ORDER BY created_at DESC').all(guildId);
+
         return res.render('settings', {
             user: req.user,
             mode: 'guild',
             guild: guild,
             channels: channels,
-            channels: channels,
-            settings: settings || {} // Pass empty obj if null
+            settings: settings || {},
+            customCommands: customCommands || []
         });
     }
 
@@ -186,6 +189,22 @@ router.post('/settings', async (req, res) => {
             `);
 
             stmt.run(guild_id, isEnabled, welcome_channel_id, welcome_message);
+        }
+
+        else if (action === 'add_command') {
+            const { trigger, response } = req.body;
+            if (!trigger || !response) throw new Error('Trigger and Response are required');
+
+            // Check if trigger already exists
+            const existing = db.prepare('SELECT id FROM custom_commands WHERE guild_id = ? AND trigger = ?').get(guild_id, trigger);
+            if (existing) throw new Error('This trigger already exists!');
+
+            db.prepare('INSERT INTO custom_commands (guild_id, trigger, response) VALUES (?, ?, ?)').run(guild_id, trigger, response);
+        }
+
+        else if (action === 'delete_command') {
+            const { command_id } = req.body;
+            db.prepare('DELETE FROM custom_commands WHERE id = ? AND guild_id = ?').run(command_id, guild_id);
         }
 
         res.redirect(`/dashboard/settings?guild_id=${guild_id}`);

@@ -191,8 +191,87 @@
                         </div>
 
                     </div>
-                    <% } %>
+
+                    <!-- Module 4: Custom Commands -->
+                    <div class="settings-card" style="grid-column: 1 / -1; border-top: 4px solid #5865F2;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 style="margin: 0;"><i class="fa-solid fa-robot"
+                                    style="color: #5865F2; margin-right: 10px;"></i> 自訂指令 (Custom Commands)</h3>
+                        </div>
+
+                        <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                            <!-- Left: Add New Command -->
+                            <div style="flex: 1; min-width: 300px;">
+                                <h4 style="margin-bottom: 1rem; color: var(--text-secondary);">新增指令</h4>
+                                <form action="/dashboard/settings" method="POST"
+                                    style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                                    <input type="hidden" name="guild_id" value="<%= guild.id %>">
+                                    <input type="hidden" name="action" value="add_command">
+
+                                    <div class="form-group">
+                                        <label>觸發詞 (Trigger)</label>
+                                        <input type="text" name="trigger" placeholder="e.g. !help" required
+                                            style="font-family: monospace;">
+                                        <small style="color: var(--text-secondary);">當用戶輸入此詞時觸發</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>機器人回應 (Response)</label>
+                                        <textarea name="response" rows="3" placeholder="你好！有什麼我可以幫你的嗎？"
+                                            required></textarea>
+                                    </div>
+
+                                    <button type="submit" class="btn-submit" style="width: 100%;">
+                                        <i class="fa-solid fa-plus"></i> 新增指令
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Right: Existing Commands List -->
+                            <div style="flex: 1; min-width: 300px;">
+                                <h4 style="margin-bottom: 1rem; color: var(--text-secondary);">現有指令 (<%=
+                                        customCommands.length %>)</h4>
+                                <div
+                                    style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.8rem;">
+                                    <% if (customCommands.length===0) { %>
+                                        <div
+                                            style="text-align: center; padding: 2rem; color: var(--text-secondary); background: rgba(0,0,0,0.2); border-radius: 12px;">
+                                            尚未設定任何指令
+                                        </div>
+                                        <% } else { %>
+                                            <% customCommands.forEach(cmd=> { %>
+                                                <div
+                                                    style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                                                    <div style="overflow: hidden;">
+                                                        <div
+                                                            style="font-weight: bold; color: var(--accent-color); margin-bottom: 4px;">
+                                                            <%= cmd.trigger %>
+                                                        </div>
+                                                        <div
+                                                            style="font-size: 0.9rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                            <%= cmd.response %>
+                                                        </div>
+                                                    </div>
+                                                    <form action="/dashboard/settings" method="POST" style="margin: 0;">
+                                                        <input type="hidden" name="guild_id" value="<%= guild.id %>">
+                                                        <input type="hidden" name="action" value="delete_command">
+                                                        <input type="hidden" name="command_id" value="<%= cmd.id %>">
+                                                        <button type="submit" class="btn-remove" title="刪除指令">
+                                                            <i class="fa-solid fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                                <% }); %>
+                                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
         </div>
+        <% } %>
+            </div>
 </body>
 
 </html>
