@@ -38,8 +38,10 @@ app.use(limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-// Static files - Ensure absolute path resolution
-app.use(express.static(path.resolve(__dirname, '../web/public')));
+// Static files
+const publicPath = path.join(__dirname, '../web/public');
+console.log('Serving static files from:', publicPath);
+app.use(express.static(publicPath));
 
 // Session
 app.use(session({
