@@ -193,9 +193,17 @@ body {
 /* Cards & Grid */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: 1fr;
+  /* Mobile default */
   gap: 1.5rem;
   margin-bottom: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+    /* Desktop: 2 equal columns */
+  }
 }
 
 .stat-card,
