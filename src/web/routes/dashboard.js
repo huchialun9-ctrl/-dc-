@@ -30,16 +30,20 @@ router.get('/', (req, res) => {
 
 // 伺服器列表路由
 router.get('/servers', (req, res) => {
-    // 取得使用者所在的伺服器 (假設 Passport 已將 guilds 存入 req.user)
-    // 如果 req.user.guilds 不存在，這裡會報錯或顯示空。
-    // 實務上通常需要在 callback 中處理 guilds fetch，或者這裡重新 fetch (需要 access token)。
-    // 為了展示，這裡假設 req.user.guilds 有資料，如果沒有則顯示空陣列並提示。
     const userGuilds = req.user.guilds || [];
+    const client = require('../../bot/client');
 
-    // 簡單過濾：只顯示使用者有管理權限的伺服器 (0x8 = Administrator, 0x20 = Manage Guild)
-    // Permission 計算有點複雜，這裡先列出全部做展示
+    const adminGuilds = userGuilds.filter(g => (g.permissions & 0x8) === 0x8 || (g.permissions & 0x20) === 0x20);
 
-    res.render('servers', { user: req.user, guilds: userGuilds });
+    const processedGuilds = adminGuilds.map(guild => {
+        const botInGuild = client.guilds.cache.has(guild.id);
+        return {
+            ...guild,
+            hasBot: botInGuild
+        };
+    });
+
+    res.render('servers', { user: req.user, guilds: processedGuilds });
 });
 
 router.get('/users', (req, res) => {

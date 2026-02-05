@@ -18,7 +18,12 @@ router.get('/callback', passport.authenticate('discord', {
 });
 
 router.get('/invite', (req, res) => {
-    const inviteUrl = `https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=8&response_type=code&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}&integration_type=0&scope=identify+guilds.members.read+guilds.join+email+guilds+guilds.channels.read+bot+applications.commands+applications.entitlements+presences.write`;
+    let inviteUrl = `https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=8&response_type=code&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}&integration_type=0&scope=identify+guilds.members.read+guilds.join+email+guilds+guilds.channels.read+bot+applications.commands+applications.entitlements+presences.write`;
+
+    if (req.query.guild_id) {
+        inviteUrl += `&guild_id=${req.query.guild_id}&disable_guild_select=true`;
+    }
+
     res.redirect(inviteUrl);
 });
 

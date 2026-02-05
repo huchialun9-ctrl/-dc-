@@ -77,16 +77,17 @@
                                                 <%= guild.name %>
                                             </h4>
                                             <div style="margin-top: 1rem;">
-                                                <% if ((guild.permissions & 0x8)===0x8 || (guild.permissions &
-                                                    0x20)===0x20) { %>
+                                                <% if (guild.hasBot) { %>
                                                     <a href="/dashboard/settings?guild_id=<%= guild.id %>"
                                                         class="btn-submit"
                                                         style="display:inline-block; text-decoration: none; padding: 0.6rem 1.5rem; font-size: 0.9rem;">
                                                         管理伺服器
                                                     </a>
                                                     <% } else { %>
-                                                        <span
-                                                            style="font-size: 0.85rem; color: var(--text-secondary); background: rgba(255,255,255,0.05); padding: 0.4rem 0.8rem; border-radius: 20px;">無管理權限</span>
+                                                        <a href="/invite?guild_id=<%= guild.id %>" class="btn-submit"
+                                                            style="display:inline-block; text-decoration: none; padding: 0.6rem 1.5rem; font-size: 0.9rem; background: var(--bg-hover); border: 1px solid var(--border-color);">
+                                                            <i class="fa-solid fa-plus"></i> 邀請機器人
+                                                        </a>
                                                         <% } %>
                                             </div>
                                         </div>

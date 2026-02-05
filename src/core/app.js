@@ -74,6 +74,8 @@ passport.use(new DiscordStrategy({
         const logStmt = db.prepare('INSERT INTO activity_logs (user_id, action, details) VALUES (?, ?, ?)');
         logStmt.run(profile.id, 'LOGIN', `Logged in via Discord`);
 
+        // Save guilds to session for dashboard access
+        profile.guilds = profile.guilds || [];
         return done(null, profile);
     } catch (err) {
         logger.error(`Auth Error: ${err.message}`);
