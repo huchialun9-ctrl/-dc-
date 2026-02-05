@@ -3,17 +3,21 @@ const fs = require('fs');
 const path = require('path');
 const logger = require('../core/logger');
 
+const GiveawayService = require('./services/giveawayService');
+
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildPresences
+        GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildMessageReactions // Needed for reroll/picking winners
     ]
 });
 
 client.commands = new Collection();
+client.giveawayService = new GiveawayService(client);
 
 // Load Commands
 const commandsPath = path.join(__dirname, 'commands');
