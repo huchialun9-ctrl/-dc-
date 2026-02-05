@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Bot Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Ticket Bot</h1>
+        <% if (user) { %>
+            <a href="/dashboard" class="auth-btn">Dashboard</a>
+        <% } else { %>
+            <a href="/auth/discord" class="auth-btn">Login with Discord</a>
+        <% } %>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h2>Advanced Ticket Management</h2>
+            <p>Secure, efficient, and automated support system for your Discord server.</p>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 Ticket Bot System
+    </footer>
+</body>
+</html>

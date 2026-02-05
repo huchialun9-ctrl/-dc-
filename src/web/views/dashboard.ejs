@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Ticket Bot</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <h1>Dashboard</h1>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <span>Hello, <%= user.username %></span>
+            <a href="/logout" style="color: var(--text-secondary); text-decoration: none;">Logout</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>System Status</h3>
+                <div class="value">
+                    <span class="status-indicator status-online"></span>
+                    ACTIVE
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">Uptime: <%= Math.floor(uptime / 60) %>
+                        mins</p>
+            </div>
+
+            <div class="card">
+                <h3>Bot Identity</h3>
+                <div class="value">
+                    <%= botUser ? botUser.username : 'Loading...' %>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">Connected to <%= guilds %> Guilds</p>
+            </div>
+
+            <div class="card">
+                <h3>Active Tickets</h3>
+                <div class="value">0</div>
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">Open Support Threads</p>
+            </div>
+
+            <!-- Placeholder for future data -->
+            <div class="card">
+                <h3>Total Transcripts</h3>
+                <div class="value">0</div>
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">Archived Conversations</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 Ticket Bot System
+    </footer>
+</body>
+
+</html>
