@@ -20,9 +20,15 @@ db.prepare(`CREATE TABLE IF NOT EXISTS settings (
     guild_id TEXT PRIMARY KEY, 
     welcome_enabled INTEGER DEFAULT 0, 
     welcome_channel_id TEXT, 
-    welcome_message TEXT, 
+    welcome_message TEXT,
+    automod_badwords TEXT DEFAULT '',
+    automod_links INTEGER DEFAULT 0,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )`).run();
+
+// Migration: Add columns if they don't exist (Navie approach for SQLite)
+try { db.prepare("ALTER TABLE settings ADD COLUMN automod_badwords TEXT DEFAULT ''").run(); } catch (e) { }
+try { db.prepare("ALTER TABLE settings ADD COLUMN automod_links INTEGER DEFAULT 0").run(); } catch (e) { }
 
 // 4. Activity Logs
 db.prepare("CREATE TABLE IF NOT EXISTS activity_logs (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, action TEXT, details TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)").run();

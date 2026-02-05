@@ -207,6 +207,23 @@ router.post('/settings', async (req, res) => {
             db.prepare('DELETE FROM custom_commands WHERE id = ? AND guild_id = ?').run(command_id, guild_id);
         }
 
+        else if (action === 'update_automod') {
+            const { automod_links, automod_badwords } = req.body;
+            const blockLinks = automod_links ? 1 : 0;
+            const badWords = automod_badwords || '';
+
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, automod_links, automod_badwords, updated_at)
+                VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                automod_links = excluded.automod_links,
+                automod_badwords = excluded.automod_badwords,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+
+            stmt.run(guild_id, blockLinks, badWords);
+        }
+
         res.redirect(`/dashboard/settings?guild_id=${guild_id}`);
     } catch (error) {
         console.error('Settings Action Error:', error);

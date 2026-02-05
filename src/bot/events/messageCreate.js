@@ -23,8 +23,42 @@ module.exports = {
                 }
             }
 
-            // 2. Future: Leveling System (Phase 3)
-            // 3. Future: Auto-Mod (Phase 2)
+            // 2. Auto-Moderation (Phase 2)
+            const settings = db.prepare('SELECT automod_links, automod_badwords FROM settings WHERE guild_id = ?').get(message.guild.id);
+
+            if (settings) {
+                // A. Link Blocker
+                if (settings.automod_links === 1) {
+                    const linkRegex = /(https?:\/\/[^\s]+)/g;
+                    if (linkRegex.test(message.content)) {
+                        // Check if user is admin (bypass)
+                        if (!message.member.permissions.has('Administrator')) {
+                            await message.delete().catch(() => { });
+                            const warning = await message.channel.send(`${message.author}, ⚠️ 本伺服器禁止發送連結！ (No Links Allowed)`);
+                            setTimeout(() => warning.delete().catch(() => { }), 5000);
+                            return;
+                        }
+                    }
+                }
+
+                // B. Bad Words Filter
+                if (settings.automod_badwords) {
+                    const badWords = settings.automod_badwords.split(',').map(w => w.trim()).filter(w => w.length > 0);
+                    const content = message.content.toLowerCase();
+                    const found = badWords.some(word => content.includes(word.toLowerCase()));
+
+                    if (found) {
+                        if (!message.member.permissions.has('Administrator')) {
+                            await message.delete().catch(() => { });
+                            const warning = await message.channel.send(`${message.author}, ⚠️ 請注意您的用詞！ (Bad Word Detected)`);
+                            setTimeout(() => warning.delete().catch(() => { }), 5000);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            // 3. Future: Leveling System (Phase 3)
 
         } catch (error) {
             logger.error(`Message Create Error: ${error.message}`);
