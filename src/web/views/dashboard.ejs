@@ -4,58 +4,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Ticket Bot</title>
+    <title>Console - ZenithBot</title>
     <link rel="stylesheet" href="/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
     <header>
-        <h1>Dashboard</h1>
+        <div class="logo"><i class="fa-solid fa-layer-group"></i> ZenithBot</div>
         <div style="display: flex; align-items: center; gap: 1rem;">
-            <span>Hello, <%= user.username %></span>
-            <a href="/logout" style="color: var(--text-secondary); text-decoration: none;">Logout</a>
+            <span style="color: var(--text-secondary);"><i class="fa-solid fa-circle-user"></i>
+                <%= user.username %>
+            </span>
+            <a href="/logout"
+                style="color: var(--text-secondary); font-size: 0.9rem; text-decoration: none; margin-left: 1rem;">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
         </div>
     </header>
 
-    <div class="container">
+    <div class="container" style="padding-top: 3rem; padding-bottom: 3rem;">
+        <h2 style="margin-bottom: 2rem;">Overview</h2>
+
         <div class="dashboard-grid">
-            <div class="card">
-                <h3>System Status</h3>
-                <div class="value">
-                    <span class="status-indicator status-online"></span>
-                    ACTIVE
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h4>System Status</h4>
+                    <div class="stat-value" style="color: var(--success-color, #43b581);">ONLINE</div>
                 </div>
-                <p style="color: var(--text-secondary); font-size: 0.875rem;">Uptime: <%= Math.floor(uptime / 60) %>
-                        mins</p>
+                <div class="stat-icon"><i class="fa-solid fa-server"></i></div>
             </div>
 
-            <div class="card">
-                <h3>Bot Identity</h3>
-                <div class="value">
-                    <%= botUser ? botUser.username : 'Loading...' %>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h4>Guilds</h4>
+                    <div class="stat-value">
+                        <%= guilds %>
+                    </div>
                 </div>
-                <p style="color: var(--text-secondary); font-size: 0.875rem;">Connected to <%= guilds %> Guilds</p>
+                <div class="stat-icon"><i class="fa-solid fa-shield-cat"></i></div>
             </div>
 
-            <div class="card">
-                <h3>Active Tickets</h3>
-                <div class="value">0</div>
-                <p style="color: var(--text-secondary); font-size: 0.875rem;">Open Support Threads</p>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h4>Active Tickets</h4>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-icon"><i class="fa-solid fa-ticket"></i></div>
             </div>
 
-            <!-- Placeholder for future data -->
-            <div class="card">
-                <h3>Total Transcripts</h3>
-                <div class="value">0</div>
-                <p style="color: var(--text-secondary); font-size: 0.875rem;">Archived Conversations</p>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h4>Uptime</h4>
+                    <div class="stat-value">
+                        <%= Math.floor(uptime / 60) %>m
+                    </div>
+                </div>
+                <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
             </div>
+        </div>
+
+        <div class="chart-container">
+            <h3>Ticket Volume (Last 7 Days)</h3>
+            <canvas id="ticketChart"></canvas>
         </div>
     </div>
 
-    <footer>
-        &copy; 2024 Ticket Bot System
-    </footer>
+    <script>
+        const ctx = document.getElementById('ticketChart').getContext('2d');
+        // Simulated Data for Demo - In real app, pass this from server
+        const ticketChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'New Tickets',
+                    data: [12, 19, 3, 5, 2, 3, 15], // Placeholder data
+                    backgroundColor: 'rgba(88, 101, 242, 0.2)',
+                    borderColor: 'rgba(88, 101, 242, 1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#222'
+                        },
+                        ticks: { color: '#888' }
+                    },
+                    x: {
+                        grid: {
+                            color: 'transparent'
+                        },
+                        ticks: { color: '#888' }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: '#fff' }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

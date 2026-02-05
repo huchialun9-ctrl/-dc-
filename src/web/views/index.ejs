@@ -1,31 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Bot Dashboard</title>
+    <title>ZenithBot | Enterprise Grade Support</title>
     <link rel="stylesheet" href="/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
     <header>
-        <h1>Ticket Bot</h1>
-        <% if (user) { %>
-            <a href="/dashboard" class="auth-btn">Dashboard</a>
-        <% } else { %>
-            <a href="/auth/discord" class="auth-btn">Login with Discord</a>
-        <% } %>
+        <div class="logo">
+            <i class="fa-solid fa-layer-group"></i> ZenithBot
+        </div>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#pricing">Enterprise</a>
+            <% if (user) { %>
+                <a href="/dashboard" class="auth-btn glow">Dashboard <i class="fa-solid fa-arrow-right"></i></a>
+                <% } else { %>
+                    <a href="/auth/discord" class="auth-btn glow"><i class="fa-brands fa-discord"></i> Login with
+                        Discord</a>
+                    <% } %>
+        </nav>
     </header>
 
-    <div class="container">
-        <div class="hero">
-            <h2>Advanced Ticket Management</h2>
-            <p>Secure, efficient, and automated support system for your Discord server.</p>
-        </div>
-    </div>
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <span class="badge">v2.0 Now Available</span>
+                <h1>Support Your Community <br><span class="gradient-text">Like a Pro.</span></h1>
+                <p>The advanced Discord ticket system designed for scale. Featuring HTML transcripts, detailed
+                    analytics, and seamless integrations.</p>
+                <div class="cta-group">
+                    <a href="/auth/discord" class="btn-primary">Get Started</a>
+                    <a href="#features" class="btn-secondary">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="glass-card float">
+                    <div class="card-header">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="msg">
+                            <div class="avatar"></div>
+                            <div class="lines">
+                                <div class="line short"></div>
+                                <div class="line long"></div>
+                            </div>
+                        </div>
+                        <div class="msg right">
+                            <div class="lines">
+                                <div class="line medium"></div>
+                            </div>
+                            <div class="avatar blue"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features-section">
+            <h2>Powerful Features</h2>
+            <div class="grid">
+                <div class="feature-card">
+                    <i class="fa-solid fa-file-code"></i>
+                    <h3>HTML Transcripts</h3>
+                    <p>Export conversation logs in beautiful, readable HTML formats for permanent archiving.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <h3>Analytics Dashboard</h3>
+                    <p>Track team performance with real-time charts and ticket resolution stats.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <h3>Advanced Security</h3>
+                    <p>Role-based access control and isolated environment variables.</p>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <footer>
-        &copy; 2024 Ticket Bot System
+        <p>&copy; 2024 ZenithBot System. secure. efficient. powerful.</p>
     </footer>
 </body>
+
 </html>
