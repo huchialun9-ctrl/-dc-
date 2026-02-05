@@ -42,6 +42,21 @@ CREATE TABLE IF NOT EXISTS giveaways (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS voice_master (
+    guild_id TEXT PRIMARY KEY,
+    category_id TEXT,
+    channel_id TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS voice_channels (
+    channel_id TEXT PRIMARY KEY,
+    guild_id TEXT NOT NULL,
+    owner_id TEXT NOT NULL,
+    is_locked INTEGER DEFAULT 0,
+    is_hidden INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS activity_logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id TEXT,
