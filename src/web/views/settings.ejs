@@ -132,8 +132,37 @@
                             </form>
                         </div>
 
+                        <!-- Module 9: Economy System -->
+                        <div class="settings-card" style="grid-column: 1 / -1; border-top: 4px solid #FFD700;">
+                            <form action="/dashboard/settings" method="POST">
+                                <input type="hidden" name="action" value="update_economy">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                    <div>
+                                        <h3 style="margin: 0; color: white;"><i class="fa-solid fa-coins"
+                                                style="color: #FFD700; margin-right: 10px;"></i> 經濟系統 (Economy)</h3>
+                                        <div style="color: var(--text-secondary); margin-top: 5px;">
+                                            啟用每日獎勵與錢包功能。
+                                        </div>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="economy_enabled" value="1"
+                                            <%=settings.economy_enabled ? 'checked' : '' %>
+                                        onchange="this.form.submit()">
+                                    </div>
+                                </div>
+                            </form>
+                            <div>
+                                <a href="/dashboard/leaderboard/<%= guild.id %>/economy" class="btn-secondary"
+                                    style="width: 100%; text-align: center; display: block;">
+                                    <i class="fa-solid fa-trophy"></i> 查看富豪榜 (Leaderboard)
+                                </a>
+                            </div>
+                        </div>
+
                         <!-- Module 3: Welcome System -->
-                        <div class="settings-card" style="display: block; border-top: 4px solid #00ff9d;">
+                        <div class="settings-card" style="display: block; border-top: 44px solid #00ff9d;">
                             <div
                                 style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                                 <h3 style="margin:0;"><i class="fa-solid fa-door-open"

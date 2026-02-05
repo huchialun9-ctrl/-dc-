@@ -44,6 +44,15 @@ db.prepare("CREATE TABLE IF NOT EXISTS levels (user_id TEXT, guild_id TEXT, xp I
 // 7. Ticket Transcripts
 db.prepare("CREATE TABLE IF NOT EXISTS ticket_transcripts (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_name TEXT, guild_id TEXT, user_id TEXT, html_content TEXT, closed_at DATETIME DEFAULT CURRENT_TIMESTAMP)").run();
 
+// 8. Economy Table
+db.prepare(`CREATE TABLE IF NOT EXISTS economy (
+    user_id TEXT, 
+    guild_id TEXT, 
+    balance INTEGER DEFAULT 0, 
+    last_daily DATETIME, 
+    PRIMARY KEY (user_id, guild_id)
+)`).run();
+
 // --- Migrations ---
 const safeAlter = (stmt) => {
     try { db.prepare(stmt).run(); } catch (e) { /* Ignore if column exists */ }
@@ -51,5 +60,6 @@ const safeAlter = (stmt) => {
 
 safeAlter("ALTER TABLE settings ADD COLUMN ticket_categories TEXT");
 safeAlter("ALTER TABLE settings ADD COLUMN leveling_enabled INTEGER DEFAULT 0");
+safeAlter("ALTER TABLE settings ADD COLUMN economy_enabled INTEGER DEFAULT 0");
 
 module.exports = db;

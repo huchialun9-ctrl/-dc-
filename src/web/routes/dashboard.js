@@ -163,6 +163,36 @@ router.get('/settings', async (req, res) => {
     res.render('settings', { user: req.user, mode: 'global' });
 });
 
+router.get('/leaderboard/:guild_id/economy', async (req, res) => {
+    const { guild_id } = req.params;
+    const client = require('../../bot/client');
+
+    const guild = client.guilds.cache.get(guild_id);
+    if (!guild) return res.status(404).send('Guild not found');
+
+    const topUsers = db.prepare('SELECT * FROM economy WHERE guild_id = ? ORDER BY balance DESC LIMIT 50').all(guild_id);
+
+    // Fetch user details
+    const leaderboard = await Promise.all(topUsers.map(async (entry, index) => {
+        let userTag = 'Unknown User';
+        let userAvatar = 'https://cdn.discordapp.com/embed/avatars/0.png';
+        try {
+            const user = await client.users.fetch(entry.user_id);
+            userTag = user.username;
+            userAvatar = user.displayAvatarURL();
+        } catch (e) { }
+
+        return {
+            rank: index + 1,
+            username: userTag,
+            avatar: userAvatar,
+            balance: entry.balance
+        };
+    }));
+
+    res.render('economy_leaderboard', { guild, leaderboard });
+});
+
 router.post('/settings', async (req, res) => {
     const { action, guild_id, channel_id } = req.body;
     const client = require('../../bot/client');
@@ -244,6 +274,21 @@ router.post('/settings', async (req, res) => {
                 VALUES (?, ?, CURRENT_TIMESTAMP)
                 ON CONFLICT(guild_id) DO UPDATE SET
                 leveling_enabled = excluded.leveling_enabled,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+
+            stmt.run(guild_id, enabled);
+        }
+
+        else if (action === 'update_economy') {
+            const { economy_enabled } = req.body;
+            const enabled = economy_enabled ? 1 : 0;
+
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, economy_enabled, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                economy_enabled = excluded.economy_enabled,
                 updated_at = CURRENT_TIMESTAMP
             `);
 
