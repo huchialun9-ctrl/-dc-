@@ -396,13 +396,50 @@
                 location.reload();
             }
 
-            function saveChanges() {
-                // Submit the first dirty form found
-                // Note: If multiple forms are dirty, this simple logic handles only one.
-                // Ideally we should merge or prevent multi-form edits, but for now:
-                if (dirtyForms.size > 0) {
-                    const form = dirtyForms.values().next().value;
-                    form.submit();
+            async function saveChanges() {
+                const btn = document.querySelector('.btn-save');
+                const originalText = btn.innerText;
+                btn.innerText = '儲存中... (Saving...)';
+                btn.disabled = true;
+
+                try {
+                    const promises = [];
+                    for (const form of dirtyForms) {
+                        const formData = new FormData(form);
+                        // Convert FormData to URLSearchParams for x-www-form-urlencoded
+                        // Express defaults to parsing this for standard forms unless multer is used
+                        const params = new URLSearchParams(formData);
+
+                        promises.push(fetch(form.action, {
+                            method: 'POST',
+                            body: params,
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            }
+                        }));
+                    }
+
+                    await Promise.all(promises);
+
+                    // Success feedback
+                    btn.innerText = '已儲存! (Saved!)';
+                    btn.style.background = '#43b581';
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 500);
+
+                } catch (error) {
+                    console.error('Save failed:', error);
+                    btn.innerText = '失敗 (Failed)';
+                    btn.style.background = '#f04747';
+                    alert('儲存失敗，請檢查網路連線或重試。');
+
+                    setTimeout(() => {
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                        btn.style.background = ''; // reset
+                    }, 2000);
                 }
             }
         </script>
