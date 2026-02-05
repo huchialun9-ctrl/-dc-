@@ -58,14 +58,15 @@
                                                     <% } else { %>
                                                         <span class="badge"
                                                             style="background: rgba(0,0,0,0.1); color: var(--text-secondary);">#
-                                                            <%= user.rank %></span>
+                                                            <%= user.rank %>
+                                                        </span>
                                                         <% } %>
                                     </td>
                                     <td>
                                         <div style="display: flex; align-items: center; gap: 10px;">
                                             <img src="<%= user.avatar %>" alt="Avatar"
                                                 style="width: 32px; height: 32px; border-radius: 50%;">
-                                            <span style="font-weight: 600;">
+                                            <span style="font-weight: 800; color: #D35400; font-size: 1.05rem;">
                                                 <%= user.username %>
                                             </span>
                                         </div>
