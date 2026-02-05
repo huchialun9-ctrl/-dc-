@@ -3,7 +3,7 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, PermissionFlagsBits
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('panel')
-        .setDescription('發送工單面板 | Send ticket panel')
+        .setDescription('🎫 發送工單面板 | Send ticket panel')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async execute(interaction) {
         const embed = new EmbedBuilder()

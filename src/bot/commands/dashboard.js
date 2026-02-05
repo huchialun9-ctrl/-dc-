@@ -3,7 +3,7 @@ const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('dashboard')
-        .setDescription('開啟網頁版儀表板進行進階設定 | Open web dashboard for advanced settings'),
+        .setDescription('🔧 開啟網頁版儀表板設定 | Open web dashboard settings'),
     async execute(interaction) {
         // The domain should be configured in .env, defaulting to localhost if not set
         // In production, this must be the actual public URL

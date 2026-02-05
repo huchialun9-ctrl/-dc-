@@ -3,7 +3,7 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('close')
-        .setDescription('關閉當前工單 | Close current ticket')
+        .setDescription('🔒 關閉當前工單 | Close current ticket')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels),
     async execute(interaction) {
         if (!interaction.channel.name.includes('-')) {
