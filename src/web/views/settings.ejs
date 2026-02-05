@@ -329,125 +329,130 @@
         </div>
 
         <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                let dirtyForms = new Set();
+                const bar = document.getElementById('unsaved-bar');
+                const btnSave = document.getElementById('btn-save');
+                const btnReset = document.getElementById('btn-reset');
 
-            // Add class for selection if logic needs it, but we use event delegation mostly
-            // Store initial value
-            if (input.type === 'checkbox' || input.type === 'radio') {
-                input.dataset.initial = input.checked;
-            } else {
-                input.dataset.initial = input.value;
-            }
+                // Initialize tracking
+                document.querySelectorAll('form').forEach(form => {
+                    form.querySelectorAll('input, textarea, select').forEach(input => {
+                        if (input.type === 'hidden') return;
 
-            input.addEventListener('change', () => checkDirty(input, form));
-            input.addEventListener('input', () => checkDirty(input, form));
+                        if (input.type === 'checkbox' || input.type === 'radio') {
+                            input.dataset.initial = input.checked;
+                        } else {
+                            input.dataset.initial = input.value;
+                        }
+
+                        input.addEventListener('change', () => checkDirty(input, form));
+                        input.addEventListener('input', () => checkDirty(input, form));
+                    });
+                });
+
+                function checkDirty(input, form) {
+                    let isDirty = false;
+                    if (input.type === 'checkbox' || input.type === 'radio') {
+                        isDirty = input.checked.toString() !== input.dataset.initial;
+                    } else {
+                        isDirty = input.value !== input.dataset.initial;
+                    }
+
+                    if (isDirty) {
+                        dirtyForms.add(form);
+                        form.classList.add('is-dirty');
+                    } else {
+                        let formActuallyDirty = false;
+                        form.querySelectorAll('input, textarea, select').forEach(el => {
+                            if (el.type === 'hidden') return;
+                            let d = false;
+                            if (el.type === 'checkbox' || el.type === 'radio') {
+                                d = el.checked.toString() !== el.dataset.initial;
+                            } else {
+                                d = el.value !== el.dataset.initial;
+                            }
+                            if (d) formActuallyDirty = true;
+                        });
+
+                        if (!formActuallyDirty) {
+                            dirtyForms.delete(form);
+                            form.classList.remove('is-dirty');
+                        }
+                    }
+
+                    if (dirtyForms.size > 0) {
+                        bar.classList.add('visible');
+                    } else {
+                        bar.classList.remove('visible');
+                    }
+                }
+
+                btnReset.addEventListener('click', () => {
+                    if (confirm('確定要放棄所有變更嗎？')) {
+                        location.reload();
+                    }
+                });
+
+                btnSave.addEventListener('click', async () => {
+                    console.log('Save button clicked (EventListener)');
+
+                    if (dirtyForms.size === 0) {
+                        console.warn('No dirty forms found');
+                        alert('沒有偵測到變更 (No changes detected)');
+                        return;
+                    }
+
+                    const originalText = btnSave.innerText;
+                    btnSave.innerText = '儲存中... (Saving...)';
+                    btnSave.disabled = true;
+
+                    try {
+                        const promises = [];
+                        for (const form of dirtyForms) {
+                            console.log('Submitting form:', form.action);
+                            const formData = new FormData(form);
+                            const params = new URLSearchParams(formData);
+
+                            promises.push(fetch(form.action, {
+                                method: 'POST',
+                                body: params,
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                }
+                            }).then(async res => {
+                                if (!res.ok) {
+                                    const text = await res.text();
+                                    throw new Error(`Server returned ${res.status}: ${text}`);
+                                }
+                                return res;
+                            }));
+                        }
+
+                        await Promise.all(promises);
+                        console.log('All promises resolved');
+
+                        btnSave.innerText = '已儲存! (Saved!)';
+                        btnSave.style.background = '#43b581';
+
+                        setTimeout(() => {
+                            location.reload();
+                        }, 500);
+
+                    } catch (error) {
+                        console.error('Save failed:', error);
+                        btnSave.innerText = '失敗 (Failed)';
+                        btnSave.style.background = '#f04747';
+                        alert('儲存失敗：' + error.message);
+
+                        setTimeout(() => {
+                            btnSave.innerText = originalText;
+                            btnSave.disabled = false;
+                            btnSave.style.background = ''; // reset
+                        }, 2000);
+                    }
                 });
             });
-
-            function checkDirty(input, form) {
-                let isDirty = false;
-                if (input.type === 'checkbox' || input.type === 'radio') {
-                    isDirty = input.checked.toString() !== input.dataset.initial;
-                } else {
-                    isDirty = input.value !== input.dataset.initial;
-                }
-
-                if (isDirty) {
-                    dirtyForms.add(form);
-                    form.classList.add('is-dirty');
-                } else {
-                    // Check if form has other dirty inputs
-                    // Simplified: Once dirty, stays marked until save/reset in this session usually, 
-                    // but let's try to be smart?
-                    // Re-checking entire form is expensive on every input? No, it's fine.
-                    let formActuallyDirty = false;
-                    form.querySelectorAll('input, textarea, select').forEach(el => {
-                        if (el.type === 'hidden') return;
-                        let d = false;
-                        if (el.type === 'checkbox' || el.type === 'radio') {
-                            d = el.checked.toString() !== el.dataset.initial;
-                        } else {
-                            d = el.value !== el.dataset.initial;
-                        }
-                        if (d) formActuallyDirty = true;
-                    });
-
-                    if (!formActuallyDirty) {
-                        dirtyForms.delete(form);
-                        form.classList.remove('is-dirty');
-                    }
-                }
-
-                if (dirtyForms.size > 0) {
-                    bar.classList.add('visible');
-                } else {
-                    bar.classList.remove('visible');
-                }
-            }
-
-            function resetChanges() {
-                location.reload();
-            }
-
-            async function saveChanges() {
-                console.log('Save button clicked');
-                const btn = document.querySelector('.btn-save');
-                const originalText = btn.innerText;
-
-                if (dirtyForms.size === 0) {
-                    console.warn('No dirty forms found');
-                    alert('沒有偵測到變更 (No changes detected)');
-                    return;
-                }
-
-                btn.innerText = '儲存中... (Saving...)';
-                btn.disabled = true;
-
-                try {
-                    const promises = [];
-                    for (const form of dirtyForms) {
-                        console.log('Submitting form:', form.action);
-                        const formData = new FormData(form);
-                        const params = new URLSearchParams(formData);
-
-                        promises.push(fetch(form.action, {
-                            method: 'POST',
-                            body: params,
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            }
-                        }).then(async res => {
-                            if (!res.ok) {
-                                const text = await res.text();
-                                throw new Error(`Server returned ${res.status}: ${text}`);
-                            }
-                            return res;
-                        }));
-                    }
-
-                    await Promise.all(promises);
-                    console.log('All promises resolved');
-
-                    // Success feedback
-                    btn.innerText = '已儲存! (Saved!)';
-                    btn.style.background = '#43b581';
-
-                    setTimeout(() => {
-                        location.reload();
-                    }, 500);
-
-                } catch (error) {
-                    console.error('Save failed:', error);
-                    btn.innerText = '失敗 (Failed)';
-                    btn.style.background = '#f04747';
-                    alert('儲存失敗：' + error.message);
-
-                    setTimeout(() => {
-                        btn.innerText = originalText;
-                        btn.disabled = false;
-                        btn.style.background = ''; // reset
-                    }, 2000);
-                }
-            }
         </script>
 </body>
 
