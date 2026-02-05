@@ -134,7 +134,7 @@
 
                         <!-- Module 9: Economy System -->
                         <div class="settings-card" style="grid-column: 1 / -1; border-top: 4px solid #FFD700;">
-                            <form action="/dashboard/settings" method="POST">
+                            <form action="/dashboard/settings" method="POST" class="track-changes">
                                 <input type="hidden" name="action" value="update_economy">
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
                                 <div
@@ -170,7 +170,7 @@
                                 </h3>
                             </div>
 
-                            <form action="/dashboard/settings" method="POST"
+                            <form action="/dashboard/settings" method="POST" class="track-changes"
                                 style="height: calc(100% - 60px); display: flex; flex-direction: column;">
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
                                 <input type="hidden" name="action" value="update_welcome">
@@ -212,10 +212,8 @@
                                     </small>
                                 </div>
 
-                                <button type="submit" class="btn-submit"
-                                    style="background:var(--accent-color); width:100%; margin-top: auto;">
-                                    <i class="fa-solid fa-save"></i> 儲存歡迎設定
-                                </button>
+                                <!-- Removed inline submit button in favor of global save bar -->
+
                             </form>
                         </div>
 
@@ -336,7 +334,7 @@
                 const btnReset = document.getElementById('btn-reset');
 
                 // Initialize tracking
-                document.querySelectorAll('form').forEach(form => {
+                document.querySelectorAll('form.track-changes').forEach(form => {
                     form.querySelectorAll('input, textarea, select').forEach(input => {
                         if (input.type === 'hidden') return;
 

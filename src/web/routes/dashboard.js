@@ -194,6 +194,7 @@ router.get('/leaderboard/:guild_id/economy', async (req, res) => {
 });
 
 router.post('/settings', async (req, res) => {
+    console.log('[Dashboard] Settings POST:', req.body); // DEBUG LOG
     const { action, guild_id, channel_id } = req.body;
     const client = require('../../bot/client');
     const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
