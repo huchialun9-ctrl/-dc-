@@ -256,16 +256,17 @@
                 // Guild Emojis
                 emojiOptions += '<optgroup label="伺服器表情符號">';
                 EMOJIS.forEach(e => {
-                    emojiOptions += `<option value="${e.identifier}">${e.name}</option>`;
+                    emojiOptions += `<option value="${e.identifier}" data-url="${e.url}">${e.name}</option>`;
                 });
                 emojiOptions += '</optgroup>';
 
                 div.innerHTML = `
                 <div style="flex: 1;">
                     <select name="roles[${rowCount}][role_id]" required style="margin-bottom: 0.5rem;">${roleOptions}</select>
-                    <div style="display: flex; gap: 0.5rem;">
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
                         <input type="text" name="roles[${rowCount}][label]" placeholder="按鈕文字" required>
-                        <select name="roles[${rowCount}][emoji]" style="width: 120px;">${emojiOptions}</select>
+                        <select name="roles[${rowCount}][emoji]" style="width: 120px;" onchange="updateEmojiPreview(this)">${emojiOptions}</select>
+                        <img class="emoji-preview" src="" style="width: 32px; height: 32px; display: none; object-fit: contain;">
                     </div>
                 </div>
                 <button type="button" class="btn-remove" onclick="removeRow(${rowCount})">
@@ -275,6 +276,23 @@
 
                 container.appendChild(div);
                 rowCount++;
+            }
+
+            function updateEmojiPreview(selectElement) {
+                const selectedOption = selectElement.options[selectElement.selectedIndex];
+                const url = selectedOption.getAttribute('data-url');
+                const img = selectElement.nextElementSibling; // The img tag next to select
+
+                if (url) {
+                    img.src = url;
+                    img.style.display = 'block';
+                } else {
+                    // Start of standard emoji handling? 
+                    // Standard emojis don't have URLs easily available without a library.
+                    // For now, hide preview if no URL.
+                    img.style.display = 'none';
+                    img.src = '';
+                }
             }
 
             function removeRow(id) {
