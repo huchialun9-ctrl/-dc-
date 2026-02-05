@@ -408,11 +408,18 @@
                     try {
                         const promises = [];
                         for (const form of dirtyForms) {
-                            console.log('Submitting form:', form.action);
+                            const actionUrl = form.getAttribute('action');
+                            console.log('Submitting form:', actionUrl);
                             const formData = new FormData(form);
+                            // Fix for checkboxes: FormData only declares them if checked.
+                            // If unchecked, they are missing. Express needs them to be false/0 or handled.
+                            // Our form logic uses value="1". If unchecked, it's missing.
+                            // Backend: const { economy_enabled } = req.body; const enabled = economy_enabled ? 1 : 0;
+                            // This works fine for x-www-form-urlencoded as long as it handles missing key as false.
+
                             const params = new URLSearchParams(formData);
 
-                            promises.push(fetch(form.action, {
+                            promises.push(fetch(actionUrl, {
                                 method: 'POST',
                                 body: params,
                                 headers: {
