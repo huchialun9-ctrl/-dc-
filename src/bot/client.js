@@ -22,13 +22,6 @@ const { DisTube } = require('distube');
 const { YtDlpPlugin } = require('@distube/yt-dlp');
 
 const config = {
-    leaveOnStop: false,
-    leaveOnFinish: false,
-    leaveOnEmpty: true,
-    emitNewSongOnly: true,
-    emitAddSongWhenCreatingQueue: false,
-    emitAddListWhenCreatingQueue: false,
-    savePreviousSongs: true,
     plugins: [
         new YtDlpPlugin({
             update: false
