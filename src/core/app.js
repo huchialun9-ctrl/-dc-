@@ -35,7 +35,8 @@ app.use(limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '../web/public')));
+// Static files - Ensure absolute path resolution
+app.use(express.static(path.resolve(__dirname, '../web/public')));
 
 // Session
 app.use(session({

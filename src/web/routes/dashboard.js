@@ -30,20 +30,32 @@ router.get('/', (req, res) => {
 
 // 伺服器列表路由
 router.get('/servers', (req, res) => {
-    const userGuilds = req.user.guilds || [];
-    const client = require('../../bot/client');
+    // Session 檢查：如果使用者 Session 是舊的 (沒有 guilds)，強制重新登入以獲取資料
+    if (!req.user || !req.user.guilds) {
+        return res.redirect('/auth/discord');
+    }
 
-    const adminGuilds = userGuilds.filter(g => (g.permissions & 0x8) === 0x8 || (g.permissions & 0x20) === 0x20);
+    try {
+        const userGuilds = req.user.guilds || [];
+        const client = require('../../bot/client');
 
-    const processedGuilds = adminGuilds.map(guild => {
-        const botInGuild = client.guilds.cache.has(guild.id);
-        return {
-            ...guild,
-            hasBot: botInGuild
-        };
-    });
+        // 過濾出管理員權限的伺服器
+        const adminGuilds = userGuilds.filter(g => (g.permissions & 0x8) === 0x8 || (g.permissions & 0x20) === 0x20);
 
-    res.render('servers', { user: req.user, guilds: processedGuilds });
+        const processedGuilds = adminGuilds.map(guild => {
+            // 安全檢查：Bot Client 可能尚未準備好，使用 optional chaining
+            const botInGuild = client.guilds ? client.guilds.cache.has(guild.id) : false;
+            return {
+                ...guild,
+                hasBot: botInGuild
+            };
+        });
+
+        res.render('servers', { user: req.user, guilds: processedGuilds });
+    } catch (err) {
+        console.error('Servers Route Error:', err);
+        res.status(500).render('error', { error: '無法讀取伺服器列表，請稍後再試' });
+    }
 });
 
 router.get('/users', (req, res) => {
