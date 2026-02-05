@@ -7,7 +7,20 @@ module.exports = {
     async execute(interaction) {
         // The domain should be configured in .env, defaulting to localhost if not set
         // In production, this must be the actual public URL
-        const domain = process.env.DOMAIN || 'http://localhost:3000';
+        let domain = process.env.DOMAIN;
+
+        // Try to derive from REDIRECT_URI (e.g. https://myapp.railway.app/auth/discord/callback)
+        if (!domain && process.env.REDIRECT_URI) {
+            try {
+                const url = new URL(process.env.REDIRECT_URI);
+                domain = url.origin;
+            } catch (e) {
+                console.error('Invalid REDIRECT_URI:', process.env.REDIRECT_URI);
+            }
+        }
+
+        if (!domain) domain = 'http://localhost:3000';
+
         const dashboardUrl = `${domain}/dashboard/settings?guild_id=${interaction.guild.id}`;
 
         const embed = new EmbedBuilder()
