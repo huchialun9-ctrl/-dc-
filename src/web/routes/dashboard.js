@@ -13,9 +13,40 @@ router.get('/', (req, res) => {
     // Uptime from process
     const uptime = process.uptime();
 
-    // Guilds (from Bot - requires passing bot client or IPC, simplified for now)
-    // In V3, we might store guild states in DB or use a Service to fetch
-    const guilds = '1 (Synced)';
+    // 4. Chart Data (Last 7 Days)
+    const chartLabels = [];
+    const chartData = [];
+
+    // Generate last 7 days labels
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const dateStr = d.toISOString().split('T')[0]; // YYYY-MM-DD
+        chartLabels.push(dateStr);
+        chartData.push(0); // Init with 0
+    }
+
+    // Query DB
+    const dailyStats = db.prepare(`
+        SELECT date(created_at) as date, COUNT(*) as count 
+        FROM tickets 
+        WHERE created_at >= date('now', '-6 days')
+        GROUP BY date(created_at)
+    `).all();
+
+    // Fill data
+    dailyStats.forEach(stat => {
+        const index = chartLabels.indexOf(stat.date);
+        if (index !== -1) {
+            chartData[index] = stat.count;
+        }
+    });
+
+    // Format labels for display (MM/DD)
+    const displayLabels = chartLabels.map(dateStr => {
+        const [y, m, d] = dateStr.split('-');
+        return `${m}/${d}`;
+    });
 
     res.render('dashboard', {
         user: req.user,
@@ -24,6 +55,10 @@ router.get('/', (req, res) => {
             tickets: ticketCount,
             uptime: uptime,
             guilds: guilds
+        },
+        chart: {
+            labels: displayLabels,
+            data: chartData
         }
     });
 });

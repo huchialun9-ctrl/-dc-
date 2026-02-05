@@ -78,15 +78,23 @@
             </div>
         </div>
 
+        <!-- Data Injection -->
+        <script id="chart-data" type="application/json">
+            <%- JSON.stringify(chart) %>
+        </script>
+
         <script>
+            // Parse data from hidden script tag to avoid syntax errors and XSS issues
+            const chartData = JSON.parse(document.getElementById('chart-data').textContent);
+
             const ctx = document.getElementById('ticketChart').getContext('2d');
             const ticketChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['週一', '週二', '週三', '週四', '週五', '週六', '週日'],
+                    labels: chartData.labels,
                     datasets: [{
-                        label: '新增工單',
-                        data: [12, 19, 3, 5, 2, 3, 15],
+                        label: '新增工單 (New Tickets)',
+                        data: chartData.data,
                         backgroundColor: 'rgba(88, 101, 242, 0.2)',
                         borderColor: 'rgba(88, 101, 242, 1)',
                         borderWidth: 2,

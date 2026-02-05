@@ -87,10 +87,17 @@ module.exports = {
             return interaction.reply({ content: '❌ 你必須在語音頻道內才能使用此指令！', ephemeral: true });
         }
 
-        // Check ownership
+        // Check ownership or Admin permissions
         const channelData = db.prepare('SELECT * FROM voice_channels WHERE channel_id = ?').get(memberChannel.id);
-        if (!channelData || channelData.owner_id !== interaction.user.id) {
-            return interaction.reply({ content: '❌ 這不是你的專屬頻道，或此頻道不是由 VoiceMaster 創建的。', ephemeral: true });
+        const isOwner = channelData && channelData.owner_id === interaction.user.id;
+        const isAdmin = interaction.member.permissions.has(PermissionsBitField.Flags.Administrator);
+
+        if (!channelData) {
+            return interaction.reply({ content: '❌ 這不是由 VoiceMaster 創建的頻道。', ephemeral: true });
+        }
+
+        if (!isOwner && !isAdmin) {
+            return interaction.reply({ content: '❌ 你不是此頻道的擁有者，無法使用管理指令！', ephemeral: true });
         }
 
         if (sub === 'lock') {
