@@ -1,0 +1,33 @@
+<div id="cookie-consent" class="cookie-consent hidden">
+    <div class="cookie-content">
+        <i class="fa-solid fa-cookie-bite cookie-icon"></i>
+        <div class="cookie-text">
+            <h3>我們使用 Cookies</h3>
+            <p>為了提供最佳的網站體驗，我們使用 Cookies 來記憶您的設定與登入狀態。繼續使用本網站即代表您同意我們的隱私權政策。</p>
+        </div>
+        <button id="accept-cookies" class="btn-primary">我同意 (Accept)</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cookieBox = document.getElementById('cookie-consent');
+        const acceptBtn = document.getElementById('accept-cookies');
+
+        // Check if user already accepted
+        if (!localStorage.getItem('cookieConsent')) {
+            setTimeout(() => {
+                cookieBox.classList.remove('hidden');
+                cookieBox.classList.add('show');
+            }, 1000); // Delay for smooth entrance
+        }
+
+        acceptBtn.addEventListener('click', () => {
+            localStorage.setItem('cookieConsent', 'true');
+            cookieBox.classList.remove('show');
+            setTimeout(() => {
+                cookieBox.classList.add('hidden');
+            }, 500); // Wait for transition
+        });
+    });
+</script>

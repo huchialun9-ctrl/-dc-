@@ -827,3 +827,71 @@ footer {
   background: #3ca374;
   transform: scale(1.05);
 }
+
+/* Cookie Consent Banner */
+.cookie-consent {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  /* Right side usually less intrusive than center for this style */
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+  max-width: 400px;
+  transform: translateY(150%);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  flex-direction: column;
+}
+
+.cookie-consent.hidden {
+  display: none;
+  /* Actually remove from layout if hidden initially? Or utilize transform */
+}
+
+/* Override hidden for animation usage */
+.cookie-consent.hidden {
+  display: flex;
+  /* Keep layout for transform */
+  transform: translateY(150%);
+}
+
+.cookie-consent.show {
+  transform: translateY(0);
+}
+
+.cookie-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cookie-icon {
+  font-size: 2rem;
+  color: #D4A373;
+  /* Cookie color ish */
+}
+
+.cookie-text h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.cookie-text p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .cookie-consent {
+    left: 20px;
+    right: 20px;
+    max-width: none;
+  }
+}
