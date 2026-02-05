@@ -12,6 +12,9 @@ const db = require('../database/db');
 // Initialize App
 const app = express();
 
+// Trust Proxy (Required for Railway/Heroku behind load balancer)
+app.set('trust proxy', 1);
+
 // Security Middleware
 app.use(helmet({
     contentSecurityPolicy: {
