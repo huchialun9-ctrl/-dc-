@@ -17,6 +17,11 @@ router.get('/callback', passport.authenticate('discord', {
     res.redirect('/dashboard');
 });
 
+router.get('/invite', (req, res) => {
+    const inviteUrl = `https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=8&response_type=code&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}&integration_type=0&scope=identify+guilds.members.read+guilds.join+email+guilds+guilds.channels.read+bot+applications.commands+applications.entitlements+presences.write`;
+    res.redirect(inviteUrl);
+});
+
 router.get('/privacy', (req, res) => {
     res.render('privacy', { user: req.user });
 });
