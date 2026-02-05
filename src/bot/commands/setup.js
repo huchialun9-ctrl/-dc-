@@ -4,7 +4,7 @@ const db = require('../../database/db');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('setup')
-        .setDescription('Configure the bot settings')
+        .setDescription('快速設定系統 | Quick setup system')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
         .addChannelOption(option =>
             option.setName('transcripts')

@@ -3,10 +3,10 @@ const { SlashCommandBuilder, PermissionsBitField } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('clear')
-        .setDescription('批量刪除訊息 (僅限管理員)')
+        .setDescription('批量刪除訊息 (僅限管理員) | Bulk delete messages (Admin only)')
         .addIntegerOption(option =>
             option.setName('amount')
-                .setDescription('要刪除的訊息數量 (1-100)')
+                .setDescription('要刪除的訊息數量 (1-100) | Number of messages (1-100)')
                 .setMinValue(1)
                 .setMaxValue(100)
                 .setRequired(true)),
