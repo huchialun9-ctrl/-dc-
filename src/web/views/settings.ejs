@@ -174,8 +174,10 @@
 
         <!-- Data for JS -->
         <script>
+            // Data Injection from Server
             const ROLES = <% - JSON.stringify(roles || []) %>;
             const EMOJIS = <% - JSON.stringify(emojis || []) %>;
+            const MODE = '<%= mode %>';
             let rowCount = 0;
 
             function addRoleRow() {
@@ -228,8 +230,8 @@
                 if (row) row.remove();
             }
 
-            // Init with 1 row if mode is guild
-            if (<%= mode === 'guild' %>) {
+            // Init with 1 row if in guild mode
+            if (MODE === 'guild') {
                 addRoleRow();
             }
         </script>
