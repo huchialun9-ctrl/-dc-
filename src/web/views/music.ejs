@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音樂控制器 - <%= guild.name %>
+    </title>
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <link rel="stylesheet" href="/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .player-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .album-art {
+            width: 250px;
+            height: 250px;
+            border-radius: 16px;
+            object-fit: cover;
+            margin: 0 auto 1.5rem auto;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            background: #222;
+        }
+
+        .song-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .song-artist {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-control {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-control:hover {
+            background: white;
+            color: black;
+            transform: scale(1.1);
+        }
+
+        .btn-play {
+            width: 70px;
+            height: 70px;
+            font-size: 1.8rem;
+            background: var(--accent-color);
+        }
+
+        .btn-play:hover {
+            background: #ff91ff;
+            color: white;
+        }
+
+        .queue-list {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .queue-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.2s;
+            border-radius: 8px;
+        }
+
+        .queue-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .queue-item.active {
+            background: rgba(var(--accent-rgb), 0.1);
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="/dashboard/settings?guild_id=<%= guild.id %>" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i> 返回控制台
+    </a>
+
+    <div class="container">
+        <!-- Player -->
+        <div class="player-card">
+            <% if (currentSong) { %>
+                <img src="<%= currentSong.thumbnail %>" alt="Cover" class="album-art">
+                <div class="song-title">
+                    <%= currentSong.name %>
+                </div>
+                <div class="song-artist">Requested by <%= currentSong.user.username %>
+                </div>
+                <% } else { %>
+                    <div class="album-art"
+                        style="display: flex; align-items: center; justify-content: center; color: #555;">
+                        <i class="fa-solid fa-music" style="font-size: 4rem;"></i>
+                    </div>
+                    <div class="song-title">No music playing</div>
+                    <div class="song-artist">Join a voice channel and use /music play</div>
+                    <% } %>
+
+                        <div class="controls">
+                            <button class="btn-control" onclick="doAction('stop')" title="Stop"><i
+                                    class="fa-solid fa-stop"></i></button>
+                            <button class="btn-control btn-play"
+                                onclick="doAction('<%= isPlaying ? 'pause' : 'resume' %>')">
+                                <i class="fa-solid fa-<%= isPlaying ? 'pause' : 'play' %>"
+                                    style="margin-left: <%= isPlaying ? '0' : '5px' %>"></i>
+                            </button>
+                            <button class="btn-control" onclick="doAction('skip')" title="Skip"><i
+                                    class="fa-solid fa-forward"></i></button>
+                        </div>
+
+                        <div class="volume-slider">
+                            <input type="range" min="0" max="100" value="<%= volume %>"
+                                onchange="doAction('volume', this.value)" style="width: 100%;">
+                        </div>
+        </div>
+
+        <!-- Queue -->
+        <div class="queue-list">
+            <h3 style="margin-top: 0; margin-bottom: 1rem;"><i class="fa-solid fa-list-ol"></i> 播放清單</h3>
+            <% if (queue.length===0) { %>
+                <div style="color: var(--text-secondary); text-align: center;">Empty Queue</div>
+                <% } %>
+                    <% queue.forEach((song, index)=> { %>
+                        <div class="queue-item <%= index === 0 ? 'active' : '' %>">
+                            <div style="width: 30px; color: var(--text-secondary); font-weight: bold;">
+                                <%= index + 1 %>
+                            </div>
+                            <div style="flex: 1; overflow: hidden;">
+                                <div
+                                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500;">
+                                    <%= song.name %>
+                                </div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary);">
+                                    <%= song.formattedDuration %>
+                                </div>
+                            </div>
+                        </div>
+                        <% }); %>
+        </div>
+    </div>
+
+    <script>
+        function doAction(action, value = null) {
+            fetch('/dashboard/music/<%= guild.id %>/action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action, value })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload(); // Simple reload to update state
+                    } else {
+                        alert('Action failed: ' + (data.message || 'Unknown error'));
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>

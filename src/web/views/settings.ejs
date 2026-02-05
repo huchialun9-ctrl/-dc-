@@ -267,11 +267,27 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
+                        <!-- Module 8: Music System -->
+                        <div class="settings-card" style="grid-column: 1 / -1; border-top: 4px solid #F39C12;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3 style="margin: 0; color: white;"><i class="fa-solid fa-music"
+                                            style="color: #F39C12; margin-right: 10px;"></i> 音樂播放器 (Music Player)</h3>
+                                    <div style="color: var(--text-secondary); margin-top: 5px;">
+                                        直接在網頁上控制機器人的音樂播放。
+                                    </div>
+                                </div>
+                                <a href="/dashboard/music/<%= guild.id %>" class="btn-secondary"
+                                    style="background: #F39C12; color: #000; font-weight: bold;">
+                                    <i class="fa-solid fa-play"></i> 開啟播放控制器
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <% } %>
         </div>
-        <% } %>
-            </div>
 </body>
 
 </html>

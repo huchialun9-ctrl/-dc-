@@ -396,4 +396,72 @@ router.get('/transcripts/:guild_id/:ticket_id', async (req, res) => {
     }
 });
 
+// Music Controller Route
+router.get('/music/:guild_id', async (req, res) => {
+    const guildId = req.params.guild_id;
+    const client = require('../../bot/client');
+
+    try {
+        const guild = client.guilds.cache.get(guildId);
+        if (!guild) return res.status(404).send('Guild not found');
+
+        const queue = client.distube.getQueue(guildId);
+        const songs = queue ? queue.songs : [];
+        const isPlaying = queue ? queue.playing : false;
+        const volume = queue ? queue.volume : 50;
+
+        // Current Song
+        const currentSong = songs.length > 0 ? songs[0] : null;
+
+        res.render('music', {
+            guild: guild,
+            queue: songs,
+            currentSong: currentSong,
+            isPlaying: isPlaying,
+            volume: volume
+        });
+    } catch (error) {
+        console.error('Music Page Error:', error);
+        res.status(500).send('Error');
+    }
+});
+
+// Music Actions API
+router.post('/music/:guild_id/action', async (req, res) => {
+    const guildId = req.params.guild_id;
+    const { action, value } = req.body; // action: play, pause, resume, skip, stop, volume
+    const client = require('../../bot/client');
+
+    try {
+        const queue = client.distube.getQueue(guildId);
+
+        if (!queue && action !== 'play') { // Play might work without queue if URL provided (not impl here yet)
+            return res.json({ success: false, message: 'No queue active' });
+        }
+
+        switch (action) {
+            case 'pause':
+                if (queue) queue.pause();
+                break;
+            case 'resume':
+                if (queue) queue.resume();
+                break;
+            case 'skip':
+                if (queue) await queue.skip().catch(() => { });
+                break;
+            case 'stop':
+                if (queue) queue.stop();
+                break;
+            case 'volume':
+                if (queue) queue.setVolume(parseInt(value));
+                break;
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Music Action Error:', error);
+        res.json({ success: false, message: error.message });
+    }
+});
+
 module.exports = router;
