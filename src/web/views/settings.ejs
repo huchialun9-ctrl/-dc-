@@ -323,31 +323,23 @@
         <div id="unsaved-bar" class="unsaved-bar">
             <span>小心！你有未儲存的變更 (You have unsaved changes)</span>
             <div style="display: flex; gap: 10px;">
-                <button onclick="resetChanges()" class="btn-reset">重置 (Reset)</button>
-                <button onclick="saveChanges()" class="btn-save">儲存變更 (Save)</button>
+                <button id="btn-reset" type="button" class="btn-reset">重置 (Reset)</button>
+                <button id="btn-save" type="button" class="btn-save">儲存變更 (Save)</button>
             </div>
         </div>
 
         <script>
-            let dirtyForms = new Set();
-            const bar = document.getElementById('unsaved-bar');
 
-            // Initialize tracking
-            document.querySelectorAll('form').forEach(form => {
-                form.querySelectorAll('input, textarea, select').forEach(input => {
-                    // Ignore hidden inputs
-                    if (input.type === 'hidden') return;
+            // Add class for selection if logic needs it, but we use event delegation mostly
+            // Store initial value
+            if (input.type === 'checkbox' || input.type === 'radio') {
+                input.dataset.initial = input.checked;
+            } else {
+                input.dataset.initial = input.value;
+            }
 
-                    // Add class for selection if logic needs it, but we use event delegation mostly
-                    // Store initial value
-                    if (input.type === 'checkbox' || input.type === 'radio') {
-                        input.dataset.initial = input.checked;
-                    } else {
-                        input.dataset.initial = input.value;
-                    }
-
-                    input.addEventListener('change', () => checkDirty(input, form));
-                    input.addEventListener('input', () => checkDirty(input, form));
+            input.addEventListener('change', () => checkDirty(input, form));
+            input.addEventListener('input', () => checkDirty(input, form));
                 });
             });
 
