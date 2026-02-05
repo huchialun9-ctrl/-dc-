@@ -397,17 +397,24 @@
             }
 
             async function saveChanges() {
+                console.log('Save button clicked');
                 const btn = document.querySelector('.btn-save');
                 const originalText = btn.innerText;
+
+                if (dirtyForms.size === 0) {
+                    console.warn('No dirty forms found');
+                    alert('沒有偵測到變更 (No changes detected)');
+                    return;
+                }
+
                 btn.innerText = '儲存中... (Saving...)';
                 btn.disabled = true;
 
                 try {
                     const promises = [];
                     for (const form of dirtyForms) {
+                        console.log('Submitting form:', form.action);
                         const formData = new FormData(form);
-                        // Convert FormData to URLSearchParams for x-www-form-urlencoded
-                        // Express defaults to parsing this for standard forms unless multer is used
                         const params = new URLSearchParams(formData);
 
                         promises.push(fetch(form.action, {
@@ -416,10 +423,17 @@
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded',
                             }
+                        }).then(async res => {
+                            if (!res.ok) {
+                                const text = await res.text();
+                                throw new Error(`Server returned ${res.status}: ${text}`);
+                            }
+                            return res;
                         }));
                     }
 
                     await Promise.all(promises);
+                    console.log('All promises resolved');
 
                     // Success feedback
                     btn.innerText = '已儲存! (Saved!)';
@@ -433,7 +447,7 @@
                     console.error('Save failed:', error);
                     btn.innerText = '失敗 (Failed)';
                     btn.style.background = '#f04747';
-                    alert('儲存失敗，請檢查網路連線或重試。');
+                    alert('儲存失敗：' + error.message);
 
                     setTimeout(() => {
                         btn.innerText = originalText;
