@@ -147,9 +147,9 @@
                                         </div>
                                     </div>
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" name="economy_enabled" value="1"
-                                            <%=settings.economy_enabled ? 'checked' : '' %>
-                                        onchange="this.form.submit()">
+                                        <input class="form-check-input detect-change" type="checkbox"
+                                            name="economy_enabled" value="1" <%=settings.economy_enabled ? 'checked'
+                                            : '' %>>
                                     </div>
                                 </div>
                             </form>
@@ -317,6 +317,95 @@
                     </div>
                     <% } %>
         </div>
+        </div>
+
+        <!-- Unsaved Changes Floating Bar -->
+        <div id="unsaved-bar" class="unsaved-bar">
+            <span>小心！你有未儲存的變更 (You have unsaved changes)</span>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="resetChanges()" class="btn-reset">重置 (Reset)</button>
+                <button onclick="saveChanges()" class="btn-save">儲存變更 (Save)</button>
+            </div>
+        </div>
+
+        <script>
+            let dirtyForms = new Set();
+            const bar = document.getElementById('unsaved-bar');
+
+            // Initialize tracking
+            document.querySelectorAll('form').forEach(form => {
+                form.querySelectorAll('input, textarea, select').forEach(input => {
+                    // Ignore hidden inputs
+                    if (input.type === 'hidden') return;
+
+                    // Add class for selection if logic needs it, but we use event delegation mostly
+                    // Store initial value
+                    if (input.type === 'checkbox' || input.type === 'radio') {
+                        input.dataset.initial = input.checked;
+                    } else {
+                        input.dataset.initial = input.value;
+                    }
+
+                    input.addEventListener('change', () => checkDirty(input, form));
+                    input.addEventListener('input', () => checkDirty(input, form));
+                });
+            });
+
+            function checkDirty(input, form) {
+                let isDirty = false;
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    isDirty = input.checked.toString() !== input.dataset.initial;
+                } else {
+                    isDirty = input.value !== input.dataset.initial;
+                }
+
+                if (isDirty) {
+                    dirtyForms.add(form);
+                    form.classList.add('is-dirty');
+                } else {
+                    // Check if form has other dirty inputs
+                    // Simplified: Once dirty, stays marked until save/reset in this session usually, 
+                    // but let's try to be smart?
+                    // Re-checking entire form is expensive on every input? No, it's fine.
+                    let formActuallyDirty = false;
+                    form.querySelectorAll('input, textarea, select').forEach(el => {
+                        if (el.type === 'hidden') return;
+                        let d = false;
+                        if (el.type === 'checkbox' || el.type === 'radio') {
+                            d = el.checked.toString() !== el.dataset.initial;
+                        } else {
+                            d = el.value !== el.dataset.initial;
+                        }
+                        if (d) formActuallyDirty = true;
+                    });
+
+                    if (!formActuallyDirty) {
+                        dirtyForms.delete(form);
+                        form.classList.remove('is-dirty');
+                    }
+                }
+
+                if (dirtyForms.size > 0) {
+                    bar.classList.add('visible');
+                } else {
+                    bar.classList.remove('visible');
+                }
+            }
+
+            function resetChanges() {
+                location.reload();
+            }
+
+            function saveChanges() {
+                // Submit the first dirty form found
+                // Note: If multiple forms are dirty, this simple logic handles only one.
+                // Ideally we should merge or prevent multi-form edits, but for now:
+                if (dirtyForms.size > 0) {
+                    const form = dirtyForms.values().next().value;
+                    form.submit();
+                }
+            }
+        </script>
 </body>
 
 </html>

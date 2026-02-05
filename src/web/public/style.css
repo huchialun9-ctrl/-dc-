@@ -761,3 +761,69 @@ footer {
     padding: 1.5rem;
   }
 }
+
+/* Unsaved Changes Bar */
+.unsaved-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(150%);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  color: #fff;
+  width: 90%;
+  max-width: 800px;
+  z-index: 1000;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.unsaved-bar.visible {
+  transform: translateX(-50%) translateY(0);
+}
+
+.unsaved-bar span {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.btn-reset {
+  background: transparent;
+  color: #fff;
+  /* Button text always white on dark bar */
+  border: none;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.btn-reset:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.btn-save {
+  background: #43b581;
+  /* Discord Green */
+  color: #fff;
+  /* Button text always white on dark bar */
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.btn-save:hover {
+  background: #3ca374;
+  transform: scale(1.05);
+}
