@@ -48,6 +48,8 @@ router.get('/', (req, res) => {
         return `${m}/${d}`;
     });
 
+    const guilds = '1 (Synced)'; // Restore missing variable
+
     res.render('dashboard', {
         user: req.user,
         stats: {
