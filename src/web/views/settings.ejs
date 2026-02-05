@@ -89,12 +89,10 @@
                                 <h3 style="margin:0;"><i class="fa-solid fa-bullhorn"
                                         style="color: var(--accent-color); margin-right: 10px;"></i> 發送公告</h3>
                             </div>
-
                             <form action="/dashboard/settings" method="POST"
                                 style="flex: 1; display: flex; flex-direction: column;">
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
                                 <input type="hidden" name="action" value="send_announcement">
-
                                 <div class="form-group">
                                     <label>選擇頻道</label>
                                     <select name="channel_id" required>
@@ -104,90 +102,54 @@
                                             <% }); %>
                                     </select>
                                 </div>
-
                                 <div class="form-group">
                                     <label>公告標題</label>
                                     <input type="text" name="title" placeholder="例如：重大更新通知" required>
                                 </div>
-
                                 <div class="form-group" style="flex: 1;">
                                     <label>公告內容</label>
                                     <textarea name="description" rows="5"
-                                        style="width:100%; height: 100%; min-height: 120px; padding:1rem; background:rgba(0,0,0,0.3); border:1px solid var(--border-color); border-radius:10px; color:#fff;"
+                                        style="width:100%; height: 100%; min-height: 120px;"
                                         placeholder="支援 Markdown 語法..." required></textarea>
                                 </div>
-
                                 <div class="form-group">
                                     <label>顏色 (Hex)</label>
                                     <div style="display: flex; gap: 10px;">
                                         <input type="color" name="color" value="#5865F2"
-                                            style="height: 50px; width: 60px; padding: 0.5rem; flex: none;">
+                                            style="height: 42px; width: 60px; padding: 0.2rem; border:none; background:none;">
                                         <input type="text" value="#5865F2" disabled style="flex: 1; opacity: 0.7;">
                                     </div>
                                 </div>
-
                                 <button type="submit" class="btn-submit" style="width:100%; margin-top: auto;">
                                     <i class="fa-solid fa-paper-plane"></i> 發送訊息
                                 </button>
                             </form>
                         </div>
 
-                        <!-- Module 9: Economy System -->
-                        <div class="settings-card" style="grid-column: 1 / -1; border-top: 4px solid #FFD700;">
-                            <form action="/dashboard/settings" method="POST" class="track-changes">
-                                <input type="hidden" name="action" value="update_economy">
-                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                                <div
-                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                                    <div>
-                                        <h3 style="margin: 0; color: var(--text-primary);"><i class="fa-solid fa-coins"
-                                                style="color: #FFD700; margin-right: 10px;"></i> 經濟系統 (Economy)</h3>
-                                        <div style="color: var(--text-secondary); margin-top: 5px;">
-                                            啟用每日獎勵與錢包功能。
-                                        </div>
-                                    </div>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input detect-change" type="checkbox"
-                                            name="economy_enabled" value="1" <%=settings.economy_enabled ? 'checked'
-                                            : '' %>>
-                                    </div>
-                                </div>
-                            </form>
-                            <div>
-                                <a href="/dashboard/leaderboard/<%= guild.id %>/economy" class="btn-secondary"
-                                    style="width: 100%; text-align: center; display: block; background: #FFD700; color: #000; font-weight: bold; border: none;">
-                                    <i class="fa-solid fa-trophy"></i> 查看富豪榜 (Leaderboard)
-                                </a>
-                            </div>
-                        </div>
-
                         <!-- Module 3: Welcome System -->
-                        <div class="settings-card" style="display: block; border-top: 44px solid #00ff9d;">
+                        <div class="settings-card" style="border-top: 4px solid #00ff9d;">
                             <div
                                 style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                                 <h3 style="margin:0;"><i class="fa-solid fa-door-open"
-                                        style="color: #00ff9d; margin-right: 10px;"></i> 歡迎系統
-                                </h3>
+                                        style="color: #00ff9d; margin-right: 10px;"></i> 歡迎系統</h3>
                             </div>
-
                             <form action="/dashboard/settings" method="POST" class="track-changes"
-                                style="height: calc(100% - 60px); display: flex; flex-direction: column;">
+                                style="height: 100%; display: flex; flex-direction: column;">
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
                                 <input type="hidden" name="action" value="update_welcome">
-
                                 <div class="form-group">
                                     <div
-                                        style="background: rgba(0,255,157,0.1); padding: 1rem; border-radius: 8px; border: 1px solid rgba(0,255,157,0.2);">
-                                        <label style="display:flex; align-items:center; cursor:pointer; margin: 0;">
+                                        style="background: rgba(0,255,157,0.05); padding: 1rem; border-radius: 8px; border: 1px solid rgba(0,255,157,0.1);">
+                                        <label
+                                            style="display:flex; align-items:center; cursor:pointer; margin: 0; color: #00ff9d;">
                                             <input type="checkbox" name="welcome_enabled" value="1" <%=typeof settings
                                                 !=='undefined' && settings && settings.welcome_enabled ? 'checked' : ''
-                                                %>
-                                            style="width:20px; height: 20px; margin-right:10px;">
-                                            <span style="font-weight: bold; color: #00ff9d;">啟用歡迎訊息功能</span>
+                                                %> style="width:20px; height: 20px; margin-right:10px; accent-color:
+                                            #00ff9d;">
+                                            啟用歡迎訊息功能
                                         </label>
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <label>發送頻道</label>
                                     <select name="welcome_channel_id">
@@ -200,115 +162,123 @@
                                             <% }); %>
                                     </select>
                                 </div>
-
                                 <div class="form-group" style="flex: 1;">
                                     <label>歡迎訊息內容</label>
                                     <textarea name="welcome_message" rows="6"
-                                        style="width:100%; height: 100%; min-height: 120px; padding:1rem; background:rgba(0,0,0,0.3); border:1px solid var(--border-color); border-radius:10px; color:#fff;"
-                                        placeholder="Welcome {user} to {server}! (支援變數: {user}, {server}, {memberCount})"><%= typeof settings !== 'undefined' && settings && settings.welcome_message ? settings.welcome_message : '' %></textarea>
-                                    <small style="color: var(--text-secondary); display: block; margin-top: 5px;">
-                                        可用變數: <code>{user}</code> (用戶), <code>{server}</code> (伺服器名),
-                                        <code>{memberCount}</code> (人數)
-                                    </small>
+                                        style="width:100%; height: 100%; min-height: 150px;"
+                                        placeholder="Welcome {user} to {server}!"><%= typeof settings !== 'undefined' && settings && settings.welcome_message ? settings.welcome_message : '' %></textarea>
                                 </div>
-
-                                <!-- Removed inline submit button in favor of global save bar -->
-
                             </form>
                         </div>
 
-                    </div>
-
-                    <!-- Module 4: Custom Commands -->
-                    <div class="settings-card" style="grid-column: 1 / -1; border-top: 4px solid #5865F2;">
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                            <h3 style="margin: 0;"><i class="fa-solid fa-robot"
-                                    style="color: #5865F2; margin-right: 10px;"></i> 自訂指令 (Custom Commands)</h3>
-                        </div>
-
-                        <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
-                            <!-- Left: Add New Command -->
-                            <div style="flex: 1; min-width: 300px;">
-                                <h4 style="margin-bottom: 1rem; color: var(--text-secondary);">新增指令</h4>
-                                <form action="/dashboard/settings" method="POST"
-                                    style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
-                                    <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                                    <input type="hidden" name="action" value="add_command">
-
-                                    <div class="form-group">
-                                        <label>觸發詞 (Trigger)</label>
-                                        <input type="text" name="trigger" placeholder="e.g. !help" required
-                                            style="font-family: monospace;">
-                                        <small style="color: var(--text-secondary);">當用戶輸入此詞時觸發</small>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>機器人回應 (Response)</label>
-                                        <textarea name="response" rows="3" placeholder="你好！有什麼我可以幫你的嗎？"
-                                            required></textarea>
-                                    </div>
-
-                                    <button type="submit" class="btn-submit" style="width: 100%;">
-                                        <i class="fa-solid fa-plus"></i> 新增指令
-                                    </button>
-                                </form>
-                            </div>
-
-                            <!-- Right: Existing Commands List -->
-                            <div style="flex: 1; min-width: 300px;">
-                                <h4 style="margin-bottom: 1rem; color: var(--text-secondary);">現有指令 (<%=
-                                        customCommands.length %>)</h4>
+                        <!-- Module 9: Economy System -->
+                        <div class="settings-card" style="border-top: 4px solid #FFD700;">
+                            <form action="/dashboard/settings" method="POST" class="track-changes">
+                                <input type="hidden" name="action" value="update_economy">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
                                 <div
-                                    style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.8rem;">
-                                    <% if (customCommands.length===0) { %>
-                                        <div
-                                            style="text-align: center; padding: 2rem; color: var(--text-secondary); background: rgba(0,0,0,0.2); border-radius: 12px;">
-                                            尚未設定任何指令
-                                        </div>
-                                        <% } else { %>
-                                            <% customCommands.forEach(cmd=> { %>
-                                                <div
-                                                    style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
-                                                    <div style="overflow: hidden;">
-                                                        <div
-                                                            style="font-weight: bold; color: var(--accent-color); margin-bottom: 4px;">
-                                                            <%= cmd.trigger %>
-                                                        </div>
-                                                        <div
-                                                            style="font-size: 0.9rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                                            <%= cmd.response %>
-                                                        </div>
-                                                    </div>
-                                                    <form action="/dashboard/settings" method="POST" style="margin: 0;">
-                                                        <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                                                        <input type="hidden" name="action" value="delete_command">
-                                                        <input type="hidden" name="command_id" value="<%= cmd.id %>">
-                                                        <button type="submit" class="btn-remove" title="刪除指令">
-                                                            <i class="fa-solid fa-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                                <% }); %>
-                                                    <% } %>
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                    <div>
+                                        <h3 style="margin: 0; color: var(--text-primary);"><i class="fa-solid fa-coins"
+                                                style="color: #FFD700; margin-right: 10px;"></i> 經濟系統</h3>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input detect-change" type="checkbox"
+                                            name="economy_enabled" value="1" <%=settings.economy_enabled ? 'checked'
+                                            : '' %> style="width: 40px; height: 20px; accent-color: #FFD700;">
+                                    </div>
                                 </div>
-                            </div>
+                                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">啟用後，成員可使用簽到、錢包與商店功能。</p>
+                            </form>
+                            <a href="/dashboard/leaderboard/<%= guild.id %>/economy" class="btn-secondary"
+                                style="width: 100%; text-align: center; display: block; background: rgba(255, 215, 0, 0.1); color: #FFD700; border: 1px solid #FFD700; padding: 0.8rem; border-radius: 8px; transition: all 0.2s;">
+                                <i class="fa-solid fa-trophy"></i> 查看富豪榜
+                            </a>
                         </div>
 
                         <!-- Module 8: Music System -->
-                        <div class="settings-card" style="grid-column: 1 / -1; border-top: 4px solid #F39C12;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="settings-card" style="border-top: 4px solid #F39C12;">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                                 <div>
                                     <h3 style="margin: 0; color: var(--text-primary);"><i class="fa-solid fa-music"
-                                            style="color: #F39C12; margin-right: 10px;"></i> 音樂播放器 (Music Player)</h3>
-                                    <div style="color: var(--text-secondary); margin-top: 5px;">
-                                        直接在網頁上控制機器人的音樂播放。
+                                            style="color: #F39C12; margin-right: 10px;"></i> 音樂播放器</h3>
+                                </div>
+                            </div>
+                            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">在網頁版儀表板直接控制機器人播放音樂、暫停或切歌。
+                            </p>
+                            <a href="/dashboard/music/<%= guild.id %>" class="btn-secondary"
+                                style="width: 100%; text-align: center; display: block; background: rgba(243, 156, 18, 0.1); color: #F39C12; border: 1px solid #F39C12; padding: 0.8rem; border-radius: 8px; transition: all 0.2s;">
+                                <i class="fa-solid fa-play"></i> 開啟播放控制器
+                            </a>
+                        </div>
+
+                        <!-- Module 4: Custom Commands (Full Width) -->
+                        <div class="settings-card full-width" style="border-top: 4px solid #5865F2;">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                <h3 style="margin: 0;"><i class="fa-solid fa-robot"
+                                        style="color: #5865F2; margin-right: 10px;"></i> 自訂指令 (Custom Commands)</h3>
+                            </div>
+                            <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                                <div style="flex: 1; min-width: 300px;">
+                                    <h4 style="margin-bottom: 1rem; color: var(--text-secondary);">新增指令</h4>
+                                    <form action="/dashboard/settings" method="POST"
+                                        style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                                        <input type="hidden" name="guild_id" value="<%= guild.id %>">
+                                        <input type="hidden" name="action" value="add_command">
+                                        <div class="form-group">
+                                            <label>觸發詞 (Trigger)</label>
+                                            <input type="text" name="trigger" placeholder="e.g. !help" required
+                                                style="font-family: monospace;">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>機器人回應 (Response)</label>
+                                            <textarea name="response" rows="3" required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn-submit" style="width: 100%;">
+                                            <i class="fa-solid fa-plus"></i> 新增指令
+                                        </button>
+                                    </form>
+                                </div>
+                                <div style="flex: 1; min-width: 300px;">
+                                    <h4 style="margin-bottom: 1rem; color: var(--text-secondary);">現有指令 (<%=
+                                            customCommands.length %>)</h4>
+                                    <div
+                                        style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.8rem;">
+                                        <% if (customCommands.length===0) { %>
+                                            <div
+                                                style="text-align: center; padding: 2rem; color: var(--text-secondary); background: rgba(0,0,0,0.2); border-radius: 12px;">
+                                                尚未設定任何指令</div>
+                                            <% } else { %>
+                                                <% customCommands.forEach(cmd=> { %>
+                                                    <div
+                                                        style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                                                        <div style="overflow: hidden;">
+                                                            <div
+                                                                style="font-weight: bold; color: var(--accent-color); margin-bottom: 4px;">
+                                                                <%= cmd.trigger %>
+                                                            </div>
+                                                            <div
+                                                                style="font-size: 0.9rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                                <%= cmd.response %>
+                                                            </div>
+                                                        </div>
+                                                        <form action="/dashboard/settings" method="POST"
+                                                            style="margin: 0;">
+                                                            <input type="hidden" name="guild_id"
+                                                                value="<%= guild.id %>">
+                                                            <input type="hidden" name="action" value="delete_command">
+                                                            <input type="hidden" name="command_id"
+                                                                value="<%= cmd.id %>">
+                                                            <button type="submit" class="btn-remove"><i
+                                                                    class="fa-solid fa-trash"></i></button>
+                                                        </form>
+                                                    </div>
+                                                    <% }); %>
+                                                        <% } %>
                                     </div>
                                 </div>
-                                <a href="/dashboard/music/<%= guild.id %>" class="btn-secondary"
-                                    style="background: #F39C12; color: #000; font-weight: bold;">
-                                    <i class="fa-solid fa-play"></i> 開啟播放控制器
-                                </a>
                             </div>
                         </div>
 

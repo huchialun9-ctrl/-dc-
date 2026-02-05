@@ -657,6 +657,21 @@ nav a:hover {
   font-family: var(--font-heading);
 }
 
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  /* Fill vs Fit */
+  gap: 1rem;
+  /* Tighter gap */
+  align-items: start;
+  /* Prevent cards stretching to max height of row */
+}
+
+/* Make full-width cards for important sections if needed */
+.settings-card.full-width {
+  grid-column: 1 / -1;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
