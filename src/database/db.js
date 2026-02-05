@@ -38,4 +38,18 @@ db.prepare(`CREATE TABLE IF NOT EXISTS custom_commands (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )`).run();
 
+// 6. Levels Table
+db.prepare("CREATE TABLE IF NOT EXISTS levels (user_id TEXT, guild_id TEXT, xp INTEGER DEFAULT 0, level INTEGER DEFAULT 0, last_xp_time DATETIME, PRIMARY KEY (user_id, guild_id))").run();
+
+// 7. Ticket Transcripts
+db.prepare("CREATE TABLE IF NOT EXISTS ticket_transcripts (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_name TEXT, guild_id TEXT, user_id TEXT, html_content TEXT, closed_at DATETIME DEFAULT CURRENT_TIMESTAMP)").run();
+
+// --- Migrations ---
+const safeAlter = (stmt) => {
+    try { db.prepare(stmt).run(); } catch (e) { /* Ignore if column exists */ }
+};
+
+safeAlter("ALTER TABLE settings ADD COLUMN ticket_categories TEXT");
+safeAlter("ALTER TABLE settings ADD COLUMN leveling_enabled INTEGER DEFAULT 0");
+
 module.exports = db;
