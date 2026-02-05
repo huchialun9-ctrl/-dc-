@@ -130,19 +130,7 @@ router.get('/settings', async (req, res) => {
             .filter(c => c.type === 0) // 0 = GUILD_TEXT
             .map(c => ({ id: c.id, name: c.name }));
 
-        const roles = guild.roles.cache
-            .filter(r => !r.managed && r.name !== '@everyone')
-            .sort((a, b) => b.position - a.position)
-            .map(r => ({ id: r.id, name: r.name, color: r.hexColor }));
 
-        // Force fetch emojis to ensure we have custom ones
-        await guild.emojis.fetch();
-        const emojis = guild.emojis.cache.map(e => ({
-            id: e.id,
-            name: e.name,
-            url: e.url,
-            identifier: `<${e.animated ? 'a' : ''}:${e.name}:${e.id}>`
-        }));
 
         // Fetch Guild Settings from DB
         const settings = db.prepare('SELECT * FROM settings WHERE guild_id = ?').get(guildId);
@@ -152,8 +140,7 @@ router.get('/settings', async (req, res) => {
             mode: 'guild',
             guild: guild,
             channels: channels,
-            roles: roles,
-            emojis: emojis,
+            channels: channels,
             settings: settings || {} // Pass empty obj if null
         });
     }
@@ -181,47 +168,7 @@ router.post('/settings', async (req, res) => {
             await channel.send({ embeds: [embed] });
         }
 
-        else if (action === 'create_role_claim') {
-            const channel = client.channels.cache.get(channel_id);
-            if (!channel) throw new Error('Channel not found');
 
-            const rolesData = req.body.roles || [];
-            if (rolesData.length === 0) throw new Error('請至少新增一個身分組按鈕');
-
-            // Construct Buttons
-            const components = [];
-            let currentRow = new ActionRowBuilder();
-
-            rolesData.forEach((item, index) => {
-                // Determine Emoji (if custom string format <a:name:id>, pass id? No, ButtonBuilder takes full string or unicode)
-                // Actually discord.js ButtonBuilder.setEmoji() takes an emoji ID or unicode string.
-
-                const button = new ButtonBuilder()
-                    .setCustomId(`role_claim_${item.role_id}`)
-                    .setLabel(item.label)
-                    .setStyle(ButtonStyle.Success);
-
-                if (item.emoji) {
-                    button.setEmoji(item.emoji);
-                }
-
-                currentRow.addComponents(button);
-
-                // Max 5 buttons per row
-                if ((index + 1) % 5 === 0 || index === rolesData.length - 1) {
-                    components.push(currentRow);
-                    currentRow = new ActionRowBuilder();
-                }
-            });
-
-            const embed = new EmbedBuilder()
-                .setTitle(req.body.embed_title || '身分組領取')
-                .setDescription(req.body.description || '點擊下方按鈕以領取/移除對應身分組。')
-                .setColor('#43b581')
-                .setFooter({ text: `共 ${rolesData.length} 個身分組可供領取` });
-
-            await channel.send({ embeds: [embed], components: components });
-        }
 
         else if (action === 'update_welcome') {
             const { welcome_enabled, welcome_channel_id, welcome_message } = req.body;
