@@ -27,6 +27,24 @@
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
+[data-theme="light"] {
+  --bg-primary: #f2f3f5;
+  --bg-secondary: #ffffff;
+  --bg-sidebar: rgba(255, 255, 255, 0.95);
+  --bg-card: rgba(255, 255, 255, 0.8);
+  --bg-hover: rgba(0, 0, 0, 0.05);
+
+  --text-primary: #060607;
+  --text-secondary: #4f5660;
+  --text-muted: #747f8d;
+
+  --border-color: rgba(0, 0, 0, 0.08);
+  --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -308,7 +326,7 @@ input,
 select {
   width: 100%;
   padding: 1rem;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 10px;
   color: var(--text-primary);

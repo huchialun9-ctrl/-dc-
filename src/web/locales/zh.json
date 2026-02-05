@@ -1,0 +1,13 @@
+{
+    "sidebar": {
+        "overview": "總覽",
+        "invite": "邀請機器人",
+        "servers": "伺服器列表",
+        "users": "使用者管理",
+        "logs": "系統日誌",
+        "settings": "全域設定",
+        "docs": "使用文檔",
+        "developer": "開發者",
+        "logout": "登出"
+    }
+}

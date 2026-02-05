@@ -42,6 +42,7 @@ app.use(cookieParser());
 const publicPath = path.join(__dirname, '../web/public');
 console.log('Serving static files from:', publicPath);
 app.use(express.static(publicPath));
+app.use(require('../web/middleware/i18nMiddleware'));
 
 // Session
 app.use(session({

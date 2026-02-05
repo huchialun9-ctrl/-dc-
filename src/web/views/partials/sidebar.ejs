@@ -4,32 +4,110 @@
     </div>
     <nav class="sidebar-nav">
         <a href="/dashboard" class="<%= path === '/dashboard' ? 'active' : '' %>">
-            <i class="fa-solid fa-chart-pie"></i> 總覽
+            <i class="fa-solid fa-chart-pie"></i>
+            <%= t('sidebar.overview') %>
         </a>
         <a href="/invite" target="_blank">
-            <i class="fa-solid fa-plus"></i> 邀請機器人
+            <i class="fa-solid fa-plus"></i>
+            <%= t('sidebar.invite') %>
         </a>
         <a href="/dashboard/servers" class="<%= path === '/dashboard/servers' ? 'active' : '' %>">
-            <i class="fa-solid fa-server"></i> 伺服器列表
+            <i class="fa-solid fa-server"></i>
+            <%= t('sidebar.servers') %>
         </a>
         <a href="/dashboard/users" class="<%= path === '/dashboard/users' ? 'active' : '' %>">
-            <i class="fa-solid fa-users"></i> 使用者管理
+            <i class="fa-solid fa-users"></i>
+            <%= t('sidebar.users') %>
         </a>
         <a href="/dashboard/logs" class="<%= path === '/dashboard/logs' ? 'active' : '' %>">
-            <i class="fa-solid fa-list-ul"></i> 系統日誌
+            <i class="fa-solid fa-list-ul"></i>
+            <%= t('sidebar.logs') %>
         </a>
         <a href="/dashboard/settings" class="<%= path === '/dashboard/settings' ? 'active' : '' %>">
-            <i class="fa-solid fa-gear"></i> 全域設定
+            <i class="fa-solid fa-gear"></i>
+            <%= t('sidebar.settings') %>
         </a>
         <a href="/docs" class="<%= path === '/docs' ? 'active' : '' %>">
-            <i class="fa-solid fa-book"></i> 使用文檔
+            <i class="fa-solid fa-book"></i>
+            <%= t('sidebar.docs') %>
         </a>
-        <a href="https://github.com/huchialun9-ctrl/-dc-.git" target="_blank">
-            <i class="fa-brands fa-github"></i> 專案原始碼
+        <a href="https://github.com/huchialun9-ctrl" target="_blank">
+            <i class="fa-brands fa-github"></i>
+            <%= t('sidebar.developer') %>: huchialun9-ctrl
         </a>
+
         <div style="flex-grow: 1;"></div>
+
+        <!-- Controls -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; padding: 0 0.5rem;">
+            <button onclick="toggleTheme()" class="icon-btn" title="切換主題 (Toggle Theme)">
+                <i class="fa-solid fa-moon" id="theme-icon"></i>
+            </button>
+            <button onclick="toggleLang()" class="icon-btn" title="切換語言 (Switch Language)">
+                <i class="fa-solid fa-language"></i>
+            </button>
+        </div>
+
         <a href="/auth/logout" style="color: var(--danger-color);">
-            <i class="fa-solid fa-right-from-bracket"></i> 登出
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <%= t('sidebar.logout') %>
         </a>
     </nav>
 </div>
+
+<style>
+    .icon-btn {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+
+    .icon-btn:hover {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+    }
+</style>
+
+<script>
+    // Theme Logic
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+
+    // Apply initial theme
+    if (currentTheme === 'light') {
+        document.body.setAttribute('data-theme', 'light');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+    }
+
+    function toggleTheme() {
+        const isLight = document.body.getAttribute('data-theme') === 'light';
+        if (isLight) {
+            document.body.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'dark');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        } else {
+            document.body.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+    }
+
+    // Language Logic
+    function toggleLang() {
+        const currentLang = document.cookie.replace(/(?:(?:^|.*;\s*)lang\s*\=\s*([^;]*).*$)|^.*$/, "$1") || 'zh';
+        const newLang = currentLang === 'zh' ? 'en' : 'zh';
+        document.cookie = `lang=${newLang}; path=/; max-age=31536000`; // 1 year
+        location.reload();
+    }
+</script>

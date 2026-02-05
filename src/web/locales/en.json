@@ -1,0 +1,13 @@
+{
+    "sidebar": {
+        "overview": "Overview",
+        "invite": "Invite Bot",
+        "servers": "Servers",
+        "users": "Users",
+        "logs": "System Logs",
+        "settings": "Global Settings",
+        "docs": "Documentation",
+        "developer": "Developer",
+        "logout": "Logout"
+    }
+}
