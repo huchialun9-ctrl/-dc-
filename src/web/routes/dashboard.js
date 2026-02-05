@@ -106,7 +106,7 @@ router.get('/logs', (req, res) => {
     res.render('logs', { user: req.user, logs: logs });
 });
 
-router.get('/settings', (req, res) => {
+router.get('/settings', async (req, res) => {
     const guildId = req.query.guild_id;
     const client = require('../../bot/client');
 
@@ -135,6 +135,8 @@ router.get('/settings', (req, res) => {
             .sort((a, b) => b.position - a.position)
             .map(r => ({ id: r.id, name: r.name, color: r.hexColor }));
 
+        // Force fetch emojis to ensure we have custom ones
+        await guild.emojis.fetch();
         const emojis = guild.emojis.cache.map(e => ({
             id: e.id,
             name: e.name,

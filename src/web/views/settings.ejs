@@ -317,8 +317,9 @@
 
                         // Guild Emojis
                         if (EMOJIS.length > 0) {
-                            emojiOptions += '<optgroup label="伺服器符號 (Guild)">';
+                            emojiOptions += '<optgroup label="伺服器圖片 (Server Items)">';
                             EMOJIS.forEach(e => {
+                                // Show only the name, not the complex ID string
                                 emojiOptions += `<option value="${e.identifier}" data-url="${e.url}">${escapeHtml(e.name)}</option>`;
                             });
                             emojiOptions += '</optgroup>';
@@ -326,11 +327,17 @@
 
                         div.innerHTML = `
                         <div style="flex: 1;">
-                            <select name="roles[${rowCount}][role_id]" required style="margin-bottom: 0.5rem;">${roleOptions}</select>
-                            <div style="display: flex; gap: 0.5rem; align-items: center;">
-                                <input type="text" name="roles[${rowCount}][label]" placeholder="按鈕文字 (Label)" required>
-                                <select name="roles[${rowCount}][emoji]" style="width: 120px;" onchange="updateEmojiPreview(this)">${emojiOptions}</select>
-                                <img class="emoji-preview" src="" style="width: 32px; height: 32px; display: none; object-fit: contain; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                            <select name="roles[${rowCount}][role_id]" required style="margin-bottom: 0.5rem; width: 100%;">${roleOptions}</select>
+                            <div style="display: flex; gap: 0.8rem; align-items: center;">
+                                <input type="text" name="roles[${rowCount}][label]" placeholder="按鈕文字 (Button Label)" required style="flex: 1;">
+                                
+                                <div style="display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 8px; border: 1px solid var(--border-color);">
+                                    <select name="roles[${rowCount}][emoji]" style="width: 140px; border: none; background: transparent;" onchange="updateEmojiPreview(this)">${emojiOptions}</select>
+                                    <div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 6px; overflow: hidden;">
+                                        <img class="emoji-preview" src="" style="width: 100%; height: 100%; display: none; object-fit: contain;">
+                                        <span class="no-preview" style="font-size: 10px; color: #666; display: block;">預覽</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <button type="button" class="btn-remove" onclick="removeRow(${rowCount})">
@@ -345,16 +352,22 @@
                     window.updateEmojiPreview = function (selectElement) {
                         const selectedOption = selectElement.options[selectElement.selectedIndex];
                         const url = selectedOption.getAttribute('data-url');
-                        const img = selectElement.nextElementSibling;
+                        const imgWrapper = selectElement.nextElementSibling;
+                        const img = imgWrapper.querySelector('.emoji-preview');
+                        const placeholder = imgWrapper.querySelector('.no-preview');
 
                         if (url) {
                             img.src = url;
                             img.style.display = 'block';
+                            if (placeholder) placeholder.style.display = 'none';
                         } else {
-                            // Only hide if no URL (handling standard emojis vs custom)
-                            // For standard emojis, we don't show preview image
+                            // Standard emoji or none
                             img.style.display = 'none';
                             img.src = '';
+                            if (placeholder) placeholder.style.display = 'block';
+
+                            // If standard emoji, maybe show it as text?
+                            // For now, simpler to cleaner UI
                         }
                     };
 
