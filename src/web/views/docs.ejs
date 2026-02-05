@@ -49,13 +49,52 @@
                 </div>
 
                 <div class="card doc-section">
-                    <h3><i class="fa-solid fa-user-tag" style="color: var(--success-color);"></i> 身分組領取</h3>
-                    <p>建立讓使用者自助領取身分組的按鈕面板：</p>
+                    <h3><i class="fa-solid fa-wand-magic-sparkles" style="color: #FF5252;"></i> 自訂指令 (Custom Commands)
+                    </h3>
+                    <p>管理專屬於您伺服器的指令：</p>
                     <ul style="color: var(--text-secondary); line-height: 1.8; margin-left: 1.5rem;">
-                        <li>進入伺服器設定頁面。</li>
-                        <li>選擇目標身分組 (注意：Bot 的身分組必須高於該目標身分組)。</li>
-                        <li>設定按鈕文字，點擊「建立面板」。</li>
-                        <li>使用者點擊按鈕後，Bot 會自動給予或移除該身分組。</li>
+                        <li>前往 Dashboard > 自訂指令管理。</li>
+                        <li>輸入「觸發詞」(Bot 偵測到此訊息) 與「回應內容」。</li>
+                        <li>範例：觸發 <code>!rules</code> -> 回應 <code>請遵守伺服器規範...</code></li>
+                    </ul>
+                </div>
+
+                <div class="card doc-section">
+                    <h3><i class="fa-solid fa-shield-halved" style="color: #69F0AE;"></i> 自動管理 (Auto-Mod)</h3>
+                    <p>保護您的伺服器免受惡意內容侵害：</p>
+                    <ul style="color: var(--text-secondary); line-height: 1.8; margin-left: 1.5rem;">
+                        <li><strong>阻擋連結</strong>：開啟後，將自動刪除包含 http/https 的訊息。</li>
+                        <li><strong>關鍵字過濾</strong>：設定禁字，Bot 將自動刪除包含這些詞彙的訊息。</li>
+                    </ul>
+                </div>
+
+                <div class="card doc-section">
+                    <h3><i class="fa-solid fa-chart-line" style="color: #F47FFF;"></i> 等級系統 (Leveling)</h3>
+                    <p>增加社群活耀度：</p>
+                    <ul style="color: var(--text-secondary); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>成員每分鐘發言可獲得隨機 XP。</li>
+                        <li><strong>排行榜</strong>：Dashboard 提供公開的 Top 50 等級排行榜。</li>
+                        <li><strong>升級通知</strong>：當成員升級時，Bot 會在頻道發送賀詞。</li>
+                    </ul>
+                </div>
+
+                <div class="card doc-section">
+                    <h3><i class="fa-solid fa-ticket" style="color: #2ECC71;"></i> 客服單系 (Ticket System)</h3>
+                    <p>專業的客服支援流程：</p>
+                    <ul style="color: var(--text-secondary); line-height: 1.8; margin-left: 1.5rem;">
+                        <li><strong>自訂類別</strong>：在 Dashboard 設定不同的客服類型 (如：技術支援、舉報)。</li>
+                        <li><strong>發送面板</strong>：使用 <code>/panel</code> 指令發送客服選單。</li>
+                        <li><strong>歷史紀錄</strong>：客服單關閉後，對話紀錄會自動保存，可於 Dashboard 隨時查看。</li>
+                    </ul>
+                </div>
+
+                <div class="card doc-section">
+                    <h3><i class="fa-solid fa-music" style="color: #F39C12;"></i> 音樂播放器 (Music)</h3>
+                    <p>高品質的音樂體驗與網頁控制：</p>
+                    <ul style="color: var(--text-secondary); line-height: 1.8; margin-left: 1.5rem;">
+                        <li><strong>指令</strong>：<code>/music play [歌名]</code>, <code>/music skip</code>,
+                            <code>/music stop</code>。</li>
+                        <li><strong>網頁控制</strong>：在 Dashboard 的音樂播放器頁面，您可以查看目前播放歌曲、調整進度與佇列。</li>
                     </ul>
                 </div>
 
