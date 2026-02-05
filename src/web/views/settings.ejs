@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <title>全域設定 - VX6</title>
+    <link rel="stylesheet" href="/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <%- include('partials/sidebar', { path: '/dashboard/settings' }) %>
+
+        <div class="main-content">
+            <div class="topbar">
+                <h2>機器人設定</h2>
+                <div class="user-menu">
+                    <span>
+                        <%= user.username %>
+                    </span>
+                    <% if(user.avatar) { %>
+                        <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png"
+                            alt="Avatar">
+                        <% } else { %>
+                            <div style="width:32px;height:32px;background:#5865F2;border-radius:50%;"></div>
+                            <% } %>
+                </div>
+            </div>
+
+            <div class="card"
+                style="background: var(--bg-card); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); max-width: 600px;">
+                <p style="color: var(--warning-color); margin-bottom: 2rem;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    注意：這裡的變更將影響機器人的全域設定 (Global Settings)。
+                </p>
+
+                <form action="/dashboard/settings" method="POST">
+                    <div class="form-group">
+                        <label>機器人名稱 (Bot Name Override)</label>
+                        <input type="text" name="botName" value="VX6" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label>維護模式 (Maintenance Mode)</label>
+                        <select name="maintenance">
+                            <option value="off">已停用 (正常運作)</option>
+                            <option value="on">啟用中 (暫停所有指令)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-submit">儲存變更</button>
+                </form>
+            </div>
+        </div>
+</body>
+
+</html>

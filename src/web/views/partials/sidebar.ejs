@@ -1,0 +1,26 @@
+<div class="sidebar">
+    <div class="sidebar-logo">
+        <i class="fa-solid fa-layer-group"></i> VX6
+    </div>
+    <nav class="sidebar-nav">
+        <a href="/dashboard" class="<%= path === '/dashboard' ? 'active' : '' %>">
+            <i class="fa-solid fa-chart-pie"></i> 總覽
+        </a>
+        <a href="/dashboard/servers" class="<%= path === '/dashboard/servers' ? 'active' : '' %>">
+            <i class="fa-solid fa-server"></i> 伺服器列表
+        </a>
+        <a href="/dashboard/users" class="<%= path === '/dashboard/users' ? 'active' : '' %>">
+            <i class="fa-solid fa-users"></i> 使用者管理
+        </a>
+        <a href="/dashboard/logs" class="<%= path === '/dashboard/logs' ? 'active' : '' %>">
+            <i class="fa-solid fa-list-ul"></i> 系統日誌
+        </a>
+        <a href="/dashboard/settings" class="<%= path === '/dashboard/settings' ? 'active' : '' %>">
+            <i class="fa-solid fa-gear"></i> 全域設定
+        </a>
+        <div style="flex-grow: 1;"></div>
+        <a href="/auth/logout" style="color: var(--danger-color);">
+            <i class="fa-solid fa-right-from-bracket"></i> 登出
+        </a>
+    </nav>
+</div>

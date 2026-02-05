@@ -1,30 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZenithBot | Enterprise Grade Support</title>
+    <title>VX6 機器人 | 企業級支援系統</title>
     <link rel="stylesheet" href="/style.css">
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
-<body>
+<body class="public-layout">
     <header>
         <div class="logo">
-            <i class="fa-solid fa-layer-group"></i> ZenithBot
+            <i class="fa-solid fa-layer-group"></i> VX6 機器人
         </div>
         <nav>
-            <a href="#features">Features</a>
-            <a href="#pricing">Enterprise</a>
+            <a href="#features">功能特色</a>
+            <a href="#pricing">企業方案</a>
             <% if (user) { %>
-                <a href="/dashboard" class="auth-btn glow">Dashboard <i class="fa-solid fa-arrow-right"></i></a>
+                <a href="/dashboard" class="auth-btn glow">控制台 <i class="fa-solid fa-arrow-right"></i></a>
                 <% } else { %>
-                    <a href="/auth/discord" class="auth-btn glow"><i class="fa-brands fa-discord"></i> Login with
-                        Discord</a>
+                    <a href="/auth/discord" class="auth-btn glow"><i class="fa-brands fa-discord"></i> 使用 Discord 登入</a>
                     <% } %>
         </nav>
     </header>
@@ -32,13 +31,12 @@
     <main>
         <section class="hero-section">
             <div class="hero-content">
-                <span class="badge">v2.0 Now Available</span>
-                <h1>Support Your Community <br><span class="gradient-text">Like a Pro.</span></h1>
-                <p>The advanced Discord ticket system designed for scale. Featuring HTML transcripts, detailed
-                    analytics, and seamless integrations.</p>
+                <span class="badge">v2.0 全新上線</span>
+                <h1>打造專業級的 <br><span class="gradient-text">社群支援體驗</span></h1>
+                <p>專為規模化設計的高級 Discord 工單系統。具備 HTML 對話紀錄、詳細數據分析與無縫整合功能。</p>
                 <div class="cta-group">
-                    <a href="/auth/discord" class="btn-primary">Get Started</a>
-                    <a href="#features" class="btn-secondary">Learn More</a>
+                    <a href="/auth/discord" class="btn-primary">立即開始</a>
+                    <a href="#features" class="btn-secondary">了解更多</a>
                 </div>
             </div>
             <div class="hero-visual">
@@ -68,29 +66,37 @@
         </section>
 
         <section id="features" class="features-section">
-            <h2>Powerful Features</h2>
+            <h2>強大功能</h2>
             <div class="grid">
                 <div class="feature-card">
                     <i class="fa-solid fa-file-code"></i>
-                    <h3>HTML Transcripts</h3>
-                    <p>Export conversation logs in beautiful, readable HTML formats for permanent archiving.</p>
+                    <h3>HTML 對話紀錄</h3>
+                    <p>將對話紀錄匯出為精美易讀的 HTML 網頁格式，永久保存完整溝通內容。</p>
                 </div>
                 <div class="feature-card">
                     <i class="fa-solid fa-chart-line"></i>
-                    <h3>Analytics Dashboard</h3>
-                    <p>Track team performance with real-time charts and ticket resolution stats.</p>
+                    <h3>數據分析儀表板</h3>
+                    <p>透過即時圖表追蹤團隊績效與工單解決狀態。</p>
                 </div>
                 <div class="feature-card">
                     <i class="fa-solid fa-shield-halved"></i>
-                    <h3>Advanced Security</h3>
-                    <p>Role-based access control and isolated environment variables.</p>
+                    <h3>進階安全性</h3>
+                    <p>採用角色權限控制與獨立的環境變數隔離，確保資料安全。</p>
                 </div>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 ZenithBot System. secure. efficient. powerful.</p>
+        <div class="container footer-content"
+            style="text-align: center; padding: 2rem 0; color: var(--text-secondary);">
+            <p>&copy; 2024 VX6 System. 安全。高效。強大。</p>
+            <div class="footer-links" style="margin-top: 1rem;">
+                <a href="/terms" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px;">服務條款</a>
+                <a href="/privacy"
+                    style="color: var(--text-secondary); text-decoration: none; margin: 0 10px;">隱私權政策</a>
+            </div>
+        </div>
     </footer>
 </body>
 

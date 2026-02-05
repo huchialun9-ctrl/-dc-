@@ -1,9 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits, ChannelType } = require('discord.js');
-const fs = require('fs');
-const path = require('path');
-
-// A simple way to store config for this MVP without a database
-const CONFIG_PATH = path.join(__dirname, '../../../config.json');
+const db = require('../../database/db');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -18,17 +14,18 @@ module.exports = {
     async execute(interaction) {
         const channel = interaction.options.getChannel('transcripts');
 
-        // Save to JSON
-        let config = {};
-        if (fs.existsSync(CONFIG_PATH)) {
-            config = JSON.parse(fs.readFileSync(CONFIG_PATH));
-        }
+        // Upsert Settings
+        const stmt = db.prepare(`
+            INSERT INTO settings (guild_id, log_channel_id, updated_at) 
+            VALUES (?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(guild_id) DO UPDATE SET 
+            log_channel_id = excluded.log_channel_id,
+            updated_at = CURRENT_TIMESTAMP
+        `);
+        stmt.run(interaction.guildId, channel.id);
 
-        config[interaction.guildId] = {
-            logChannelId: channel.id
-        };
-
-        fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2));
+        // Log setup action
+        db.prepare("INSERT INTO activity_logs (user_id, action, details) VALUES (?, ?, ?)").run(interaction.user.id, 'CONFIG_CHANGE', `Set log channel to ${channel.id}`);
 
         await interaction.reply({ content: `Configuration saved! Transcripts will be sent to ${channel}.`, ephemeral: true });
     },
