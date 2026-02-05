@@ -1,30 +1,33 @@
 :root {
-  --bg-primary: #050505;
-  --bg-secondary: #0a0a0a;
-  --bg-sidebar: rgba(8, 8, 8, 0.95);
-  --bg-card: rgba(20, 20, 20, 0.6);
-  --bg-hover: rgba(255, 255, 255, 0.05);
+  /* Beige Theme (米白) */
+  --bg-primary: #F9F5EC;
+  --bg-secondary: #FFFFFF;
+  --bg-sidebar: #F2EFE5;
+  --bg-card: rgba(255, 255, 255, 0.8);
+  --bg-hover: rgba(0, 0, 0, 0.05);
 
-  --text-primary: #ffffff;
-  --text-secondary: #a0a0a0;
-  --text-muted: #666666;
+  --text-primary: #3D342B;
+  --text-secondary: #756B60;
+  --text-muted: #9E968E;
 
-  --accent-color: #5865F2;
-  --accent-hover: #4752c4;
-  --accent-glow: rgba(88, 101, 242, 0.3);
+  --accent-color: #E6A23C;
+  /* Warm Orange/Gold */
+  --accent-hover: #D68F2C;
+  --accent-glow: rgba(230, 162, 60, 0.3);
 
-  --success-color: #43b581;
-  --danger-color: #f04747;
-  --warning-color: #faa61a;
+  --success-color: #67C23A;
+  --danger-color: #F56C6C;
+  --warning-color: #E6A23C;
 
-  --border-color: rgba(255, 255, 255, 0.08);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --border-color: rgba(61, 52, 43, 0.08);
+  /* Darker border for light theme */
+  --glass-border: 1px solid rgba(61, 52, 43, 0.05);
 
   --font-heading: 'Outfit', 'Noto Sans TC', sans-serif;
   --font-body: 'Inter', 'Noto Sans TC', sans-serif;
 
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 2px 8px rgba(61, 52, 43, 0.05);
+  --shadow-md: 0 8px 24px rgba(61, 52, 43, 0.1);
 }
 
 [data-theme="light"] {
@@ -54,8 +57,8 @@ body {
   font-family: var(--font-body);
   background-color: var(--bg-primary);
   background-image:
-    radial-gradient(circle at 15% 50%, rgba(88, 101, 242, 0.08), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(67, 181, 129, 0.05), transparent 25%);
+    radial-gradient(circle at 15% 50%, rgba(230, 162, 60, 0.08), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(103, 194, 58, 0.05), transparent 25%);
   color: var(--text-primary);
   display: flex;
   height: 100vh;
@@ -73,12 +76,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
+  background: #D7D0C0;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #C4BCA8;
 }
 
 /* Layout */
@@ -101,7 +104,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  color: #fff;
+  color: var(--text-primary);
   text-shadow: 0 0 20px var(--accent-glow);
 }
 
