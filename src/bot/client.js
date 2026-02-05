@@ -22,12 +22,18 @@ const { DisTube } = require('distube');
 const { YtDlpPlugin } = require('@distube/yt-dlp');
 
 const config = {
+    leaveOnStop: false,
+    leaveOnFinish: false,
+    leaveOnEmpty: true,
+    initialVolume: 80,
     emitNewSongOnly: true,
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: false,
+    savePreviousSongs: true,
+    nsfw: true, // Allow age-restricted content (requires cookies)
     plugins: [
         new YtDlpPlugin({
-            update: false // Prevent auto-update on every run which slows down startup
+            update: false
         })
     ]
 };
