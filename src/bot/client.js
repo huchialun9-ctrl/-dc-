@@ -25,7 +25,6 @@ const config = {
     leaveOnStop: false,
     leaveOnFinish: false,
     leaveOnEmpty: true,
-    initialVolume: 80,
     emitNewSongOnly: true,
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: false,
