@@ -24,7 +24,7 @@ const config = {
     },
     plugins: [
         new YtDlpPlugin({
-            update: true // Enable auto-update to fix YouTube 403/Search issues
+            update: false // Write access denied on Railway
         })
     ]
 };
