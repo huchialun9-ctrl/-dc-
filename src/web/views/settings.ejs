@@ -253,89 +253,126 @@
 
         <!-- Data for JS -->
         <!-- Data Injection for JS (clean separation to avoid Linter errors) -->
-        <script id="server-data-roles" type="application/json"><%- JSON.stringify(roles || []) %></script>
-        <script id="server-data-emojis" type="application/json"><%- JSON.stringify(emojis || []) %></script>
-        <script id="server-data-mode" type="application/json"><%- JSON.stringify(mode) %></script>
+        <!-- Data Injection with basic sanitization -->
+        <script id="server-data-roles"
+            type="application/json"><%- JSON.stringify(roles || []).replace(/</g, '\\u003c') %></script>
+        <script id="server-data-emojis"
+            type="application/json"><%- JSON.stringify(emojis || []).replace(/</g, '\\u003c') %></script>
+        <script id="server-data-mode"
+            type="application/json"><%- JSON.stringify(mode).replace(/</g, '\\u003c') %></script>
 
         <script>
-            // Read data from DOM
-            const ROLES = JSON.parse(document.getElementById('server-data-roles').textContent);
-            const EMOJIS = JSON.parse(document.getElementById('server-data-emojis').textContent);
-            const MODE = JSON.parse(document.getElementById('server-data-mode').textContent);
-            let rowCount = 0;
+            document.addEventListener('DOMContentLoaded', () => {
+                try {
+                    // Read data from DOM safely
+                    const rolesData = document.getElementById('server-data-roles').textContent;
+                    const emojisData = document.getElementById('server-data-emojis').textContent;
+                    const modeData = document.getElementById('server-data-mode').textContent;
 
-            function addRoleRow() {
-                if (rowCount >= 15) return alert('最多只能新增 15 個按鈕！');
+                    const ROLES = JSON.parse(rolesData);
+                    const EMOJIS = JSON.parse(emojisData);
+                    const MODE = JSON.parse(modeData);
 
-                const container = document.getElementById('roleRows');
-                const div = document.createElement('div');
-                div.className = 'role-row';
-                div.id = `row-${rowCount}`;
+                    let rowCount = 0;
 
-                // Build Role Options
-                let roleOptions = '<option value="">選擇身分組...</option>';
-                ROLES.forEach(r => {
-                    roleOptions += `<option value="${r.id}" style="color:${r.color}">${r.name}</option>`;
-                });
+                    // Expose to window for onclick handlers
+                    window.addRoleRow = function () {
+                        if (rowCount >= 15) {
+                            alert('最多只能新增 15 個按鈕！ (Max 15 buttons)');
+                            return;
+                        }
 
-                // Build Emoji Options
-                let emojiOptions = '<option value="">無表情符號</option>';
-                // Standard Emojis (Sample)
-                const standardEmojis = ['🔥', '✨', '🎮', '📢', '💎', '✅', '❌', '⭐'];
-                standardEmojis.forEach(e => {
-                    emojiOptions += `<option value="${e}">${e}</option>`;
-                });
-                // Guild Emojis
-                emojiOptions += '<optgroup label="伺服器表情符號">';
-                EMOJIS.forEach(e => {
-                    emojiOptions += `<option value="${e.identifier}" data-url="${e.url}">${e.name}</option>`;
-                });
-                emojiOptions += '</optgroup>';
+                        const container = document.getElementById('roleRows');
+                        if (!container) {
+                            console.error('Container #roleRows not found');
+                            return;
+                        }
 
-                div.innerHTML = `
-                <div style="flex: 1;">
-                    <select name="roles[${rowCount}][role_id]" required style="margin-bottom: 0.5rem;">${roleOptions}</select>
-                    <div style="display: flex; gap: 0.5rem; align-items: center;">
-                        <input type="text" name="roles[${rowCount}][label]" placeholder="按鈕文字" required>
-                        <select name="roles[${rowCount}][emoji]" style="width: 120px;" onchange="updateEmojiPreview(this)">${emojiOptions}</select>
-                        <img class="emoji-preview" src="" style="width: 32px; height: 32px; display: none; object-fit: contain;">
-                    </div>
-                </div>
-                <button type="button" class="btn-remove" onclick="removeRow(${rowCount})">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
-            `;
+                        const div = document.createElement('div');
+                        div.className = 'role-row';
+                        div.id = `row-${rowCount}`;
 
-                container.appendChild(div);
-                rowCount++;
-            }
+                        // Escape HTML to prevent XSS in option labels
+                        const escapeHtml = (unsafe) => {
+                            return unsafe
+                                .replace(/&/g, "&amp;")
+                                .replace(/</g, "&lt;")
+                                .replace(/>/g, "&gt;")
+                                .replace(/"/g, "&quot;")
+                                .replace(/'/g, "&#039;");
+                        }
 
-            function updateEmojiPreview(selectElement) {
-                const selectedOption = selectElement.options[selectElement.selectedIndex];
-                const url = selectedOption.getAttribute('data-url');
-                const img = selectElement.nextElementSibling; // The img tag next to select
+                        // Build Role Options
+                        let roleOptions = '<option value="">選擇身分組 (Select Role)...</option>';
+                        ROLES.forEach(r => {
+                            roleOptions += `<option value="${r.id}" style="color:${r.color}">${escapeHtml(r.name)}</option>`;
+                        });
 
-                if (url) {
-                    img.src = url;
-                    img.style.display = 'block';
-                } else {
-                    // Start of standard emoji handling? 
-                    // Standard emojis don't have URLs easily available without a library.
-                    // For now, hide preview if no URL.
-                    img.style.display = 'none';
-                    img.src = '';
+                        // Build Emoji Options
+                        let emojiOptions = '<option value="">無表情符號 (No Emoji)</option>';
+                        const standardEmojis = ['🔥', '✨', '🎮', '📢', '💎', '✅', '❌', '⭐'];
+                        standardEmojis.forEach(e => {
+                            emojiOptions += `<option value="${e}">${e}</option>`;
+                        });
+
+                        // Guild Emojis
+                        if (EMOJIS.length > 0) {
+                            emojiOptions += '<optgroup label="伺服器符號 (Guild)">';
+                            EMOJIS.forEach(e => {
+                                emojiOptions += `<option value="${e.identifier}" data-url="${e.url}">${escapeHtml(e.name)}</option>`;
+                            });
+                            emojiOptions += '</optgroup>';
+                        }
+
+                        div.innerHTML = `
+                        <div style="flex: 1;">
+                            <select name="roles[${rowCount}][role_id]" required style="margin-bottom: 0.5rem;">${roleOptions}</select>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <input type="text" name="roles[${rowCount}][label]" placeholder="按鈕文字 (Label)" required>
+                                <select name="roles[${rowCount}][emoji]" style="width: 120px;" onchange="updateEmojiPreview(this)">${emojiOptions}</select>
+                                <img class="emoji-preview" src="" style="width: 32px; height: 32px; display: none; object-fit: contain; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                            </div>
+                        </div>
+                        <button type="button" class="btn-remove" onclick="removeRow(${rowCount})">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    `;
+
+                        container.appendChild(div);
+                        rowCount++;
+                    };
+
+                    window.updateEmojiPreview = function (selectElement) {
+                        const selectedOption = selectElement.options[selectElement.selectedIndex];
+                        const url = selectedOption.getAttribute('data-url');
+                        const img = selectElement.nextElementSibling;
+
+                        if (url) {
+                            img.src = url;
+                            img.style.display = 'block';
+                        } else {
+                            // Only hide if no URL (handling standard emojis vs custom)
+                            // For standard emojis, we don't show preview image
+                            img.style.display = 'none';
+                            img.src = '';
+                        }
+                    };
+
+                    window.removeRow = function (id) {
+                        const row = document.getElementById(`row-${id}`);
+                        if (row) row.remove();
+                    };
+
+                    // Init with 1 row if in guild mode
+                    if (MODE === 'guild') {
+                        // Small delay to ensure render
+                        setTimeout(() => window.addRoleRow(), 100);
+                    }
+
+                } catch (e) {
+                    console.error('Settings Script Error:', e);
                 }
-            }
-
-            function removeRow(id) {
-                const row = document.getElementById(`row-${id}`);
-                if (row) row.remove();
-            }
-
-            // Init with 1 row if in guild mode
-            if (MODE === 'guild') {
-                addRoleRow();
-            }
+            });
         </script>
 </body>
 
