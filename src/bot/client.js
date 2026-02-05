@@ -53,6 +53,9 @@ const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
 for (const file of eventFiles) {
+    // Skip distubeEvents.js as it's not a standard Discord event and manually loaded
+    if (file === 'distubeEvents.js') continue;
+
     const filePath = path.join(eventsPath, file);
     const event = require(filePath);
     if (event.once) {
@@ -60,6 +63,13 @@ for (const file of eventFiles) {
     } else {
         client.on(event.name, (...args) => event.execute(...args));
     }
+}
+
+// Load DisTube Events
+try {
+    require('./events/distubeEvents')(client);
+} catch (e) {
+    console.error('Failed to load DisTube events:', e);
 }
 
 module.exports = client;
