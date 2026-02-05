@@ -98,12 +98,20 @@ router.get('/settings', (req, res) => {
             .sort((a, b) => b.position - a.position)
             .map(r => ({ id: r.id, name: r.name, color: r.hexColor }));
 
+        const emojis = guild.emojis.cache.map(e => ({
+            id: e.id,
+            name: e.name,
+            url: e.url,
+            identifier: `<${e.animated ? 'a' : ''}:${e.name}:${e.id}>`
+        }));
+
         return res.render('settings', {
             user: req.user,
             mode: 'guild',
             guild: guild,
             channels: channels,
-            roles: roles
+            roles: roles,
+            emojis: emojis
         });
     }
 
@@ -134,19 +142,42 @@ router.post('/settings', async (req, res) => {
             const channel = client.channels.cache.get(channel_id);
             if (!channel) throw new Error('Channel not found');
 
+            const rolesData = req.body.roles || [];
+            if (rolesData.length === 0) throw new Error('請至少新增一個身分組按鈕');
+
+            // Construct Buttons
+            const components = [];
+            let currentRow = new ActionRowBuilder();
+
+            rolesData.forEach((item, index) => {
+                // Determine Emoji (if custom string format <a:name:id>, pass id? No, ButtonBuilder takes full string or unicode)
+                // Actually discord.js ButtonBuilder.setEmoji() takes an emoji ID or unicode string.
+
+                const button = new ButtonBuilder()
+                    .setCustomId(`role_claim_${item.role_id}`)
+                    .setLabel(item.label)
+                    .setStyle(ButtonStyle.Success);
+
+                if (item.emoji) {
+                    button.setEmoji(item.emoji);
+                }
+
+                currentRow.addComponents(button);
+
+                // Max 5 buttons per row
+                if ((index + 1) % 5 === 0 || index === rolesData.length - 1) {
+                    components.push(currentRow);
+                    currentRow = new ActionRowBuilder();
+                }
+            });
+
             const embed = new EmbedBuilder()
                 .setTitle(req.body.embed_title || '身分組領取')
-                .setDescription(`點擊下方按鈕以領取身分組 <@&${req.body.role_id}>`)
-                .setColor('#43b581');
+                .setDescription(req.body.description || '點擊下方按鈕以領取/移除對應身分組。')
+                .setColor('#43b581')
+                .setFooter({ text: `共 ${rolesData.length} 個身分組可供領取` });
 
-            const button = new ButtonBuilder()
-                .setCustomId(`role_claim_${req.body.role_id}`)
-                .setLabel(req.body.button_label)
-                .setStyle(ButtonStyle.Success);
-
-            const row = new ActionRowBuilder().addComponents(button);
-
-            await channel.send({ embeds: [embed], components: [row] });
+            await channel.send({ embeds: [embed], components: components });
         }
 
         res.redirect(`/dashboard/settings?guild_id=${guild_id}`);

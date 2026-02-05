@@ -9,6 +9,36 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .role-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-remove {
+            background: rgba(240, 71, 71, 0.2);
+            color: #f04747;
+            border: 1px solid rgba(240, 71, 71, 0.3);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-remove:hover {
+            background: rgba(240, 71, 71, 0.4);
+        }
+    </style>
 </head>
 
 <body>
@@ -49,10 +79,10 @@
                 </div>
                 <% } else { %>
                     <!-- Guild Specific Modules -->
-                    <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="dashboard-grid" style="grid-template-columns: 1fr;">
 
                         <!-- Module 1: Announcement Builder -->
-                        <div class="card" style="display: block;">
+                        <div class="card">
                             <div
                                 style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                                 <h3 style="margin:0;"><i class="fa-solid fa-bullhorn"
@@ -95,15 +125,15 @@
                             </form>
                         </div>
 
-                        <!-- Module 2: Role Claim -->
-                        <div class="card" style="display: block;">
+                        <!-- Module 2: Role Claim (Enhanced) -->
+                        <div class="card">
                             <div
                                 style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                                 <h3 style="margin:0;"><i class="fa-solid fa-user-tag"
                                         style="color: var(--success-color);"></i> 身分組領取面板</h3>
                             </div>
 
-                            <form action="/dashboard/settings" method="POST">
+                            <form action="/dashboard/settings" method="POST" id="roleClaimForm">
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
                                 <input type="hidden" name="action" value="create_role_claim">
 
@@ -118,36 +148,91 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>選擇身分組 (使用者按下按鈕後獲得)</label>
-                                    <select name="role_id" required>
-                                        <% roles.forEach(role=> { %>
-                                            <option value="<%= role.id %>" style="color: <%= role.color %>;">
-                                                <%= role.name %>
-                                            </option>
-                                            <% }); %>
-                                    </select>
-                                    <small
-                                        style="color: var(--text-secondary); display:block; margin-top:0.5rem;">注意：機器人的身分組層級必須高於此身分組。</small>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>按鈕文字</label>
-                                    <input type="text" name="button_label" placeholder="例如：領取通知組" required>
-                                </div>
-
-                                <div class="form-group">
                                     <label>面板標題</label>
                                     <input type="text" name="embed_title" value="身分組自助領取">
                                 </div>
 
+                                <div class="form-group">
+                                    <label>身分組配置 (最多 15 個)</label>
+                                    <div id="roleRows">
+                                        <!-- Dynamic Rows will be inserted here -->
+                                    </div>
+                                    <button type="button" class="btn-secondary" onclick="addRoleRow()"
+                                        style="width: 100%; margin-top: 1rem; border-style: dashed;">
+                                        <i class="fa-solid fa-plus"></i> 新增身分組按鈕
+                                    </button>
+                                </div>
+
                                 <button type="submit" class="btn-submit"
-                                    style="background: var(--success-color); width:100%;">建立面板</button>
+                                    style="background: var(--success-color); width:100%; margin-top: 2rem;">建立面板</button>
                             </form>
                         </div>
 
                     </div>
                     <% } %>
         </div>
+
+        <!-- Data for JS -->
+        <script>
+            const ROLES = <% - JSON.stringify(roles || []) %>;
+            const EMOJIS = <% - JSON.stringify(emojis || []) %>;
+            let rowCount = 0;
+
+            function addRoleRow() {
+                if (rowCount >= 15) return alert('最多只能新增 15 個按鈕！');
+
+                const container = document.getElementById('roleRows');
+                const div = document.createElement('div');
+                div.className = 'role-row';
+                div.id = `row-${rowCount}`;
+
+                // Build Role Options
+                let roleOptions = '<option value="">選擇身分組...</option>';
+                ROLES.forEach(r => {
+                    roleOptions += `<option value="${r.id}" style="color:${r.color}">${r.name}</option>`;
+                });
+
+                // Build Emoji Options
+                let emojiOptions = '<option value="">無表情符號</option>';
+                // Standard Emojis (Sample)
+                const standardEmojis = ['🔥', '✨', '🎮', '📢', '💎', '✅', '❌', '⭐'];
+                standardEmojis.forEach(e => {
+                    emojiOptions += `<option value="${e}">${e}</option>`;
+                });
+                // Guild Emojis
+                emojiOptions += '<optgroup label="伺服器表情符號">';
+                EMOJIS.forEach(e => {
+                    emojiOptions += `<option value="${e.identifier}">${e.name}</option>`;
+                });
+                emojiOptions += '</optgroup>';
+
+                div.innerHTML = `
+                <div style="flex: 1;">
+                    <select name="roles[${rowCount}][role_id]" required style="margin-bottom: 0.5rem;">${roleOptions}</select>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" name="roles[${rowCount}][label]" placeholder="按鈕文字" required>
+                        <select name="roles[${rowCount}][emoji]" style="width: 120px;">${emojiOptions}</select>
+                    </div>
+                </div>
+                <button type="button" class="btn-remove" onclick="removeRow(${rowCount})">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            `;
+
+                container.appendChild(div);
+                rowCount++;
+            }
+
+            function removeRow(id) {
+                const row = document.getElementById(`row-${id}`);
+                if (row) row.remove();
+            }
+
+            // Init with 1 row if mode is guild
+            if (<%= mode === 'guild' %>) {
+                addRoleRow();
+            }
+        </script>
 </body>
 
 </html>
