@@ -5,6 +5,10 @@ const logger = require('../core/logger');
 
 const GiveawayService = require('./services/giveawayService');
 const EarthquakeService = require('./services/earthquakeService');
+const AiService = require('./services/aiService');
+
+// Initialize AI
+AiService.init();
 
 const client = new Client({
     intents: [

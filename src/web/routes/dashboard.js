@@ -296,6 +296,21 @@ router.post('/settings', async (req, res) => {
             stmt.run(guild_id, enabled);
         }
 
+        else if (action === 'update_ai_chat') {
+            const { ai_chat_enabled } = req.body;
+            const enabled = ai_chat_enabled ? 1 : 0;
+
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, ai_chat_enabled, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                ai_chat_enabled = excluded.ai_chat_enabled,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+
+            stmt.run(guild_id, enabled);
+        }
+
         else if (action === 'add_ticket_category') {
             const { cat_label, cat_desc, cat_emoji } = req.body;
 

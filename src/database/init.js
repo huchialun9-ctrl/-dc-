@@ -9,6 +9,14 @@ function initDb() {
         const schema = fs.readFileSync(schemaPath, 'utf8');
 
         db.exec(schema);
+
+        // Migrations
+        try {
+            db.exec("ALTER TABLE settings ADD COLUMN ai_chat_enabled INTEGER DEFAULT 0");
+        } catch (e) {
+            // Column likely exists
+        }
+
         logger.info('Database initialized successfully.');
     } catch (error) {
         logger.error('Failed to initialize database: ' + error.message);

@@ -1,6 +1,7 @@
 const { Events } = require('discord.js');
 const db = require('../../database/db');
 const logger = require('../../core/logger');
+const AiService = require('../services/aiService');
 
 module.exports = {
     name: Events.MessageCreate,
@@ -9,6 +10,26 @@ module.exports = {
         if (!message.guild) return;
 
         try {
+            // 0. AI Chat (Priority if Mentioned)
+            // Check if mentioned
+            if (message.mentions.has(message.client.user) && !message.mentions.everyone) {
+                const aiSetting = db.prepare('SELECT ai_chat_enabled FROM settings WHERE guild_id = ?').get(message.guild.id);
+                if (aiSetting && aiSetting.ai_chat_enabled === 1) {
+                    await message.channel.sendTyping();
+                    const prompt = message.content.replace(/<@!?[0-9]+>/g, '').trim();
+                    if (!prompt) return; // Ignore empty mentions
+
+                    const response = await AiService.generateResponse(prompt, `
+User: ${message.author.username}
+Server: ${message.guild.name}
+Role: Helpful Discord Bot
+                    `.trim());
+
+                    await message.reply(response);
+                    return; // Stop processing other things if AI handled it
+                }
+            }
+
             // 1. Check Custom Commands
             // Simple robust check: exact match or starts with (if needed, but simple trigger usually implies exact or prefix)
             // For now, let's do "exact match" to be safe and simple 

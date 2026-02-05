@@ -190,12 +190,42 @@
                                 </div>
                                 <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">啟用後，成員可使用簽到、錢包與商店功能。</p>
                             </form>
-                            <a href="/dashboard/leaderboard/<%= guild.id %>/economy" class="btn-secondary"
-                                style="width: 100%; text-align: center; display: block; background: rgba(255, 215, 0, 0.1); color: #FFD700; border: 1px solid #FFD700; padding: 0.8rem; border-radius: 8px; transition: all 0.2s;">
-                                <i class="fa-solid fa-trophy"></i> 查看富豪榜
-                            </a>
+                            <div>
+                                <a href="/dashboard/leaderboard/<%= guild.id %>/economy" class="btn-secondary"
+                                    style="width: 100%; text-align: center; display: block; background: rgba(255, 215, 0, 0.1); color: #FFD700; border: 1px solid #FFD700; padding: 0.8rem; border-radius: 8px; transition: all 0.2s;">
+                                    <i class="fa-solid fa-trophy"></i> 查看富豪榜
+                                </a>
+                            </div>
                         </div>
 
+                        <!-- Module 10: AI Chat (Gemini) -->
+                        <div class="settings-card" style="border-top: 4px solid #9C27B0;">
+                            <form action="/dashboard/settings" method="POST" class="track-changes">
+                                <input type="hidden" name="action" value="update_ai_chat">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                    <div>
+                                        <h3 style="margin: 0; color: var(--text-primary);"><i
+                                                class="fa-solid fa-wand-magic-sparkles"
+                                                style="color: #9C27B0; margin-right: 10px;"></i> AI 聊天模式</h3>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input detect-change" type="checkbox"
+                                            name="ai_chat_enabled" value="1" <%=settings.ai_chat_enabled ? 'checked'
+                                            : '' %> style="width: 40px; height: 20px; accent-color: #9C27B0;">
+                                    </div>
+                                </div>
+                                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">啟用後，只要提及機器人
+                                    (<code>@<%= user.username %></code>)，它就會用 AI 回覆您！</p>
+                            </form>
+                            <div
+                                style="background: rgba(156, 39, 176, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid rgba(156, 39, 176, 0.2);">
+                                <small style="color: #9C27B0; display: block;">
+                                    <i class="fa-brands fa-google"></i> Powered by Google Gemini
+                                </small>
+                            </div>
+                        </div>
                         <!-- Module 8: Music System -->
                         <div class="settings-card" style="border-top: 4px solid #F39C12;">
                             <div
