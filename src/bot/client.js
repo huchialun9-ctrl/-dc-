@@ -42,10 +42,15 @@ const config = {
 const cookiesPath = path.join(__dirname, '../../cookies.json');
 if (fs.existsSync(cookiesPath)) {
     try {
-        config.cookies = JSON.parse(fs.readFileSync(cookiesPath, 'utf8'));
-        logger.info('✅ Loaded YouTube cookies.json');
+        const rawCookies = JSON.parse(fs.readFileSync(cookiesPath, 'utf8'));
+        if (Array.isArray(rawCookies)) {
+            config.cookies = rawCookies;
+            logger.info('✅ Loaded YouTube cookies.json');
+        } else {
+            logger.error('❌ cookies.json is not an array (Invalid Format)');
+        }
     } catch (e) {
-        logger.error('❌ Failed to parse cookies.json');
+        logger.error('❌ Failed to parse cookies.json: ' + e.message);
     }
 } else {
     logger.warn('⚠️ cookies.json not found! YouTube playback may be restricted.');
