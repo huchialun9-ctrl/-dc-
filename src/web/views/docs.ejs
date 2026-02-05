@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <title>使用文檔 - VX6</title>
+    <link rel="stylesheet" href="/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <%- include('partials/sidebar', { path: '/docs' }) %>
+
+        <div class="main-content">
+            <div class="topbar">
+                <h2>使用文檔 (Documentation)</h2>
+                <div class="user-menu" style="background: var(--bg-card); border: var(--glass-border);">
+                    <i class="fa-solid fa-search" style="color: var(--text-secondary);"></i>
+                    <input type="text" id="searchInput" placeholder="搜尋文檔..."
+                        style="background: transparent; border: none; outline: none; color: #fff; padding-left: 0.5rem; width: 200px;">
+                </div>
+            </div>
+
+            <div class="dashboard-grid" style="grid-template-columns: 1fr;">
+
+                <div class="card doc-section">
+                    <h3><i class="fa-solid fa-rocket" style="color: var(--accent-color);"></i> 快速開始</h3>
+                    <p>歡迎使用 VX6 機器人！這是一個專為社群管理設計的高級 Discord 機器人。請按照以下步驟開始使用：</p>
+                    <ol style="color: var(--text-secondary); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>點擊左側的「邀請機器人」將 Bot 加入您的伺服器。</li>
+                        <li>給予機器人 <code>Administrator</code> 或 <code>Manage Server</code> 權限以確保功能正常。</li>
+                        <li>前往「伺服器列表」，點擊您伺服器的「管理伺服器」按鈕。</li>
+                    </ol>
+                </div>
+
+                <div class="card doc-section">
+                    <h3><i class="fa-solid fa-bullhorn" style="color: var(--warning-color);"></i> 發送公告</h3>
+                    <p>您可以在網頁控制台直接發送精美的 Embed 公告：</p>
+                    <ul style="color: var(--text-secondary); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>進入伺服器設定頁面。</li>
+                        <li>找到「發送公告」區塊。</li>
+                        <li>填寫標題、內容 (支援 Markdown) 並選擇頻道。</li>
+                        <li>點擊發送，機器人即會同步發布。</li>
+                    </ul>
+                </div>
+
+                <div class="card doc-section">
+                    <h3><i class="fa-solid fa-user-tag" style="color: var(--success-color);"></i> 身分組領取</h3>
+                    <p>建立讓使用者自助領取身分組的按鈕面板：</p>
+                    <ul style="color: var(--text-secondary); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>進入伺服器設定頁面。</li>
+                        <li>選擇目標身分組 (注意：Bot 的身分組必須高於該目標身分組)。</li>
+                        <li>設定按鈕文字，點擊「建立面板」。</li>
+                        <li>使用者點擊按鈕後，Bot 會自動給予或移除該身分組。</li>
+                    </ul>
+                </div>
+
+                <div class="card doc-section" id="github-section">
+                    <h3><i class="fa-brands fa-github" style="color: #fff;"></i> 開源專案</h3>
+                    <p>本專案已開源於 GitHub，歡迎提交 Issue 或 Pull Request。</p>
+                    <a href="https://github.com/huchialun9-ctrl/-dc-.git" target="_blank" class="btn-submit"
+                        style="display: inline-block; text-decoration: none; margin-top: 1rem;">
+                        前往 GitHub Repository <i class="fa-solid fa-external-link-alt"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <script>
+            // Simple Client-side Search
+            document.getElementById('searchInput').addEventListener('keyup', function (e) {
+                const term = e.target.value.toLowerCase();
+                const sections = document.querySelectorAll('.doc-section');
+
+                sections.forEach(section => {
+                    const text = section.innerText.toLowerCase();
+                    if (text.includes(term)) {
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+</body>
+
+</html>
