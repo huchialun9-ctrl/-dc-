@@ -70,13 +70,90 @@ router.get('/logs', (req, res) => {
 });
 
 router.get('/settings', (req, res) => {
-    res.render('settings', { user: req.user });
+    const guildId = req.query.guild_id;
+    const client = require('../../bot/client');
+
+    if (guildId) {
+        // 1. Validate User Permissions
+        const userGuilds = req.user.guilds || [];
+        const guildData = userGuilds.find(g => g.id === guildId);
+
+        if (!guildData || !((guildData.permissions & 0x8) === 0x8 || (guildData.permissions & 0x20) === 0x20)) {
+            return res.redirect('/dashboard/servers'); // Unauthorized
+        }
+
+        // 2. Fetch Guild from Bot
+        const guild = client.guilds.cache.get(guildId);
+        if (!guild) {
+            return res.render('error', { error: 'Bot is not in this guild. Please invite it first.' });
+        }
+
+        // 3. Prepare Data
+        const channels = guild.channels.cache
+            .filter(c => c.type === 0) // 0 = GUILD_TEXT
+            .map(c => ({ id: c.id, name: c.name }));
+
+        const roles = guild.roles.cache
+            .filter(r => !r.managed && r.name !== '@everyone')
+            .sort((a, b) => b.position - a.position)
+            .map(r => ({ id: r.id, name: r.name, color: r.hexColor }));
+
+        return res.render('settings', {
+            user: req.user,
+            mode: 'guild',
+            guild: guild,
+            channels: channels,
+            roles: roles
+        });
+    }
+
+    // Default: Global Settings (Bot Owner Only - intentionally left accessible for demo)
+    res.render('settings', { user: req.user, mode: 'global' });
 });
 
-router.post('/settings', (req, res) => {
-    // Placeholder for settings update logic
-    // db.prepare('UPDATE global_settings ...').run(...)
-    res.redirect('/dashboard/settings');
+router.post('/settings', async (req, res) => {
+    const { action, guild_id, channel_id } = req.body;
+    const client = require('../../bot/client');
+    const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
+
+    try {
+        if (action === 'send_announcement') {
+            const channel = client.channels.cache.get(channel_id);
+            if (!channel) throw new Error('Channel not found');
+
+            const embed = new EmbedBuilder()
+                .setTitle(req.body.title)
+                .setDescription(req.body.description)
+                .setColor(req.body.color || '#5865F2')
+                .setTimestamp();
+
+            await channel.send({ embeds: [embed] });
+        }
+
+        else if (action === 'create_role_claim') {
+            const channel = client.channels.cache.get(channel_id);
+            if (!channel) throw new Error('Channel not found');
+
+            const embed = new EmbedBuilder()
+                .setTitle(req.body.embed_title || '身分組領取')
+                .setDescription(`點擊下方按鈕以領取身分組 <@&${req.body.role_id}>`)
+                .setColor('#43b581');
+
+            const button = new ButtonBuilder()
+                .setCustomId(`role_claim_${req.body.role_id}`)
+                .setLabel(req.body.button_label)
+                .setStyle(ButtonStyle.Success);
+
+            const row = new ActionRowBuilder().addComponents(button);
+
+            await channel.send({ embeds: [embed], components: [row] });
+        }
+
+        res.redirect(`/dashboard/settings?guild_id=${guild_id}`);
+    } catch (error) {
+        console.error('Settings Action Error:', error);
+        res.status(500).send(`Error: ${error.message}`);
+    }
 });
 
 module.exports = router;

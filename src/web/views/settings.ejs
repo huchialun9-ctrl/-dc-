@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>全域設定 - VX6</title>
+    <title>控制台 - VX6</title>
     <link rel="stylesheet" href="/style.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap"
@@ -16,7 +16,9 @@
 
         <div class="main-content">
             <div class="topbar">
-                <h2>機器人設定</h2>
+                <h2>
+                    <%= mode==='guild' ? `管理 ${guild.name}` : '全域設定' %>
+                </h2>
                 <div class="user-menu">
                     <span>
                         <%= user.username %>
@@ -30,30 +32,121 @@
                 </div>
             </div>
 
-            <div class="card"
-                style="background: var(--bg-card); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); max-width: 600px;">
-                <p style="color: var(--warning-color); margin-bottom: 2rem;">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    注意：這裡的變更將影響機器人的全域設定 (Global Settings)。
-                </p>
+            <% if (mode==='global' ) { %>
+                <!-- Global Settings -->
+                <div class="card" style="max-width: 600px;">
+                    <p style="color: var(--warning-color); margin-bottom: 2rem;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> 注意：這是機器人的全域設定。
+                    </p>
+                    <form action="/dashboard/settings" method="POST">
+                        <input type="hidden" name="action" value="global_update">
+                        <div class="form-group">
+                            <label>機器人名稱</label>
+                            <input type="text" value="VX6 System" disabled>
+                        </div>
+                        <button type="submit" class="btn-submit">儲存變更</button>
+                    </form>
+                </div>
+                <% } else { %>
+                    <!-- Guild Specific Modules -->
+                    <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr;">
 
-                <form action="/dashboard/settings" method="POST">
-                    <div class="form-group">
-                        <label>機器人名稱 (Bot Name Override)</label>
-                        <input type="text" name="botName" value="VX6" disabled>
+                        <!-- Module 1: Announcement Builder -->
+                        <div class="card" style="display: block;">
+                            <div
+                                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                                <h3 style="margin:0;"><i class="fa-solid fa-bullhorn"
+                                        style="color: var(--accent-color);"></i> 發送公告</h3>
+                            </div>
+
+                            <form action="/dashboard/settings" method="POST">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
+                                <input type="hidden" name="action" value="send_announcement">
+
+                                <div class="form-group">
+                                    <label>選擇頻道</label>
+                                    <select name="channel_id" required>
+                                        <% channels.forEach(channel=> { %>
+                                            <option value="<%= channel.id %>"># <%= channel.name %>
+                                            </option>
+                                            <% }); %>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>公告標題</label>
+                                    <input type="text" name="title" placeholder="例如：重大更新通知" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>公告內容</label>
+                                    <textarea name="description" rows="5"
+                                        style="width:100%; padding:1rem; background:rgba(0,0,0,0.3); border:1px solid var(--border-color); border-radius:10px; color:#fff;"
+                                        placeholder="支援 Markdown 語法..." required></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>顏色 (Hex)</label>
+                                    <input type="color" name="color" value="#5865F2"
+                                        style="height: 50px; padding: 0.5rem;">
+                                </div>
+
+                                <button type="submit" class="btn-submit" style="width:100%;">發送訊息</button>
+                            </form>
+                        </div>
+
+                        <!-- Module 2: Role Claim -->
+                        <div class="card" style="display: block;">
+                            <div
+                                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                                <h3 style="margin:0;"><i class="fa-solid fa-user-tag"
+                                        style="color: var(--success-color);"></i> 身分組領取面板</h3>
+                            </div>
+
+                            <form action="/dashboard/settings" method="POST">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
+                                <input type="hidden" name="action" value="create_role_claim">
+
+                                <div class="form-group">
+                                    <label>選擇發送頻道</label>
+                                    <select name="channel_id" required>
+                                        <% channels.forEach(channel=> { %>
+                                            <option value="<%= channel.id %>"># <%= channel.name %>
+                                            </option>
+                                            <% }); %>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>選擇身分組 (使用者按下按鈕後獲得)</label>
+                                    <select name="role_id" required>
+                                        <% roles.forEach(role=> { %>
+                                            <option value="<%= role.id %>" style="color: <%= role.color %>;">
+                                                <%= role.name %>
+                                            </option>
+                                            <% }); %>
+                                    </select>
+                                    <small
+                                        style="color: var(--text-secondary); display:block; margin-top:0.5rem;">注意：機器人的身分組層級必須高於此身分組。</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>按鈕文字</label>
+                                    <input type="text" name="button_label" placeholder="例如：領取通知組" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>面板標題</label>
+                                    <input type="text" name="embed_title" value="身分組自助領取">
+                                </div>
+
+                                <button type="submit" class="btn-submit"
+                                    style="background: var(--success-color); width:100%;">建立面板</button>
+                            </form>
+                        </div>
+
                     </div>
-
-                    <div class="form-group">
-                        <label>維護模式 (Maintenance Mode)</label>
-                        <select name="maintenance">
-                            <option value="off">已停用 (正常運作)</option>
-                            <option value="on">啟用中 (暫停所有指令)</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="btn-submit">儲存變更</button>
-                </form>
-            </div>
+                    <% } %>
         </div>
 </body>
 
