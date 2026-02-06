@@ -1,69 +1,57 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, PermissionFlagsBits, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js');
-
-const db = require('../../database/db');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('panel')
-        .setDescription('🎫 發送工單面板 | Send ticket panel')
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+        .setDescription('開啟功能控制面板 (Open Control Panel)'),
+
     async execute(interaction) {
-        const { guild } = interaction;
-
-        // Fetch Categories
-        const settings = db.prepare('SELECT ticket_categories FROM settings WHERE guild_id = ?').get(guild.id);
-        let categories = [];
-        if (settings && settings.ticket_categories) {
-            try {
-                const parsed = JSON.parse(settings.ticket_categories);
-                if (Array.isArray(parsed)) categories = parsed;
-            } catch (e) { }
-        }
-
+        // Embed mimicking Dashboard Hero/Shortcuts
         const embed = new EmbedBuilder()
-            .setTitle('客服中心 (Support Center)')
-            .setDescription('請從下方選單選擇您需要的協助類別。\n(Select a category from the dropdown below)')
+            .setTitle('🎮 VX6 控制面板')
+            .setDescription('請選擇下方功能捷徑：')
             .setColor('#5865F2')
-            .setFooter({ text: 'Powered by ZenithBot V2' });
-
-        const select = new StringSelectMenuBuilder()
-            .setCustomId('ticket_select')
-            .setPlaceholder('選擇類別 (Select Category)...');
-
-        if (categories.length > 0) {
-            // Use Custom Categories
-            categories.forEach(cat => {
-                select.addOptions(
-                    new StringSelectMenuOptionBuilder()
-                        .setLabel(cat.label)
-                        .setDescription(cat.description || 'Click to open ticket')
-                        .setValue(cat.value)
-                        .setEmoji(cat.emoji || '🎫')
-                );
-            });
-        } else {
-            // Use Defaults
-            select.addOptions(
-                new StringSelectMenuOptionBuilder()
-                    .setLabel('Technical Support')
-                    .setDescription('Get help with technical issues')
-                    .setValue('tech')
-                    .setEmoji('🔧'),
-                new StringSelectMenuOptionBuilder()
-                    .setLabel('Billing Support')
-                    .setDescription('Subscription and payment help')
-                    .setValue('billing')
-                    .setEmoji('💳'),
-                new StringSelectMenuOptionBuilder()
-                    .setLabel('Report User')
-                    .setDescription('Report a violation of our rules')
-                    .setValue('report')
-                    .setEmoji('🛡️'),
+            .addFields(
+                { name: '🎉 一鍵抽獎', value: '快速設定並開始活動', inline: true },
+                { name: '🎵 音樂面板', value: '開啟點歌與播放控制', inline: true },
+                { name: '📜 系統日誌', value: '查看機器人運作紀錄', inline: true },
+                { name: '📘 使用手冊', value: '完整的指令與教學', inline: true }
             );
-        }
 
-        const row = new ActionRowBuilder().addComponents(select);
+        // Buttons
+        const row1 = new ActionRowBuilder()
+            .addComponents(
+                new ButtonBuilder()
+                    .setLabel('一鍵抽獎')
+                    .setEmoji('🎉')
+                    .setStyle(ButtonStyle.Primary)
+                    .setCustomId('panel_giveaway'),
+                new ButtonBuilder()
+                    .setLabel('音樂面板')
+                    .setEmoji('🎵')
+                    .setStyle(ButtonStyle.Success)
+                    .setCustomId('panel_music')
+            );
 
-        await interaction.reply({ embeds: [embed], components: [row] });
-    },
+        const row2 = new ActionRowBuilder()
+            .addComponents(
+                new ButtonBuilder()
+                    .setLabel('系統日誌')
+                    .setEmoji('📜')
+                    .setStyle(ButtonStyle.Secondary)
+                    .setCustomId('panel_logs'),
+                new ButtonBuilder()
+                    .setLabel('使用手冊')
+                    .setEmoji('📘')
+                    .setStyle(ButtonStyle.Link)
+                    .setURL('https://dc-production-b215.up.railway.app/docs'),
+                new ButtonBuilder()
+                    .setLabel('前往網頁版')
+                    .setEmoji('🌐')
+                    .setStyle(ButtonStyle.Link)
+                    .setURL('https://dc-production-b215.up.railway.app/dashboard')
+            );
+
+        await interaction.reply({ embeds: [embed], components: [row1, row2] });
+    }
 };
