@@ -192,16 +192,23 @@ router.post('/settings', async (req, res) => {
                 throw new Error('Announcement plugin is not installed/enabled.');
             }
 
-            const channel = client.channels.cache.get(channel_id);
-            if (!channel) throw new Error('Channel not found');
+            let channel;
+            try {
+                channel = await client.channels.fetch(channel_id);
+            } catch (e) {
+                channel = client.channels.cache.get(channel_id);
+            }
+
+            if (!channel) throw new Error('Channel not found or bot lacks access.');
 
             const embed = new EmbedBuilder()
-                .setTitle(req.body.title)
-                .setDescription(req.body.description)
+                .setTitle(req.body.title || 'Announcement')
+                .setDescription(req.body.description || 'No content provided.')
                 .setColor(req.body.color || '#5865F2')
                 .setTimestamp();
 
             await channel.send({ embeds: [embed] });
+            logger.info(`Announcement sent to ${channel_id} in guild ${guild_id}`);
         }
 
 
@@ -321,9 +328,9 @@ router.post('/settings', async (req, res) => {
 
         // --- Phase 26: Plugin Store Toggle Handlers ---
 
-        else if (action === 'update_announcement_toggle') {
-            const { announcement_enabled } = req.body;
-            const enabled = announcement_enabled ? 1 : 0;
+        else if (action === 'update_announcement_toggle' || action === 'announcement') {
+            const { announcement_enabled, enabled: ajaxEnabled } = req.body;
+            const enabled = (announcement_enabled !== undefined ? announcement_enabled : ajaxEnabled) ? 1 : 0;
             const stmt = db.prepare(`
                 INSERT INTO settings (guild_id, announcement_enabled, updated_at)
                 VALUES (?, ?, CURRENT_TIMESTAMP)
@@ -380,12 +387,12 @@ router.post('/settings', async (req, res) => {
             stmt.run(guild_id, enabled);
         }
 
-        else if (action === 'update_welcome_toggle') {
+        else if (action === 'update_welcome_toggle' || action === 'welcome') {
             // Logic already exists? Let's check.
             // It was called inside update_welcome_toggle block if it exists?
             // Let's ensure this block is consistent.
-            const { welcome_enabled } = req.body;
-            const enabled = welcome_enabled ? 1 : 0;
+            const { welcome_enabled, enabled: ajaxEnabled } = req.body;
+            const enabled = (welcome_enabled !== undefined ? welcome_enabled : ajaxEnabled) ? 1 : 0;
             const stmt = db.prepare(`
                 INSERT INTO settings (guild_id, welcome_enabled, updated_at)
                 VALUES (?, ?, CURRENT_TIMESTAMP)
