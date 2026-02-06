@@ -29,15 +29,20 @@ router.get('/', (req, res) => {
     const guilds = client.guilds.cache.size;
 
     // Fetch Recent Activity (New for Redesign)
-    const recentLogs = db.prepare('SELECT * FROM activity_logs ORDER BY created_at DESC LIMIT 5').all();
+    let recentLogs = [];
+    try {
+        recentLogs = db.prepare('SELECT * FROM activity_logs ORDER BY created_at DESC LIMIT 5').all();
+    } catch (e) {
+        logger.warn('Failed to fetch recent logs for dashboard:', e.message);
+    }
 
     res.render('dashboard', {
-        user: req.user,
+        user: req.user || {},
         stats: {
-            users: userCount,
-            tickets: ticketCount,
-            uptime: uptime,
-            guilds: guilds
+            users: userCount || 0,
+            tickets: ticketCount || 0,
+            uptime: uptime || 0,
+            guilds: guilds || 0
         },
         commands: commandList,
         recentLogs: recentLogs,

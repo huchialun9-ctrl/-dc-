@@ -13,14 +13,20 @@ module.exports = (req, res, next) => {
 
     // Attach translation helper
     res.locals.t = (key) => {
-        const keys = key.split('.');
-        let value = locales[lang] || locales['zh'];
+        try {
+            const keys = key.split('.');
+            let value = locales[lang] || locales['zh'];
 
-        for (const k of keys) {
-            value = value[k];
-            if (!value) return key; // Fallback to key if not found
+            for (const k of keys) {
+                if (value === null || typeof value !== 'object') return key;
+                value = value[k];
+                if (value === undefined) return key; // Fallback to key if not found
+            }
+            return value;
+        } catch (e) {
+            console.error(`i18n Error for key "${key}":`, e.message);
+            return key;
         }
-        return value;
     };
 
     // Attach current language for UI toggles

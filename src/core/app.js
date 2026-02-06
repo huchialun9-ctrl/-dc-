@@ -45,15 +45,24 @@ app.use(express.static(publicPath));
 app.use(require('../web/middleware/i18nMiddleware'));
 
 // Session
-app.use(session({
+const sessionConfig = {
     secret: process.env.SESSION_SECRET || 'dev_secret',
     resave: false,
     saveUninitialized: false,
+    name: 'vx6.sid',
     cookie: {
         secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        sameSite: 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000 // 1 week
     }
-}));
+};
+
+if (process.env.NODE_ENV === 'production') {
+    logger.info('Production mode detected. Secure cookies enabled.');
+}
+
+app.use(session(sessionConfig));
 
 // Passport Config
 passport.serializeUser((user, done) => done(null, user));
@@ -143,8 +152,12 @@ app.get('/health', (req, res) => {
 
 // Error Handler
 app.use((err, req, res, next) => {
+    logger.error('!!! WEB ERROR !!!');
+    logger.error(`Path: ${req.url}`);
+    logger.error(`Error: ${err.message}`);
     logger.error(err.stack);
-    res.status(500).render('error', { error: 'Internal Server Error' });
+    console.error(err);
+    res.status(500).render('error', { error: err.message || 'Internal Server Error' });
 });
 
 module.exports = app;
