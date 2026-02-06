@@ -116,6 +116,7 @@ safeAlter("ALTER TABLE settings ADD COLUMN announcement_enabled INTEGER DEFAULT 
 safeAlter("ALTER TABLE settings ADD COLUMN music_enabled INTEGER DEFAULT 0");
 safeAlter("ALTER TABLE settings ADD COLUMN custom_commands_enabled INTEGER DEFAULT 0");
 safeAlter("ALTER TABLE settings ADD COLUMN automod_enabled INTEGER DEFAULT 0");
+safeAlter("ALTER TABLE settings ADD COLUMN language TEXT DEFAULT 'zh'");
 
 // Activity Logs Expansion
 safeAlter("ALTER TABLE activity_logs ADD COLUMN ip_address TEXT");

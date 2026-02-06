@@ -23,6 +23,10 @@
             <i class="fa-solid fa-list-ul"></i>
             <%= t('sidebar.logs') %>
         </a>
+        <a href="/dashboard/broadcast" class="<%= path === '/dashboard/broadcast' ? 'active' : '' %>">
+            <i class="fa-solid fa-bullhorn"></i>
+            <%= t('sidebar.broadcast') %>
+        </a>
         <a href="/dashboard/settings" class="<%= path === '/dashboard/settings' ? 'active' : '' %>">
             <i class="fa-solid fa-gear"></i>
             <%= t('sidebar.settings') %>

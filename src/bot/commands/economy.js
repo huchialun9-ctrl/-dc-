@@ -23,9 +23,12 @@ module.exports = {
         const subcommand = options.getSubcommand();
 
         // Check if economy is enabled
-        const settings = db.prepare('SELECT economy_enabled, economy_daily, economy_start_balance FROM settings WHERE guild_id = ?').get(guild.id);
+        const settings = db.prepare('SELECT economy_enabled, economy_daily, economy_start_balance, language FROM settings WHERE guild_id = ?').get(guild.id);
+        const lang = settings ? (settings.language || 'zh') : 'zh';
+        const { t } = require('../utils/i18n');
+
         if (!settings || settings.economy_enabled !== 1) {
-            return interaction.reply({ content: '❌ 此伺服器尚未啟用經濟系統！請管理員至Dashboard開啟。', ephemeral: true });
+            return interaction.reply({ content: t('bot.music_not_enabled', lang), ephemeral: true }); // Using existing error key for now or add a new one
         }
 
         if (subcommand === 'balance') {
@@ -52,7 +55,8 @@ module.exports = {
                 const remaining = cooldown - (now - lastDaily);
                 const hours = Math.floor(remaining / (1000 * 60 * 60));
                 const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-                return interaction.reply({ content: `⏳ 您已經領過今天的獎勵了！請在 **${hours}小時 ${minutes}分** 後再來。`, ephemeral: true });
+                const timeStr = lang === 'zh' ? `${hours}小時 ${minutes}分` : `${hours}h ${minutes}m`;
+                return interaction.reply({ content: t('bot.economy_daily_cooldown', lang).replace('{time}', timeStr), ephemeral: true });
             }
 
             const dailyAmount = settings.economy_daily || 100;
@@ -69,8 +73,8 @@ module.exports = {
 
             const embed = new EmbedBuilder()
                 .setColor('#2ECC71')
-                .setTitle('✅ 每日獎勵 (Daily Reward)')
-                .setDescription(`您領取了 **$${reward}**！\n現在餘額: **$${((data ? data.balance : 0) + reward).toLocaleString()}**`);
+                .setTitle(lang === 'zh' ? '✅ 每日獎勵' : '✅ Daily Reward')
+                .setDescription(t('bot.economy_daily_success', lang).replace('{amount}', reward.toLocaleString()) + `\n${lang === 'zh' ? '現在餘額' : 'Balance'}: **$${((data ? data.balance : 0) + reward).toLocaleString()}**`);
 
             interaction.reply({ embeds: [embed] });
         }

@@ -92,6 +92,69 @@ router.get('/logs', (req, res) => {
     res.render('logs', { user: req.user, logs: logs });
 });
 
+router.get('/broadcast', (req, res) => {
+    const client = require('../../bot/client');
+    const userGuilds = req.user.guilds || [];
+
+    // Filter guilds where user is admin AND bot is present
+    const adminGuilds = userGuilds.filter(g => {
+        const hasPerms = (g.permissions & 0x8) === 0x8 || (g.permissions & 0x20) === 0x20;
+        const botPresent = client.guilds.cache.has(g.id);
+        return hasPerms && botPresent;
+    });
+
+    res.render('broadcast', {
+        user: req.user,
+        guilds: adminGuilds,
+        path: '/dashboard/broadcast'
+    });
+});
+
+router.post('/broadcast', async (req, res) => {
+    const { title, description, color, target_guilds } = req.body;
+    const client = require('../../bot/client');
+    const { EmbedBuilder } = require('discord.js');
+
+    const guildIds = Array.isArray(target_guilds) ? target_guilds : [target_guilds];
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const guildId of guildIds) {
+        try {
+            const guild = client.guilds.cache.get(guildId);
+            if (!guild) continue;
+
+            const settings = db.prepare('SELECT announcement_channel_id FROM settings WHERE guild_id = ?').get(guildId);
+            const channelId = settings ? settings.announcement_channel_id : null;
+
+            if (!channelId) {
+                failCount++;
+                continue;
+            }
+
+            const channel = await client.channels.fetch(channelId);
+            if (!channel) {
+                failCount++;
+                continue;
+            }
+
+            const embed = new EmbedBuilder()
+                .setTitle(title)
+                .setDescription(description)
+                .setColor(color || '#5865F2')
+                .setTimestamp()
+                .setFooter({ text: 'VX6 Global Broadcast' });
+
+            await channel.send({ embeds: [embed] });
+            successCount++;
+        } catch (e) {
+            failCount++;
+        }
+    }
+
+    res.redirect(`/dashboard/broadcast?success=Sent to ${successCount} servers. Failed in ${failCount}.`);
+});
+
 router.get('/settings', async (req, res) => {
     const guildId = req.query.guild_id;
     const client = require('../../bot/client');
@@ -435,6 +498,18 @@ router.post('/settings', async (req, res) => {
                 updated_at = CURRENT_TIMESTAMP
             `);
             stmt.run(guild_id, parseFloat(leveling_rate) || 1.0);
+        }
+
+        else if (action === 'update_language') {
+            const { language } = req.body;
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, language, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                language = excluded.language,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+            stmt.run(guild_id, language || 'zh');
         }
 
         else if (action === 'add_ticket_category') {

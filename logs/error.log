@@ -1,0 +1,8 @@
+{"level":"error","message":"Interaction Error: Interaction has already been acknowledged.","timestamp":"2026-02-06 10:48:56"}
+{"level":"error","message":"Interaction Error: Interaction has already been acknowledged.","timestamp":"2026-02-06 11:10:50"}
+{"level":"error","message":"Interaction Error: Interaction has already been acknowledged.","timestamp":"2026-02-06 11:17:50"}
+{"level":"error","message":"Interaction Error: Interaction has already been acknowledged.","timestamp":"2026-02-06 11:18:21"}
+{"level":"error","message":"AI Generation Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","timestamp":"2026-02-06 11:18:48"}
+{"level":"error","message":"Interaction Error: Interaction has already been acknowledged.","timestamp":"2026-02-06 11:25:14"}
+{"level":"error","message":"Interaction Error: Unknown interaction","timestamp":"2026-02-06 11:25:24"}
+{"level":"error","message":"Interaction Error: Interaction has already been acknowledged.","timestamp":"2026-02-06 11:25:49"}

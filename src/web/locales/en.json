@@ -6,8 +6,16 @@
         "users": "Users",
         "logs": "System Logs",
         "settings": "Global Settings",
+        "broadcast": "Global Broadcast",
         "docs": "Documentation",
         "developer": "Developer",
         "logout": "Logout"
+    },
+    "bot": {
+        "welcome": "Hey {user}, welcome to **{server}**! You are the {count}th member. ✨",
+        "economy_daily_success": "✅ Claimed successfully! You received **${amount}**.",
+        "economy_daily_cooldown": "⏳ You need to wait {time} before claiming again.",
+        "music_not_enabled": "❌ Music system is not enabled in this server!",
+        "no_permission": "⚠️ You do not have permission to perform this action."
     }
 }

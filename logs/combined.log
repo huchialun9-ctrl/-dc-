@@ -1,1 +1,100 @@
 {"level":"info","message":"Database initialized successfully.","timestamp":"2026-02-05 11:38:48"}
+{"level":"info","message":"✅ AI (Gemini) Service Initialized","timestamp":"2026-02-06 10:37:15"}
+{"level":"warn","message":"⚠️ cookies.json not found! YouTube playback may be restricted.","timestamp":"2026-02-06 10:37:15"}
+{"level":"info","message":"Web Server running on port 8000","timestamp":"2026-02-06 10:37:15"}
+{"level":"info","message":"Bot logged in as VX6 Tool#9755","timestamp":"2026-02-06 10:37:17"}
+{"level":"info","message":"Logged in as VX6 Tool#9755","timestamp":"2026-02-06 10:37:17"}
+{"level":"info","message":"GiveawayService initialized.","timestamp":"2026-02-06 10:37:17"}
+{"level":"info","message":"EarthquakeService started (Polling CWA API).","timestamp":"2026-02-06 10:37:17"}
+{"level":"info","message":"Running database migrations...","timestamp":"2026-02-06 10:43:37"}
+{"level":"info","message":"✅ AI (Gemini) Service Initialized","timestamp":"2026-02-06 10:43:37"}
+{"level":"warn","message":"⚠️ cookies.json not found! YouTube playback may be restricted.","timestamp":"2026-02-06 10:43:37"}
+{"level":"info","message":"🚀 Web Server running on port 8000","timestamp":"2026-02-06 10:43:37"}
+{"level":"info","message":"✅ Bot logged in as VX6 Tool#9755","timestamp":"2026-02-06 10:43:38"}
+{"level":"info","message":"Logged in as VX6 Tool#9755","timestamp":"2026-02-06 10:43:38"}
+{"level":"info","message":"GiveawayService initialized.","timestamp":"2026-02-06 10:43:38"}
+{"level":"info","message":"EarthquakeService started (Polling CWA API).","timestamp":"2026-02-06 10:43:38"}
+{"level":"error","message":"Interaction Error: Interaction has already been acknowledged.","timestamp":"2026-02-06 10:48:56"}
+{"level":"info","message":"✅ Database table initialized: Users","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"✅ Database table initialized: Tickets","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"✅ Database table initialized: Settings","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"✅ Database table initialized: Activity Logs","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"✅ Database table initialized: Custom Commands","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"✅ Database table initialized: Levels","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"✅ Database table initialized: Transcripts","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"✅ Database table initialized: Economy","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"✅ Database table initialized: Giveaways","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"✅ Database table initialized: Voice Master","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"✅ Database table initialized: Voice Channels","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"✅ Database table initialized: Earthquake Subs","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"Running database migrations...","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"✅ AI (Gemini) Service Initialized","timestamp":"2026-02-06 10:49:24"}
+{"level":"warn","message":"⚠️ cookies.json not found! YouTube playback may be restricted.","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"🚀 Web Server running on port 8000","timestamp":"2026-02-06 10:49:24"}
+{"level":"info","message":"✅ Bot logged in as VX6 Tool#9755","timestamp":"2026-02-06 10:49:25"}
+{"level":"info","message":"Logged in as VX6 Tool#9755","timestamp":"2026-02-06 10:49:25"}
+{"level":"info","message":"GiveawayService initialized.","timestamp":"2026-02-06 10:49:25"}
+{"level":"info","message":"EarthquakeService started (Polling CWA API).","timestamp":"2026-02-06 10:49:25"}
+{"level":"info","message":"✅ Database table initialized: Users","timestamp":"2026-02-06 11:00:37"}
+{"level":"info","message":"✅ Database table initialized: Tickets","timestamp":"2026-02-06 11:00:37"}
+{"level":"info","message":"✅ Database table initialized: Settings","timestamp":"2026-02-06 11:00:37"}
+{"level":"info","message":"✅ Database table initialized: Activity Logs","timestamp":"2026-02-06 11:00:37"}
+{"level":"info","message":"✅ Database table initialized: Custom Commands","timestamp":"2026-02-06 11:00:37"}
+{"level":"info","message":"✅ Database table initialized: Levels","timestamp":"2026-02-06 11:00:37"}
+{"level":"info","message":"✅ Database table initialized: Transcripts","timestamp":"2026-02-06 11:00:37"}
+{"level":"info","message":"✅ Database table initialized: Economy","timestamp":"2026-02-06 11:00:37"}
+{"level":"info","message":"✅ Database table initialized: Giveaways","timestamp":"2026-02-06 11:00:37"}
+{"level":"info","message":"✅ Database table initialized: Voice Master","timestamp":"2026-02-06 11:00:37"}
+{"level":"info","message":"✅ Database table initialized: Voice Channels","timestamp":"2026-02-06 11:00:37"}
+{"level":"info","message":"✅ Database table initialized: Earthquake Subs","timestamp":"2026-02-06 11:00:37"}
+{"level":"info","message":"Running database migrations...","timestamp":"2026-02-06 11:00:37"}
+{"level":"info","message":"GET /health - ::ffff:127.0.0.1","timestamp":"2026-02-06 11:01:18"}
+{"level":"info","message":"✅ Database table initialized: Users","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"✅ Database table initialized: Tickets","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"✅ Database table initialized: Settings","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"✅ Database table initialized: Activity Logs","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"✅ Database table initialized: Custom Commands","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"✅ Database table initialized: Levels","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"✅ Database table initialized: Transcripts","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"✅ Database table initialized: Economy","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"✅ Database table initialized: Giveaways","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"✅ Database table initialized: Voice Master","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"✅ Database table initialized: Voice Channels","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"✅ Database table initialized: Earthquake Subs","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"Running database migrations...","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"✅ AI (Gemini) Service Initialized","timestamp":"2026-02-06 11:02:36"}
+{"level":"warn","message":"⚠️ cookies.json not found! YouTube playback may be restricted.","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"🚀 Web Server running on port 8000","timestamp":"2026-02-06 11:02:36"}
+{"level":"info","message":"✅ Bot logged in as VX6 Tool#9755","timestamp":"2026-02-06 11:02:37"}
+{"level":"info","message":"Logged in as VX6 Tool#9755","timestamp":"2026-02-06 11:02:37"}
+{"level":"info","message":"GiveawayService initialized.","timestamp":"2026-02-06 11:02:37"}
+{"level":"info","message":"EarthquakeService started (Polling CWA API).","timestamp":"2026-02-06 11:02:37"}
+{"level":"info","message":"✅ Database table initialized: Users","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"✅ Database table initialized: Tickets","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"✅ Database table initialized: Settings","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"✅ Database table initialized: Activity Logs","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"✅ Database table initialized: Custom Commands","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"✅ Database table initialized: Levels","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"✅ Database table initialized: Transcripts","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"✅ Database table initialized: Economy","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"✅ Database table initialized: Giveaways","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"✅ Database table initialized: Voice Master","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"✅ Database table initialized: Voice Channels","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"✅ Database table initialized: Earthquake Subs","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"Running database migrations...","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"✅ AI (Gemini) Service Initialized","timestamp":"2026-02-06 11:07:29"}
+{"level":"warn","message":"⚠️ cookies.json not found! YouTube playback may be restricted.","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"🚀 Web Server running on port 8000","timestamp":"2026-02-06 11:07:29"}
+{"level":"info","message":"✅ Bot logged in as VX6 Tool#9755","timestamp":"2026-02-06 11:07:30"}
+{"level":"info","message":"Logged in as VX6 Tool#9755","timestamp":"2026-02-06 11:07:31"}
+{"level":"info","message":"GiveawayService initialized.","timestamp":"2026-02-06 11:07:31"}
+{"level":"info","message":"EarthquakeService started (Polling CWA API).","timestamp":"2026-02-06 11:07:31"}
+{"level":"info","message":"GET /auth/discord - ::ffff:127.0.0.1","timestamp":"2026-02-06 11:07:31"}
+{"level":"info","message":"Initialized settings for guild 1468484517596500033 with AI enabled.","timestamp":"2026-02-06 11:10:41"}
+{"level":"error","message":"Interaction Error: Interaction has already been acknowledged.","timestamp":"2026-02-06 11:10:50"}
+{"level":"error","message":"Interaction Error: Interaction has already been acknowledged.","timestamp":"2026-02-06 11:17:50"}
+{"level":"error","message":"Interaction Error: Interaction has already been acknowledged.","timestamp":"2026-02-06 11:18:21"}
+{"level":"error","message":"AI Generation Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","timestamp":"2026-02-06 11:18:48"}
+{"level":"error","message":"Interaction Error: Interaction has already been acknowledged.","timestamp":"2026-02-06 11:25:14"}
+{"level":"error","message":"Interaction Error: Unknown interaction","timestamp":"2026-02-06 11:25:24"}
+{"level":"error","message":"Interaction Error: Interaction has already been acknowledged.","timestamp":"2026-02-06 11:25:49"}
