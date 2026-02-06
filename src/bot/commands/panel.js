@@ -6,7 +6,7 @@ module.exports = {
         .setDescription('開啟功能控制面板 (Open Control Panel)'),
 
     async execute(interaction) {
-        // Embed mimicking Dashboard Hero/Shortcuts
+        // Embed providing quick feature shortcuts
         const embed = new EmbedBuilder()
             .setTitle('🎮 VX6 控制面板')
             .setDescription('請選擇下方功能捷徑：')
@@ -44,12 +44,7 @@ module.exports = {
                     .setLabel('使用手冊')
                     .setEmoji('📘')
                     .setStyle(ButtonStyle.Link)
-                    .setURL('https://dc-production-b215.up.railway.app/docs'),
-                new ButtonBuilder()
-                    .setLabel('前往網頁版')
-                    .setEmoji('🌐')
-                    .setStyle(ButtonStyle.Link)
-                    .setURL('https://dc-production-b215.up.railway.app/dashboard')
+                    .setURL('https://dc-production-b215.up.railway.app/')
             );
 
         await interaction.reply({ embeds: [embed], components: [row1, row2] });

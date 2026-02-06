@@ -44,8 +44,4 @@ router.get('/terms', (req, res) => {
     res.render('terms', { user: req.user });
 });
 
-router.get('/docs', (req, res) => {
-    res.render('docs', { user: req.user });
-});
-
 module.exports = router;

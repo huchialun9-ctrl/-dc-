@@ -89,7 +89,7 @@ module.exports = {
 
                 else if (interaction.customId === 'panel_giveaway') {
                     await interaction.reply({
-                        content: '🎉 **一鍵抽獎設定**\n請使用 `/giveaway start` 指令來開始一個新的抽獎活動，或是前往 [控制台](https://dc-production-b215.up.railway.app/dashboard) 進行詳細設定。',
+                        content: '🎉 **一鍵抽獎設定**\n請使用 `/giveaway start` 指令來開始一個新的抽獎活動。',
                         ephemeral: true
                     });
                 }

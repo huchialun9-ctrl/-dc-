@@ -94,8 +94,6 @@ passport.use(new DiscordStrategy({
 
         logger.info(`Auth Success: ${profile.id}`);
 
-        // Save guilds to session for dashboard access
-        profile.guilds = profile.guilds || [];
         return done(null, profile);
     } catch (err) {
         logger.error(`Auth Callback Error: ${err.message}`);
@@ -120,7 +118,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/', require('../web/routes/index'));
 app.use('/auth', require('../web/routes/auth'));
-// app.use('/dashboard', require('../web/routes/dashboard')); // Protected
+
 
 // Health Check & DB Status
 app.get('/health', (req, res) => {
