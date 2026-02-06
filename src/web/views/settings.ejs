@@ -649,7 +649,8 @@
                     // Initialize tracking
                     document.querySelectorAll('form.track-changes').forEach(form => {
                         form.querySelectorAll('input, textarea, select').forEach(input => {
-                            if (input.type === 'hidden') return;
+                            // SKIP hidden inputs UNLESS they are plugin-state toggles
+                            if (input.type === 'hidden' && !input.classList.contains('plugin-state')) return;
 
                             if (input.type === 'checkbox' || input.type === 'radio') {
                                 input.dataset.initial = input.checked;
@@ -676,7 +677,9 @@
                         } else {
                             let formActuallyDirty = false;
                             form.querySelectorAll('input, textarea, select').forEach(el => {
-                                if (el.type === 'hidden') return;
+                                // Same check here
+                                if (el.type === 'hidden' && !el.classList.contains('plugin-state')) return;
+
                                 let d = false;
                                 if (el.type === 'checkbox' || el.type === 'radio') {
                                     d = el.checked.toString() !== el.dataset.initial;
