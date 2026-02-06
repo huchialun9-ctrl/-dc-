@@ -1,4 +1,4 @@
-const { Events } = require('discord.js');
+const { Events, ActivityType } = require('discord.js');
 const logger = require('../../core/logger');
 
 module.exports = {
@@ -6,6 +6,15 @@ module.exports = {
     once: true,
     execute(client) {
         logger.info(`Logged in as ${client.user.tag}`);
+
+        // Set Presence to "Watching VCT"
+        client.user.setPresence({
+            activities: [{
+                name: 'VCT',
+                type: ActivityType.Watching
+            }],
+            status: 'online',
+        });
 
         // Initialize Services
         if (client.giveawayService) {
