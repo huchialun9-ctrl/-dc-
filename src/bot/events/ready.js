@@ -7,11 +7,12 @@ module.exports = {
     execute(client) {
         logger.info(`Logged in as ${client.user.tag}`);
 
-        // Set Presence to "Watching VCT"
+        // Set Presence to Custom Status
         client.user.setPresence({
             activities: [{
-                name: 'VCT',
-                type: ActivityType.Watching
+                name: 'custom',
+                type: ActivityType.Custom,
+                state: '為民服務中'
             }],
             status: 'online',
         });
