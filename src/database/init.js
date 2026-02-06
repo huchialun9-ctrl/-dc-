@@ -11,10 +11,15 @@ function initDb() {
         db.exec(schema);
 
         // Migrations
+        // Migrations: Safer Check
         try {
-            db.exec("ALTER TABLE settings ADD COLUMN ai_chat_enabled INTEGER DEFAULT 0");
+            const columns = db.pragma('table_info(settings)').map(c => c.name);
+            if (!columns.includes('ai_chat_enabled')) {
+                db.exec("ALTER TABLE settings ADD COLUMN ai_chat_enabled INTEGER DEFAULT 0");
+                logger.info('✅ Migrated DB: Added ai_chat_enabled column');
+            }
         } catch (e) {
-            // Column likely exists
+            logger.warn('Migration warning: ' + e.message);
         }
 
         logger.info('Database initialized successfully.');
