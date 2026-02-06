@@ -20,13 +20,21 @@
             <!-- New Hero Banner -->
             <div class="hero-banner">
                 <div style="position: relative; z-index: 2;">
-                    <h1 style="color: white; font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 800;">
-                        <% const hour=new Date().getHours(); let greeting='你好' ; if (hour < 12) greeting='早安' ; else if
-                            (hour < 18) greeting='午安' ; else greeting='晚安' ; %>
-                            <%= greeting %>，<%= user.username %>！
+                    <h1
+                        style="color: white; font-size: 3.2rem; margin-bottom: 0.75rem; font-weight: 800; letter-spacing: -0.02em; text-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                        <% const hour=new Date().getHours(); let greeting='你好' ; if (hour < 5) greeting='凌晨好' ; else if
+                            (hour < 12) greeting='早安' ; else if (hour < 14) greeting='中午好' ; else if (hour < 18)
+                            greeting='午安' ; else greeting='晚安' ; %>
+                            <span
+                                style="background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(147, 197, 253, 0.3));">
+                                <%= greeting %>，<%= user.username %>！
+                            </span>
                     </h1>
-                    <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem; max-width: 600px;">
-                        歡迎回到 VX6 管理中心。目前一切運作良好，準備好管理您的伺服器了嗎？
+                    <p
+                        style="color: rgba(255,255,255,0.95); font-size: 1.3rem; max-width: 700px; font-weight: 500; line-height: 1.5; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        歡迎回到 <span
+                            style="background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2);">VX6
+                            管理中心</span>。目前一切運作良好，準備好管理您的伺服器了嗎？
                     </p>
                 </div>
                 <div class="animate-float"
