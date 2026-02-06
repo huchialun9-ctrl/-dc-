@@ -127,8 +127,7 @@
                             <form action="/dashboard/settings" method="POST" class="track-changes plugin-form">
                                 <input type="hidden" name="action" value="update_welcome_toggle">
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                                <input type="hidden" name="welcome_enabled" class="plugin-state"
-                                    value="<%= settings.welcome_enabled ? 1 : 0 %>">
+                                <!-- Hidden Input Removed: Replaced by Toggle -->
 
                                 <div class="card-header-content">
                                     <div class="card-title">
@@ -137,22 +136,17 @@
                                     <p class="card-desc">新成員加入時發送歡迎訊息。</p>
                                 </div>
 
-                                <div class="card-controls">
-                                    <button type="button"
-                                        class="btn-install <%= settings.welcome_enabled ? 'hidden' : '' %>"
-                                        onclick="togglePlugin('welcome', true)">
-                                        <i class="fa-solid fa-download"></i> 安裝插件
+                                <!-- New Toggle Layout -->
+                                <div class="card-controls-row">
+                                    <button type="button" class="btn-settings-small" onclick="openConfig('welcome')">
+                                        <i class="fa-solid fa-gear"></i> 設定
                                     </button>
-                                    <div class="plugin-installed <%= settings.welcome_enabled ? '' : 'hidden' %>"
-                                        style="width: 100%; display: flex; flex-direction: column; gap: 0.5rem;">
-                                        <button type="button" class="btn-setting" onclick="openConfig('welcome')">
-                                            <i class="fa-solid fa-gear"></i> 設定
-                                        </button>
-                                        <button type="button" class="btn-uninstall"
-                                            onclick="togglePlugin('welcome', false)">
-                                            <i class="fa-solid fa-trash"></i> 移除
-                                        </button>
-                                    </div>
+
+                                    <label class="switch">
+                                        <input type="checkbox" name="welcome_enabled" value="1"
+                                            <%=settings.welcome_enabled ? 'checked' : '' %>>
+                                        <span class="slider"></span>
+                                    </label>
                                 </div>
                             </form>
                             <div class="card-watermark"><i class="fa-solid fa-door-open"></i></div>
@@ -163,8 +157,7 @@
                             <form action="/dashboard/settings" method="POST" class="track-changes plugin-form">
                                 <input type="hidden" name="action" value="update_economy">
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                                <input type="hidden" name="economy_enabled" class="plugin-state"
-                                    value="<%= settings.economy_enabled ? 1 : 0 %>">
+                                <!-- Hidden Input Removed: Replaced by Toggle -->
 
                                 <div class="card-header-content">
                                     <div class="card-title">
@@ -173,23 +166,17 @@
                                     <p class="card-desc">簽到、錢包與商店功能。</p>
                                 </div>
 
-                                <div class="card-controls">
-                                    <button type="button"
-                                        class="btn-install <%= settings.economy_enabled ? 'hidden' : '' %>"
-                                        onclick="togglePlugin('economy', true)">
-                                        <i class="fa-solid fa-download"></i> 安裝插件
-                                    </button>
-                                    <div class="plugin-installed <%= settings.economy_enabled ? '' : 'hidden' %>"
-                                        style="width: 100%; display: flex; flex-direction: column; gap: 0.5rem;">
-                                        <a href="/dashboard/leaderboard/<%= guild.id %>/economy" class="btn-setting"
-                                            style="text-align: center;">
-                                            <i class="fa-solid fa-chart-bar"></i> 查看榜單
-                                        </a>
-                                        <button type="button" class="btn-uninstall"
-                                            onclick="togglePlugin('economy', false)">
-                                            <i class="fa-solid fa-trash"></i> 移除
-                                        </button>
-                                    </div>
+                                <!-- New Toggle Layout -->
+                                <div class="card-controls-row">
+                                    <a href="/dashboard/leaderboard/<%= guild.id %>/economy" class="btn-settings-small">
+                                        <i class="fa-solid fa-chart-bar"></i> 查看榜單
+                                    </a>
+
+                                    <label class="switch">
+                                        <input type="checkbox" name="economy_enabled" value="1"
+                                            <%=settings.economy_enabled ? 'checked' : '' %>>
+                                        <span class="slider"></span>
+                                    </label>
                                 </div>
                             </form>
                             <div class="card-watermark"><i class="fa-solid fa-coins"></i></div>
@@ -200,8 +187,7 @@
                             <form action="/dashboard/settings" method="POST" class="track-changes plugin-form">
                                 <input type="hidden" name="action" value="update_ai_chat">
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                                <input type="hidden" name="ai_chat_enabled" class="plugin-state"
-                                    value="<%= settings.ai_chat_enabled ? 1 : 0 %>">
+                                <!-- Hidden Input Removed: Replaced by Toggle -->
 
                                 <div class="card-header-content">
                                     <div class="card-title">
@@ -210,21 +196,17 @@
                                     <p class="card-desc">提及機器人即可進行智慧對話。</p>
                                 </div>
 
-                                <div class="card-controls">
-                                    <button type="button"
-                                        class="btn-install <%= settings.ai_chat_enabled ? 'hidden' : '' %>"
-                                        onclick="togglePlugin('ai', true)">
-                                        <i class="fa-solid fa-download"></i> 安裝插件
+                                <!-- New Toggle Layout -->
+                                <div class="card-controls-row">
+                                    <button type="button" class="btn-settings-small" onclick="openConfig('ai')">
+                                        <i class="fa-solid fa-gear"></i> 設定
                                     </button>
-                                    <div class="plugin-installed <%= settings.ai_chat_enabled ? '' : 'hidden' %>"
-                                        style="width: 100%; display: flex; flex-direction: column; gap: 0.5rem;">
-                                        <button type="button" class="btn-setting" onclick="openConfig('ai')">
-                                            <i class="fa-solid fa-gear"></i> 設定
-                                        </button>
-                                        <button type="button" class="btn-uninstall" onclick="togglePlugin('ai', false)">
-                                            <i class="fa-solid fa-trash"></i> 移除
-                                        </button>
-                                    </div>
+
+                                    <label class="switch">
+                                        <input type="checkbox" name="ai_chat_enabled" value="1"
+                                            <%=settings.ai_chat_enabled ? 'checked' : '' %>>
+                                        <span class="slider"></span>
+                                    </label>
                                 </div>
                             </form>
                             <div class="card-watermark"><i class="fa-solid fa-robot"></i></div>
@@ -243,8 +225,7 @@
                                 <!-- Actually, user might want bad words but not link filter. -->
                                 <!-- Better: Use automod_enabled as Master Switch. I need to update route handler to respect it. -->
                                 <!-- For now, let's map Install -> automod_links=1. It's the simplest path. -->
-                                <input type="hidden" name="automod_links" class="plugin-state"
-                                    value="<%= settings.automod_links ? 1 : 0 %>">
+                                <!-- Hidden Input Removed: Replaced by Toggle -->
 
                                 <div class="card-header-content">
                                     <div class="card-title">
@@ -253,22 +234,17 @@
                                     <p class="card-desc">過濾惡意連結與詞彙。</p>
                                 </div>
 
-                                <div class="card-controls">
-                                    <button type="button"
-                                        class="btn-install <%= settings.automod_links ? 'hidden' : '' %>"
-                                        onclick="togglePlugin('automod', true)">
-                                        <i class="fa-solid fa-download"></i> 安裝插件
+                                <!-- New Toggle Layout -->
+                                <div class="card-controls-row">
+                                    <button type="button" class="btn-settings-small" onclick="openConfig('automod')">
+                                        <i class="fa-solid fa-gear"></i> 設定
                                     </button>
-                                    <div class="plugin-installed <%= settings.automod_links ? '' : 'hidden' %>"
-                                        style="width: 100%; display: flex; flex-direction: column; gap: 0.5rem;">
-                                        <button type="button" class="btn-setting" onclick="openConfig('automod')">
-                                            <i class="fa-solid fa-gear"></i> 設定
-                                        </button>
-                                        <button type="button" class="btn-uninstall"
-                                            onclick="togglePlugin('automod', false)">
-                                            <i class="fa-solid fa-trash"></i> 移除
-                                        </button>
-                                    </div>
+
+                                    <label class="switch">
+                                        <input type="checkbox" name="automod_links" value="1" <%=settings.automod_links
+                                            ? 'checked' : '' %>>
+                                        <span class="slider"></span>
+                                    </label>
                                 </div>
                             </form>
                             <div class="card-watermark"><i class="fa-solid fa-gavel"></i></div>
@@ -279,8 +255,7 @@
                             <form action="/dashboard/settings" method="POST" class="track-changes plugin-form">
                                 <input type="hidden" name="action" value="update_music_toggle">
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                                <input type="hidden" name="music_enabled" class="plugin-state"
-                                    value="<%= settings.music_enabled ? 1 : 0 %>">
+                                <!-- Hidden Input Removed: Replaced by Toggle -->
 
                                 <div class="card-header-content">
                                     <div class="card-title">
@@ -289,23 +264,17 @@
                                     <p class="card-desc">Web 音樂控制面板。</p>
                                 </div>
 
-                                <div class="card-controls">
-                                    <button type="button"
-                                        class="btn-install <%= settings.music_enabled ? 'hidden' : '' %>"
-                                        onclick="togglePlugin('music', true)">
-                                        <i class="fa-solid fa-download"></i> 安裝插件
-                                    </button>
-                                    <div class="plugin-installed <%= settings.music_enabled ? '' : 'hidden' %>"
-                                        style="width: 100%; display: flex; flex-direction: column; gap: 0.5rem;">
-                                        <a href="/dashboard/music/<%= guild.id %>" class="btn-setting"
-                                            style="text-align: center;">
-                                            <i class="fa-solid fa-music"></i> 開啟面板
-                                        </a>
-                                        <button type="button" class="btn-uninstall"
-                                            onclick="togglePlugin('music', false)">
-                                            <i class="fa-solid fa-trash"></i> 移除
-                                        </button>
-                                    </div>
+                                <!-- New Toggle Layout -->
+                                <div class="card-controls-row">
+                                    <a href="/dashboard/music/<%= guild.id %>" class="btn-settings-small">
+                                        <i class="fa-solid fa-music"></i> 開啟面板
+                                    </a>
+
+                                    <label class="switch">
+                                        <input type="checkbox" name="music_enabled" value="1" <%=settings.music_enabled
+                                            ? 'checked' : '' %>>
+                                        <span class="slider"></span>
+                                    </label>
                                 </div>
                             </form>
                             <div class="card-watermark"><i class="fa-solid fa-music"></i></div>
@@ -316,8 +285,7 @@
                             <form action="/dashboard/settings" method="POST" class="track-changes plugin-form">
                                 <input type="hidden" name="action" value="update_leveling">
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                                <input type="hidden" name="leveling_enabled" class="plugin-state"
-                                    value="<%= settings.leveling_enabled ? 1 : 0 %>">
+                                <!-- Hidden Input Removed: Replaced by Toggle -->
 
                                 <div class="card-header-content">
                                     <div class="card-title">
@@ -326,23 +294,17 @@
                                     <p class="card-desc">聊天獲取經驗與等級。</p>
                                 </div>
 
-                                <div class="card-controls">
-                                    <button type="button"
-                                        class="btn-install <%= settings.leveling_enabled ? 'hidden' : '' %>"
-                                        onclick="togglePlugin('leveling', true)">
-                                        <i class="fa-solid fa-download"></i> 安裝插件
-                                    </button>
-                                    <div class="plugin-installed <%= settings.leveling_enabled ? '' : 'hidden' %>"
-                                        style="width: 100%; display: flex; flex-direction: column; gap: 0.5rem;">
-                                        <a href="/dashboard/leaderboard/<%= guild.id %>" class="btn-setting"
-                                            style="text-align: center;">
-                                            <i class="fa-solid fa-chart-line"></i> 排行榜
-                                        </a>
-                                        <button type="button" class="btn-uninstall"
-                                            onclick="togglePlugin('leveling', false)">
-                                            <i class="fa-solid fa-trash"></i> 移除
-                                        </button>
-                                    </div>
+                                <!-- New Toggle Layout -->
+                                <div class="card-controls-row">
+                                    <a href="/dashboard/leaderboard/<%= guild.id %>" class="btn-settings-small">
+                                        <i class="fa-solid fa-chart-line"></i> 排行榜
+                                    </a>
+
+                                    <label class="switch">
+                                        <input type="checkbox" name="leveling_enabled" value="1"
+                                            <%=settings.leveling_enabled ? 'checked' : '' %>>
+                                        <span class="slider"></span>
+                                    </label>
                                 </div>
                             </form>
                             <div class="card-watermark"><i class="fa-solid fa-star"></i></div>
@@ -353,8 +315,7 @@
                             <form action="/dashboard/settings" method="POST" class="track-changes plugin-form">
                                 <input type="hidden" name="action" value="update_commands_toggle">
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                                <input type="hidden" name="custom_commands_enabled" class="plugin-state"
-                                    value="<%= settings.custom_commands_enabled ? 1 : 0 %>">
+                                <!-- Hidden Input Removed: Replaced by Toggle -->
 
                                 <div class="card-header-content">
                                     <div class="card-title">
@@ -363,22 +324,17 @@
                                     <p class="card-desc">建立伺服器專屬指令。</p>
                                 </div>
 
-                                <div class="card-controls">
-                                    <button type="button"
-                                        class="btn-install <%= settings.custom_commands_enabled ? 'hidden' : '' %>"
-                                        onclick="togglePlugin('commands', true)">
-                                        <i class="fa-solid fa-download"></i> 安裝插件
+                                <!-- New Toggle Layout -->
+                                <div class="card-controls-row">
+                                    <button type="button" class="btn-settings-small" onclick="openConfig('commands')">
+                                        <i class="fa-solid fa-list-check"></i> 管理指令
                                     </button>
-                                    <div class="plugin-installed <%= settings.custom_commands_enabled ? '' : 'hidden' %>"
-                                        style="width: 100%; display: flex; flex-direction: column; gap: 0.5rem;">
-                                        <button type="button" class="btn-setting" onclick="openConfig('commands')">
-                                            <i class="fa-solid fa-list-check"></i> 管理指令
-                                        </button>
-                                        <button type="button" class="btn-uninstall"
-                                            onclick="togglePlugin('commands', false)">
-                                            <i class="fa-solid fa-trash"></i> 移除
-                                        </button>
-                                    </div>
+
+                                    <label class="switch">
+                                        <input type="checkbox" name="custom_commands_enabled" value="1"
+                                            <%=settings.custom_commands_enabled ? 'checked' : '' %>>
+                                        <span class="slider"></span>
+                                    </label>
                                 </div>
                             </form>
                             <div class="card-watermark"><i class="fa-solid fa-terminal"></i></div>
@@ -584,35 +540,7 @@
                             }
                         });
 
-                        function togglePlugin(moduleId, install) {
-                            const card = document.querySelector(`.settings-card[data-module="${moduleId}"]`);
-                            if (!card) return;
-
-                            const installBtn = card.querySelector('.btn-install');
-                            const installedDiv = card.querySelector('.plugin-installed');
-                            const input = card.querySelector('.plugin-state');
-
-                            if (install) {
-                                // Install
-                                installBtn.classList.add('hidden');
-                                installedDiv.classList.remove('hidden');
-                                input.value = "1";
-                            } else {
-                                // Uninstall
-                                installBtn.classList.remove('hidden');
-                                installedDiv.classList.add('hidden');
-                                input.value = "0";
-                            }
-
-                            // Trigger change event for unsaved bar
-                            // Use global checker if available for robustness
-                            const form = card.querySelector('form');
-                            if (window.checkDirty && form) {
-                                window.checkDirty(input, form);
-                            } else {
-                                input.dispatchEvent(new Event('change', { bubbles: true }));
-                            }
-                        }
+                        // togglePlugin function removed (logic replaced by direct checkbox listeners)
 
                         function openConfig(moduleId) {
                             document.getElementById('modules-grid').style.display = 'none';
