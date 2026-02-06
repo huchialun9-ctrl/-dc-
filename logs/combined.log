@@ -111,3 +111,29 @@
 {"level":"info","message":"✅ Database table initialized: Voice Channels","timestamp":"2026-02-07 07:34:06"}
 {"level":"info","message":"✅ Database table initialized: Earthquake Subs","timestamp":"2026-02-07 07:34:06"}
 {"level":"info","message":"Running database migrations...","timestamp":"2026-02-07 07:34:06"}
+{"level":"info","message":"✅ Database table initialized: Users","timestamp":"2026-02-07 07:57:22"}
+{"level":"info","message":"✅ Database table initialized: Tickets","timestamp":"2026-02-07 07:57:22"}
+{"level":"info","message":"✅ Database table initialized: Settings","timestamp":"2026-02-07 07:57:22"}
+{"level":"info","message":"✅ Database table initialized: Activity Logs","timestamp":"2026-02-07 07:57:22"}
+{"level":"info","message":"✅ Database table initialized: Custom Commands","timestamp":"2026-02-07 07:57:22"}
+{"level":"info","message":"✅ Database table initialized: Levels","timestamp":"2026-02-07 07:57:22"}
+{"level":"info","message":"✅ Database table initialized: Transcripts","timestamp":"2026-02-07 07:57:22"}
+{"level":"info","message":"✅ Database table initialized: Economy","timestamp":"2026-02-07 07:57:22"}
+{"level":"info","message":"✅ Database table initialized: Giveaways","timestamp":"2026-02-07 07:57:22"}
+{"level":"info","message":"✅ Database table initialized: Voice Master","timestamp":"2026-02-07 07:57:22"}
+{"level":"info","message":"✅ Database table initialized: Voice Channels","timestamp":"2026-02-07 07:57:22"}
+{"level":"info","message":"✅ Database table initialized: Earthquake Subs","timestamp":"2026-02-07 07:57:22"}
+{"level":"info","message":"Running database migrations...","timestamp":"2026-02-07 07:57:22"}
+{"level":"info","message":"✅ Database table initialized: Users","timestamp":"2026-02-07 07:58:58"}
+{"level":"info","message":"✅ Database table initialized: Tickets","timestamp":"2026-02-07 07:58:58"}
+{"level":"info","message":"✅ Database table initialized: Settings","timestamp":"2026-02-07 07:58:58"}
+{"level":"info","message":"✅ Database table initialized: Activity Logs","timestamp":"2026-02-07 07:58:58"}
+{"level":"info","message":"✅ Database table initialized: Custom Commands","timestamp":"2026-02-07 07:58:58"}
+{"level":"info","message":"✅ Database table initialized: Levels","timestamp":"2026-02-07 07:58:58"}
+{"level":"info","message":"✅ Database table initialized: Transcripts","timestamp":"2026-02-07 07:58:58"}
+{"level":"info","message":"✅ Database table initialized: Economy","timestamp":"2026-02-07 07:58:58"}
+{"level":"info","message":"✅ Database table initialized: Giveaways","timestamp":"2026-02-07 07:58:58"}
+{"level":"info","message":"✅ Database table initialized: Voice Master","timestamp":"2026-02-07 07:58:58"}
+{"level":"info","message":"✅ Database table initialized: Voice Channels","timestamp":"2026-02-07 07:58:58"}
+{"level":"info","message":"✅ Database table initialized: Earthquake Subs","timestamp":"2026-02-07 07:58:58"}
+{"level":"info","message":"Running database migrations...","timestamp":"2026-02-07 07:58:58"}

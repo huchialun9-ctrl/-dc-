@@ -39,6 +39,21 @@ module.exports = {
                 .setDescription('配置榮耀勳章 (等級系統)')
                 .addNumberOption(opt => opt.setName('rate').setDescription('全域經驗倍率 (例如: 1.5)'))
                 .addStringOption(opt => opt.setName('status').setDescription('啟用狀態').addChoices({ name: '開啟', value: 'on' }, { name: '關閉', value: 'off' }))
+        )
+        // Subcommand Group: Ticket
+        .addSubcommandGroup(group =>
+            group.setName('ticket')
+                .setDescription('🎫 工單系統進階設定 (Ticket System)')
+                .addSubcommand(sub =>
+                    sub.setName('staff')
+                        .setDescription('👮 設定客服工作人員身分組 (Support Role)')
+                        .addRoleOption(opt => opt.setName('role').setDescription('客服身分組').setRequired(true))
+                )
+                .addSubcommand(sub =>
+                    sub.setName('logs')
+                        .setDescription('📜 設定工單對話紀錄頻道 (Transcript Channel)')
+                        .addChannelOption(opt => opt.setName('channel').setDescription('日誌頻道').addChannelTypes(ChannelType.GuildText).setRequired(true))
+                )
         ),
 
     async execute(interaction) {
@@ -120,6 +135,21 @@ module.exports = {
             `);
             stmt.run(guildId, rate || null, enabled);
             embed.setTitle('🏆 等級系統設定已更新').setDescription(`狀態: ${status || '未變動'}\n倍率: ${rate || '未變動'}`);
+        }
+
+        // 6. Ticket Config
+        else if (interaction.options.getSubcommandGroup() === 'ticket') {
+            const sub = interaction.options.getSubcommand();
+            if (sub === 'staff') {
+                const role = interaction.options.getRole('role');
+                db.prepare('UPDATE settings SET ticket_support_role_id = ?, updated_at = CURRENT_TIMESTAMP WHERE guild_id = ?').run(role.id, interaction.guildId);
+                embed.setTitle('👮 客服身分組已設定').setDescription(`現在只有持有 ${role} 身分組的人員可以查看與領取工單。`);
+            }
+            if (sub === 'logs') {
+                const channel = interaction.options.getChannel('channel');
+                db.prepare('UPDATE settings SET log_channel_id = ?, updated_at = CURRENT_TIMESTAMP WHERE guild_id = ?').run(channel.id, interaction.guildId);
+                embed.setTitle('📜 工單日誌頻道已設定').setDescription(`所有的工單對話紀錄 (Transcripts) 將發送至 ${channel}。`);
+            }
         }
 
         await interaction.reply({ embeds: [embed], ephemeral: true });

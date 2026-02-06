@@ -33,8 +33,14 @@ module.exports = {
 
             else if (interaction.isButton() && interaction.customId === 'close_ticket') {
                 const { channel, user } = interaction;
-                await interaction.deferReply();
+                await interaction.reply({ content: '🔒 正在準備關閉工單...', ephemeral: true });
                 await TicketService.closeTicket(channel, user);
+            }
+
+            else if (interaction.isButton() && interaction.customId === 'claim_ticket') {
+                const result = await TicketService.claimTicket(interaction.channel, interaction.user);
+                if (result.error) return interaction.reply({ content: `❌ ${result.error}`, ephemeral: true });
+                return interaction.reply({ content: '✅ 您已成功領取此工單。', ephemeral: true });
             }
 
             // --- Control Panel Handlers ---
