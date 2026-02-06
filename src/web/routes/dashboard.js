@@ -391,6 +391,43 @@ router.post('/settings', async (req, res) => {
             stmt.run(guild_id, enabled);
         }
 
+        else if (action === 'update_economy_config') {
+            const { economy_daily, economy_start_balance } = req.body;
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, economy_daily, economy_start_balance, updated_at)
+                VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                economy_daily = excluded.economy_daily,
+                economy_start_balance = excluded.economy_start_balance,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+            stmt.run(guild_id, parseInt(economy_daily) || 100, parseInt(economy_start_balance) || 0);
+        }
+
+        else if (action === 'update_music_config') {
+            const { music_volume } = req.body;
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, music_volume, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                music_volume = excluded.music_volume,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+            stmt.run(guild_id, parseInt(music_volume) || 50);
+        }
+
+        else if (action === 'update_leveling_config') {
+            const { leveling_rate } = req.body;
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, leveling_rate, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                leveling_rate = excluded.leveling_rate,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+            stmt.run(guild_id, parseFloat(leveling_rate) || 1.0);
+        }
+
         else if (action === 'add_ticket_category') {
             const { cat_label, cat_desc, cat_emoji } = req.body;
 

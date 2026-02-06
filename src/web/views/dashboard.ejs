@@ -100,50 +100,62 @@
 
             <!-- Quick Action Tiles -->
             <div class="shortcuts-grid">
-                <a href="/dashboard/settings" class="glass-panel"
-                    style="text-decoration: none; padding: 2rem; border-radius: 20px;">
+                <div class="glass-panel"
+                    style="padding: 2rem; border-radius: 20px; position: relative; overflow: hidden;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
                         <div
                             style="background: rgba(245, 158, 11, 0.2); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
                             <i class="fa-solid fa-gift" style="color: #F59E0B; font-size: 1.3rem;"></i>
                         </div>
-                        <i class="fa-solid fa-arrow-up-right-from-square"
-                            style="color: var(--text-muted); font-size: 0.8rem;"></i>
+                        <i class="fa-solid fa-gift"
+                            style="color: rgba(255,255,255,0.05); font-size: 3.5rem; position: absolute; right: -10px; bottom: -10px;"></i>
                     </div>
-                    <h3 style="color: var(--text-primary); margin: 0 0 0.5rem 0; font-size: 1.2rem;">配置抽獎</h3>
-                    <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem; line-height: 1.5;">
+                    <h3 style="color: var(--text-primary); margin: 0 0 0.5rem 0; font-size: 1.2rem;">抽獎系統</h3>
+                    <p style="color: var(--text-secondary); margin: 0 0 1.5rem 0; font-size: 0.9rem; line-height: 1.5;">
                         管理伺服器的抽獎活動與贈禮設定。</p>
-                </a>
+                    <a href="/dashboard/settings?open=giveaway" class="btn-setting"
+                        style="display: inline-flex; padding: 0.6rem 1.2rem; font-size: 0.85rem; text-decoration: none;">
+                        <i class="fa-solid fa-plus-circle"></i> 建立抽獎
+                    </a>
+                </div>
 
-                <a href="/dashboard/servers" class="glass-panel"
-                    style="text-decoration: none; padding: 2rem; border-radius: 20px;">
+                <div class="glass-panel"
+                    style="padding: 2rem; border-radius: 20px; position: relative; overflow: hidden;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
                         <div
                             style="background: rgba(236, 72, 153, 0.2); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
                             <i class="fa-solid fa-play" style="color: #EC4899; font-size: 1.3rem;"></i>
                         </div>
-                        <i class="fa-solid fa-arrow-up-right-from-square"
-                            style="color: var(--text-muted); font-size: 0.8rem;"></i>
+                        <i class="fa-solid fa-music"
+                            style="color: rgba(255,255,255,0.05); font-size: 3.5rem; position: absolute; right: -10px; bottom: -10px;"></i>
                     </div>
                     <h3 style="color: var(--text-primary); margin: 0 0 0.5rem 0; font-size: 1.2rem;">音樂控制</h3>
-                    <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem; line-height: 1.5;">
-                        開啟網頁播放器控制正在播放的曲目。</p>
-                </a>
+                    <p style="color: var(--text-secondary); margin: 0 0 1.5rem 0; font-size: 0.9rem; line-height: 1.5;">
+                        控制正在播放的曲目與音量。</p>
+                    <a href="/dashboard/servers" class="btn-setting"
+                        style="display: inline-flex; padding: 0.6rem 1.2rem; font-size: 0.85rem; text-decoration: none; background: #EC4899; color: white;">
+                        <i class="fa-solid fa-sliders"></i> 開啟控制器
+                    </a>
+                </div>
 
-                <a href="/dashboard/logs" class="glass-panel"
-                    style="text-decoration: none; padding: 2rem; border-radius: 20px;">
+                <div class="glass-panel"
+                    style="padding: 2rem; border-radius: 20px; position: relative; overflow: hidden;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
                         <div
                             style="background: rgba(14, 165, 233, 0.2); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
                             <i class="fa-solid fa-file-invoice" style="color: #0EA5E9; font-size: 1.3rem;"></i>
                         </div>
-                        <i class="fa-solid fa-arrow-up-right-from-square"
-                            style="color: var(--text-muted); font-size: 0.8rem;"></i>
+                        <i class="fa-solid fa-list"
+                            style="color: rgba(255,255,255,0.05); font-size: 3.5rem; position: absolute; right: -10px; bottom: -10px;"></i>
                     </div>
-                    <h3 style="color: var(--text-primary); margin: 0 0 0.5rem 0; font-size: 1.2rem;">查看日誌</h3>
-                    <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem; line-height: 1.5;">
-                        追蹤機器人的所有指令執行與系統事件。</p>
-                </a>
+                    <h3 style="color: var(--text-primary); margin: 0 0 0.5rem 0; font-size: 1.2rem;">系統日誌</h3>
+                    <p style="color: var(--text-secondary); margin: 0 0 1.5rem 0; font-size: 0.9rem; line-height: 1.5;">
+                        追蹤機器人的指令執行。 </p>
+                    <a href="/dashboard/logs" class="btn-setting"
+                        style="display: inline-flex; padding: 0.6rem 1.2rem; font-size: 0.85rem; text-decoration: none; background: #0EA5E9; color: white;">
+                        <i class="fa-solid fa-eye"></i> 檢視日誌
+                    </a>
+                </div>
             </div>
 
             <!-- Activity & Commands Section -->
@@ -161,27 +173,36 @@
                     </div>
                     <div class="activity-list">
                         <% recentLogs.forEach(log=> { %>
-                            <div class="activity-item">
-                                <div class="activity-icon">
-                                    <i
-                                        class="fa-solid <%= log.action === 'LOGIN' ? 'fa-right-to-bracket' : 'fa-gear' %>"></i>
-                                </div>
-                                <div class="activity-content">
-                                    <p><strong>
-                                            <%= log.action %>
-                                        </strong>: <%= log.details %>
-                                    </p>
-                                    <span>
-                                        <%= new Date(log.created_at).toLocaleString() %>
-                                    </span>
-                                </div>
-                            </div>
-                            <% }) %>
-                                <% if(recentLogs.length===0) { %>
-                                    <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
-                                        暫無最近活動紀錄。
+                            <% let actionUrl='/dashboard/logs' ; let targetGuildId='' ; // Logic to extract guild_id
+                                from details if needed later if (log.action.includes('CONFIG'))
+                                actionUrl='/dashboard/settings' ; if (log.action==='TICKET' )
+                                actionUrl='/dashboard/settings?open=tickets' ; if (log.action==='ECONOMY' )
+                                actionUrl='/dashboard/settings?open=economy' ; %>
+                                <a href="<%= actionUrl %>" class="activity-item actionable-log"
+                                    style="text-decoration: none; color: inherit; display: flex;">
+                                    <div class="activity-icon">
+                                        <i
+                                            class="fa-solid <%= log.action === 'LOGIN' ? 'fa-right-to-bracket' : 'fa-gear' %>"></i>
                                     </div>
-                                    <% } %>
+                                    <div class="activity-content" style="flex: 1;">
+                                        <p><strong>
+                                                <%= log.action %>
+                                            </strong>: <%= log.details %>
+                                        </p>
+                                        <span>
+                                            <%= new Date(log.created_at).toLocaleString() %>
+                                        </span>
+                                    </div>
+                                    <div class="activity-arrow">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </div>
+                                </a>
+                                <% }) %>
+                                    <% if(recentLogs.length===0) { %>
+                                        <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                                            暫無最近活動紀錄。
+                                        </div>
+                                        <% } %>
                     </div>
                 </div>
 

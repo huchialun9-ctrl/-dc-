@@ -419,6 +419,107 @@
                             </form>
                         </div>
 
+                        <!-- Economy Config -->
+                        <div id="config-economy" class="config-section glass-panel"
+                            style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
+                            <div class="section-header-modern">
+                                <h3><i class="fa-solid fa-coins" style="color: #FBBF24;"></i> 經濟系統設定</h3>
+                                <button class="btn-back" onclick="closeConfig()">
+                                    <i class="fa-solid fa-arrow-left"></i> 返回
+                                </button>
+                            </div>
+                            <form action="/dashboard/settings" method="POST" class="track-changes">
+                                <input type="hidden" name="action" value="update_economy_config">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
+
+                                <div class="form-group-modern">
+                                    <label style="color: white;">每日簽到獎金 (Daily Bonus)</label>
+                                    <input type="number" name="economy_daily" class="modern-input detect-change"
+                                        value="<%= settings.economy_daily || 100 %>" min="0">
+                                </div>
+                                <div class="form-group-modern">
+                                    <label style="color: white;">初始金額 (Starting Balance)</label>
+                                    <input type="number" name="economy_start_balance" class="modern-input detect-change"
+                                        value="<%= settings.economy_start_balance || 0 %>" min="0">
+                                </div>
+                                <div style="margin-top: 2rem;">
+                                    <a href="/dashboard/leaderboard/<%= guild.id %>/economy" class="btn-setting"
+                                        style="display: inline-flex; text-decoration: none;">
+                                        <i class="fa-solid fa-trophy"></i> 查看財富排行榜
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Music Config -->
+                        <div id="config-music" class="config-section glass-panel"
+                            style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
+                            <div class="section-header-modern">
+                                <h3><i class="fa-solid fa-music" style="color: #FB923C;"></i> 音樂播放設定</h3>
+                                <button class="btn-back" onclick="closeConfig()">
+                                    <i class="fa-solid fa-arrow-left"></i> 返回
+                                </button>
+                            </div>
+                            <form action="/dashboard/settings" method="POST" class="track-changes">
+                                <input type="hidden" name="action" value="update_music_config">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
+
+                                <div class="form-group-modern">
+                                    <label style="color: white;">預設播放音量 (Default Volume)</label>
+                                    <input type="range" name="music_volume" class="detect-change" min="1" max="100"
+                                        value="<%= settings.music_volume || 50 %>"
+                                        style="width: 100%; margin-top: 1rem;"
+                                        oninput="this.nextElementSibling.innerText = this.value + '%'">
+                                    <span style="color: var(--text-muted);">
+                                        <%= settings.music_volume || 50 %>%
+                                    </span>
+                                </div>
+
+                                <div style="margin-top: 2rem;">
+                                    <a href="/dashboard/music/<%= guild.id %>" class="btn-setting"
+                                        style="display: inline-flex; text-decoration: none; background: var(--warning-color); color: black;">
+                                        <i class="fa-solid fa-play"></i> 開啟網頁控制器 (Web Player)
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Leveling Config -->
+                        <div id="config-leveling" class="config-section glass-panel"
+                            style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
+                            <div class="section-header-modern">
+                                <h3><i class="fa-solid fa-chart-line" style="color: #F472B6;"></i> 等級系統設定</h3>
+                                <button class="btn-back" onclick="closeConfig()">
+                                    <i class="fa-solid fa-arrow-left"></i> 返回
+                                </button>
+                            </div>
+                            <form action="/dashboard/settings" method="POST" class="track-changes">
+                                <input type="hidden" name="action" value="update_leveling_config">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
+
+                                <div class="form-group-modern">
+                                    <label style="color: white;">經驗獲取倍率 (XP Rate)</label>
+                                    <select name="leveling_rate" class="modern-input detect-change">
+                                        <option value="0.5" <%=settings.leveling_rate===0.5 ? 'selected' : '' %>>慢
+                                            (0.5x)</option>
+                                        <option value="1.0" <%=(!settings.leveling_rate || settings.leveling_rate===1.0)
+                                            ? 'selected' : '' %>>標準 (1.0x)</option>
+                                        <option value="1.5" <%=settings.leveling_rate===1.5 ? 'selected' : '' %>>快
+                                            (1.5x)</option>
+                                        <option value="2.0" <%=settings.leveling_rate===2.0 ? 'selected' : '' %>>極速
+                                            (2.0x)</option>
+                                    </select>
+                                </div>
+
+                                <div style="margin-top: 2rem;">
+                                    <a href="/dashboard/leaderboard/<%= guild.id %>" class="btn-setting"
+                                        style="display: inline-flex; text-decoration: none;">
+                                        <i class="fa-solid fa-medal"></i> 查看等級排行榜
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+
                         <!-- AI Chat Config -->
                         <div id="config-ai" class="config-section glass-panel"
                             style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
