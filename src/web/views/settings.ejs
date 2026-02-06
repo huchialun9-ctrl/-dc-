@@ -84,64 +84,125 @@
 
                         <!-- 1. Announcement Plugin -->
                         <div class="settings-card plugin-card" data-module="announcement">
-                            <form action="/dashboard/settings" method="POST" class="track-changes plugin-form">
-                                <input type="hidden" name="action" value="update_announcement_toggle">
-                                <!-- Logic needed in backend if not exists, or I can use a generic update -->
-                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                                <input type="hidden" name="announcement_enabled" class="plugin-state"
-                                    value="<%= settings.announcement_enabled ? 1 : 0 %>">
-
-                                <div class="card-header-content">
-                                    <div class="card-title">
-                                        <i class="fa-solid fa-bullhorn" style="color: #F87171;"></i> 公告系統
-                                    </div>
-                                    <p class="card-desc">發送崁入式公告訊息到指定頻道。</p>
+                            <div class="card-header-content">
+                                <div class="card-title">
+                                    <i class="fa-solid fa-bullhorn" style="color: #F87171;"></i> 公告系統
                                 </div>
+                                <p class="card-desc">發送崁入式公告訊息到指定頻道。</p>
+                            </div>
 
-                                <!-- New Toggle Layout -->
-                                <div class="card-controls-row">
-                                    <button type="button" class="btn-settings-small"
-                                        onclick="openConfig('announcement')">
-                                        <i class="fa-solid fa-gear"></i> 設定
-                                    </button>
-
+                            <div class="card-controls"
+                                style="margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; gap: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 0.9rem; color: var(--text-muted);">
+                                        狀態: <span
+                                            style="color: <%= settings.announcement_enabled ? '#34D399' : '#F87171' %>">
+                                            <%= settings.announcement_enabled ? '已啟用' : '已停用' %>
+                                        </span>
+                                    </span>
                                     <label class="switch">
-                                        <input type="checkbox" name="announcement_enabled" value="1"
-                                            <%=settings.announcement_enabled ? 'checked' : '' %>>
-                                        <span class="slider"></span>
+                                        <input type="checkbox" name="announcement_enabled"
+                                            <%=settings.announcement_enabled ? 'checked' : '' %>
+                                        onchange="togglePlugin('announcement_toggle', this.checked)">
+                                        <span class="slider round"></span>
                                     </label>
                                 </div>
-                            </form>
+
+                                <!-- Direct Announcement Sender -->
+                                <% if (settings.announcement_enabled) { %>
+                                    <div class="inline-config-area animate-fade-in"
+                                        style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                                        <form action="/dashboard/settings" method="POST">
+                                            <input type="hidden" name="action" value="send_announcement">
+                                            <input type="hidden" name="guild_id" value="<%= guild.id %>">
+
+                                            <div class="form-group-mini">
+                                                <select name="channel_id" class="modern-input-mini" required>
+                                                    <option value="">發送至哪個頻道？</option>
+                                                    <% channels.forEach(c=> { %>
+                                                        <option value="<%= c.id %>">#<%= c.name %>
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                            </div>
+                                            <input type="text" name="title" class="modern-input-mini" placeholder="公告標題"
+                                                required style="margin-top: 0.5rem;">
+                                            <textarea name="description" rows="3" class="modern-input-mini"
+                                                placeholder="公告內容 (支援 Markdown)..." required
+                                                style="margin-top: 0.5rem; resize: none;"></textarea>
+                                            <button type="submit" class="btn-setting"
+                                                style="width: 100%; margin-top: 0.8rem; padding: 0.6rem; font-size: 0.85rem; justify-content: center;">
+                                                <i class="fa-solid fa-paper-plane"></i> 立即發送公告
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <% } %>
+                            </div>
                             <div class="card-watermark"><i class="fa-solid fa-bullhorn"></i></div>
                         </div>
 
                         <!-- 2. Welcome Plugin -->
                         <div class="settings-card plugin-card" data-module="welcome">
-                            <form action="/dashboard/settings" method="POST" class="track-changes plugin-form">
-                                <input type="hidden" name="action" value="update_welcome_toggle">
-                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                                <!-- Hidden Input Removed: Replaced by Toggle -->
-
-                                <div class="card-header-content">
-                                    <div class="card-title">
-                                        <i class="fa-solid fa-door-open" style="color: #60A5FA;"></i> 歡迎系統
-                                    </div>
-                                    <p class="card-desc">新成員加入時發送歡迎訊息。</p>
+                            <div class="card-header-content">
+                                <div class="card-title">
+                                    <i class="fa-solid fa-door-open" style="color: #60A5FA;"></i> 歡迎系統
                                 </div>
+                                <p class="card-desc">新成員加入時發送歡迎訊息。</p>
+                            </div>
 
-                                <!-- New Toggle Layout -->
-                                <div class="card-controls-row">
-                                    <button type="button" class="btn-settings-small" onclick="openConfig('welcome')">
-                                        <i class="fa-solid fa-gear"></i> 設定
-                                    </button>
-
+                            <div class="card-controls"
+                                style="margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; gap: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 0.9rem; color: var(--text-muted);">
+                                        狀態: <span
+                                            style="color: <%= settings.welcome_enabled ? '#34D399' : '#F87171' %>">
+                                            <%= settings.welcome_enabled ? '已啟用' : '已停用' %>
+                                        </span>
+                                    </span>
                                     <label class="switch">
-                                        <input type="checkbox" name="welcome_enabled" value="1"
-                                            <%=settings.welcome_enabled ? 'checked' : '' %>>
-                                        <span class="slider"></span>
+                                        <input type="checkbox" name="welcome_enabled" <%=settings.welcome_enabled
+                                            ? 'checked' : '' %>
+                                        onchange="togglePlugin('welcome_toggle', this.checked)">
+                                        <span class="slider round"></span>
                                     </label>
                                 </div>
-                            </form>
+
+                                <!-- Direct Welcome Settings -->
+                                <% if (settings.welcome_enabled) { %>
+                                    <div class="inline-config-area animate-fade-in"
+                                        style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                                        <form action="/dashboard/settings" method="POST" class="track-changes">
+                                            <input type="hidden" name="action" value="update_welcome">
+                                            <input type="hidden" name="guild_id" value="<%= guild.id %>">
+
+                                            <div class="form-group-mini">
+                                                <label
+                                                    style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.3rem; display: block;">歡迎文字頻道</label>
+                                                <select name="welcome_channel_id" class="modern-input-mini">
+                                                    <option value="">請選擇頻道</option>
+                                                    <% channels.forEach(c=> { %>
+                                                        <option value="<%= c.id %>"
+                                                            <%=settings.welcome_channel_id===c.id ? 'selected' : '' %>>#
+                                                            <%= c.name %>
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                            </div>
+                                            <div class="form-group-mini" style="margin-top: 0.8rem;">
+                                                <label
+                                                    style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.3rem; display: block;">歡迎訊息
+                                                    ({user}, {server})</label>
+                                                <textarea name="welcome_message" rows="3" class="modern-input-mini"
+                                                    placeholder="歡迎 {user} 加入伺服器！"
+                                                    style="resize: none;"><%= settings.welcome_message %></textarea>
+                                            </div>
+                                            <p
+                                                style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem; font-style: italic;">
+                                                * 修改後請使用下方「儲存變更」按鈕</p>
+                                        </form>
+                                    </div>
+                                    <% } %>
+                            </div>
                             <div class="card-watermark"><i class="fa-solid fa-door-open"></i></div>
                         </div>
 
@@ -338,86 +399,6 @@
                     <!-- 2. Detailed Configuration Sections (Hidden by default) -->
                     <div id="modules-config">
 
-                        <!-- Announcement Config -->
-                        <div id="config-announcement" class="config-section glass-panel"
-                            style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
-                            <div class="section-header-modern">
-                                <h3><i class="fa-solid fa-bullhorn" style="color: #F87171;"></i> 發送公告設定</h3>
-                                <button class="btn-back" onclick="closeConfig()">
-                                    <i class="fa-solid fa-arrow-left"></i> 返回
-                                </button>
-                            </div>
-                            <form action="/dashboard/settings" method="POST">
-                                <input type="hidden" name="action" value="send_announcement">
-                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
-
-                                <div class="form-group">
-                                    <label>選擇頻道</label>
-                                    <select name="channel_id" class="form-control" required>
-                                        <% channels.forEach(c=> { %>
-                                            <option value="<%= c.id %>">#<%= c.name %>
-                                            </option>
-                                            <% }) %>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>標題</label>
-                                    <input type="text" name="title" class="form-control" placeholder="公告標題" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>內容 (Markdown)</label>
-                                    <textarea name="description" class="form-control" rows="6" placeholder="輸入公告內容..."
-                                        required></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label>顏色</label>
-                                    <input type="color" name="color" value="#5865F2"
-                                        style="width: 100%; height: 40px; border:none; border-radius: 4px;">
-                                </div>
-                                <button type="submit" class="btn-setting"
-                                    style="width: 100%; padding: 1rem; margin-top: 1rem;">
-                                    <i class="fa-solid fa-paper-plane"></i> 發送公告
-                                </button>
-                            </form>
-                        </div>
-
-                        <!-- Welcome Config -->
-                        <div id="config-welcome" class="config-section glass-panel"
-                            style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
-                            <div class="section-header-modern">
-                                <h3><i class="fa-solid fa-door-open" style="color: #60A5FA;"></i> 歡迎系統設定</h3>
-                                <button class="btn-back" onclick="closeConfig()">
-                                    <i class="fa-solid fa-arrow-left"></i> 返回
-                                </button>
-                            </div>
-                            <form action="/dashboard/settings" method="POST" class="track-changes">
-                                <input type="hidden" name="action" value="update_welcome">
-                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
-
-                                <div class="form-group-modern">
-                                    <label style="color: white;">歡迎頻道 (Welcome Channel)</label>
-                                    <select name="welcome_channel_id" class="modern-input detect-change">
-                                        <option value="">選擇頻道...</option>
-                                        <% channels.forEach(c=> { %>
-                                            <option value="<%= c.id %>" <%=settings.welcome_channel_id===c.id
-                                                ? 'selected' : '' %>>#<%= c.name %>
-                                            </option>
-                                            <% }) %>
-                                    </select>
-                                </div>
-                                <div class="form-group-modern">
-                                    <label style="color: white;">歡迎訊息 (Message)</label>
-                                    <textarea name="welcome_message" class="modern-input detect-change" rows="4"
-                                        placeholder="歡迎 {user} 加入 {server}！"><%= settings.welcome_message %></textarea>
-                                    <small style="color: rgba(255,255,255,0.7); display: block; margin-top: 0.5rem;">
-                                        可用變數: <code
-                                            style="background: rgba(255,255,255,0.15); color: #FBBF24; padding: 2px 4px; border-radius: 4px;">{user}</code>,
-                                        <code
-                                            style="background: rgba(255,255,255,0.15); color: #FBBF24; padding: 2px 4px; border-radius: 4px;">{server}</code>
-                                    </small>
-                                </div>
-                            </form>
-                        </div>
 
                         <!-- Economy Config -->
                         <div id="config-economy" class="config-section glass-panel"
@@ -682,6 +663,32 @@
                     toast.style.animation = 'fadeOut 0.3s ease-out forwards';
                     setTimeout(() => toast.remove(), 300);
                 }, 3000);
+            }
+
+            function togglePlugin(action, enabled) {
+                console.log('Toggling Plugin:', action, enabled);
+                const guild_id = "<%= guild.id %>";
+
+                fetch('/dashboard/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: action,
+                        guild_id: guild_id,
+                        enabled: enabled ? 1 : 0,
+                        ajax: true
+                    })
+                }).then(res => res.json()).then(data => {
+                    if (data.success) {
+                        showToast('外掛狀態已更新', 'success');
+                        setTimeout(() => location.reload(), 500); // Reload to show/hide config area
+                    } else {
+                        showToast('更新失敗: ' + data.message, 'error');
+                    }
+                }).catch(err => {
+                    console.error('Toggle Error:', err);
+                    showToast('網路錯誤', 'error');
+                });
             }
 
             function openConfig(moduleId) {
