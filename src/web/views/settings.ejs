@@ -161,9 +161,9 @@
 
                                 <!-- New Toggle Layout -->
                                 <div class="card-controls-row">
-                                    <a href="/dashboard/leaderboard/<%= guild.id %>/economy" class="btn-settings-small">
-                                        <i class="fa-solid fa-chart-bar"></i> 查看榜單
-                                    </a>
+                                    <button type="button" class="btn-settings-small" onclick="openConfig('economy')">
+                                        <i class="fa-solid fa-gear"></i> 設定
+                                    </button>
 
                                     <label class="switch">
                                         <input type="checkbox" name="economy_enabled" value="1"
@@ -259,9 +259,9 @@
 
                                 <!-- New Toggle Layout -->
                                 <div class="card-controls-row">
-                                    <a href="/dashboard/music/<%= guild.id %>" class="btn-settings-small">
-                                        <i class="fa-solid fa-music"></i> 開啟面板
-                                    </a>
+                                    <button type="button" class="btn-settings-small" onclick="openConfig('music')">
+                                        <i class="fa-solid fa-gear"></i> 設定
+                                    </button>
 
                                     <label class="switch">
                                         <input type="checkbox" name="music_enabled" value="1" <%=settings.music_enabled
@@ -289,9 +289,9 @@
 
                                 <!-- New Toggle Layout -->
                                 <div class="card-controls-row">
-                                    <a href="/dashboard/leaderboard/<%= guild.id %>" class="btn-settings-small">
-                                        <i class="fa-solid fa-chart-line"></i> 排行榜
-                                    </a>
+                                    <button type="button" class="btn-settings-small" onclick="openConfig('leveling')">
+                                        <i class="fa-solid fa-gear"></i> 設定
+                                    </button>
 
                                     <label class="switch">
                                         <input type="checkbox" name="leveling_enabled" value="1"
