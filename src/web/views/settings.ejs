@@ -39,6 +39,14 @@
         .btn-remove:hover {
             background: rgba(240, 71, 71, 0.4);
         }
+
+        .status-enabled {
+            color: #34D399;
+        }
+
+        .status-disabled {
+            color: #F87171;
+        }
     </style>
 </head>
 
@@ -96,7 +104,7 @@
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span style="font-size: 0.9rem; color: var(--text-muted);">
                                         狀態: <span
-                                            style="color: <%= settings.announcement_enabled ? '#34D399' : '#F87171' %>">
+                                            class="<%= settings.announcement_enabled ? 'status-enabled' : 'status-disabled' %>">
                                             <%= settings.announcement_enabled ? '已啟用' : '已停用' %>
                                         </span>
                                     </span>
@@ -155,7 +163,7 @@
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span style="font-size: 0.9rem; color: var(--text-muted);">
                                         狀態: <span
-                                            style="color: <%= settings.welcome_enabled ? '#34D399' : '#F87171' %>">
+                                            class="<%= settings.welcome_enabled ? 'status-enabled' : 'status-disabled' %>">
                                             <%= settings.welcome_enabled ? '已啟用' : '已停用' %>
                                         </span>
                                     </span>
