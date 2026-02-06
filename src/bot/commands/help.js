@@ -11,23 +11,38 @@ module.exports = {
         const userCount = interaction.client.guilds.cache.reduce((acc, g) => acc + g.memberCount, 0);
 
         const embed = new EmbedBuilder()
-            .setTitle('🤖 VX6 機器人指令清單')
-            .setDescription('這裡列出了所有可用的指令。使用 `/指令名` 來執行。\n管理員可以使用 `/config` 進行伺服器配置。')
+            .setTitle('🤖 VX6 BOT 指令中心 (Command Hub)')
+            .setDescription('這裡列出了所有可用的指令。您可以直接在頻道中使用 `/指令`。✨\n管理員請使用 `/config` 進行伺服器全域配置。')
             .setColor('#5865F2')
             .setThumbnail(interaction.client.user.displayAvatarURL())
             .setFooter({
                 text: `正在服務 ${guildCount} 個伺服器 | ${userCount} 位使用者`,
-                iconURL: 'https://cdn.discordapp.com/emojis/996000000000000000.png'
             });
 
-        // Group commands
-        let descriptionField = "";
+        // Define Categories
+        const categories = {
+            admin: { name: '🛠️ 核心管理', commands: ['config', 'setup', 'setup-ai', 'admin', 'reactionrole'] },
+            tools: { name: '🛡️ 工具與管理', commands: ['clear', 'close', 'say', 'voice', 'panel'] },
+            fun: { name: '🎮 娛樂與互動', commands: ['economy', 'music', 'giveaway', 'dice', 'poll', 'earthquake'] },
+            info: { name: 'ℹ️ 資訊與回饋', commands: ['help', 'ping', 'serverinfo', 'userinfo', 'avatar', 'donate'] }
+        };
 
-        commands.forEach(cmd => {
-            descriptionField += `**/${cmd.data.name}**\n${cmd.data.description}\n\n`;
-        });
+        // Populate Fields
+        for (const key in categories) {
+            const cat = categories[key];
+            let fieldContent = "";
 
-        embed.addFields({ name: '🛠️ 指令列表', value: descriptionField || '暫無指令' });
+            cat.commands.forEach(cmdName => {
+                const cmd = commands.get(cmdName);
+                if (cmd) {
+                    fieldContent += `\u2022 \`/${cmd.data.name}\` - ${cmd.data.description}\n`;
+                }
+            });
+
+            if (fieldContent) {
+                embed.addFields({ name: cat.name, value: fieldContent });
+            }
+        }
 
         const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
         const row = new ActionRowBuilder()
