@@ -395,7 +395,7 @@
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
 
                                 <div class="form-group-modern">
-                                    <label>歡迎頻道 (Welcome Channel)</label>
+                                    <label style="color: white;">歡迎頻道 (Welcome Channel)</label>
                                     <select name="welcome_channel_id" class="modern-input detect-change">
                                         <option value="">選擇頻道...</option>
                                         <% channels.forEach(c=> { %>
@@ -406,14 +406,14 @@
                                     </select>
                                 </div>
                                 <div class="form-group-modern">
-                                    <label>歡迎訊息 (Message)</label>
+                                    <label style="color: white;">歡迎訊息 (Message)</label>
                                     <textarea name="welcome_message" class="modern-input detect-change" rows="4"
                                         placeholder="歡迎 {user} 加入 {server}！"><%= settings.welcome_message %></textarea>
-                                    <small style="color: var(--text-secondary); display: block; margin-top: 0.5rem;">
+                                    <small style="color: rgba(255,255,255,0.7); display: block; margin-top: 0.5rem;">
                                         可用變數: <code
-                                            style="background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 4px;">{user}</code>,
+                                            style="background: rgba(255,255,255,0.15); color: #FBBF24; padding: 2px 4px; border-radius: 4px;">{user}</code>,
                                         <code
-                                            style="background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 4px;">{server}</code>
+                                            style="background: rgba(255,255,255,0.15); color: #FBBF24; padding: 2px 4px; border-radius: 4px;">{server}</code>
                                     </small>
                                 </div>
                             </form>
@@ -433,7 +433,7 @@
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
 
                                 <div class="form-group-modern">
-                                    <label>指定 AI 頻道 (AI Only Channel)</label>
+                                    <label style="color: white;">指定 AI 頻道 (AI Only Channel)</label>
                                     <select name="ai_channel_id" class="modern-input detect-change">
                                         <option value="">所有頻道 (All Channels)</option>
                                         <% channels.forEach(c=> { %>
@@ -442,7 +442,7 @@
                                             </option>
                                             <% }) %>
                                     </select>
-                                    <small style="color: var(--text-secondary); display: block; margin-top: 0.5rem;">
+                                    <small style="color: rgba(255,255,255,0.7); display: block; margin-top: 0.5rem;">
                                         若選擇特定頻道，則 AI 只會在該頻道回應（仍需 @機器人）。
                                     </small>
                                 </div>
@@ -464,11 +464,11 @@
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
 
                                 <div class="form-group-modern">
-                                    <label>禁止詞彙 (Bad Words)</label>
+                                    <label style="color: white;">禁止詞彙 (Bad Words)</label>
                                     <input type="text" name="automod_badwords" class="modern-input detect-change"
                                         value="<%= settings.automod_badwords %>" placeholder="垃圾, 廣告 (用逗號分隔)">
                                     <small
-                                        style="color: var(--text-secondary); display: block; margin-top: 0.5rem;">包含這些詞彙的訊息將被自動刪除。</small>
+                                        style="color: rgba(255,255,255,0.7); display: block; margin-top: 0.5rem;">包含這些詞彙的訊息將被自動刪除。</small>
                                 </div>
                             </form>
                         </div>
@@ -515,22 +515,22 @@
 
                                 <!-- Existing Commands List -->
                                 <div>
-                                    <h4 style="margin-bottom: 1rem; color: var(--text-primary);">現有指令 (<%=
-                                            customCommands.length %>)</h4>
+                                    <h4 style="margin-bottom: 1rem; color: white;">現有指令 (<%= customCommands.length %>)
+                                    </h4>
                                     <div style="max-height: 500px; overflow-y: auto; padding-right: 0.5rem;">
                                         <% customCommands.forEach(cmd=> { %>
                                             <div
-                                                style="display: flex; justify-content: space-between; align-items: flex-start; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; margin-bottom: 0.8rem; border: 1px solid rgba(255,255,255,0.05);">
+                                                style="display: flex; justify-content: space-between; align-items: flex-start; background: rgba(0,0,0,0.3); padding: 1.2rem; border-radius: 12px; margin-bottom: 0.8rem; border: 1px solid rgba(255,255,255,0.1);">
                                                 <div style="width: 100%; overflow: hidden;">
                                                     <div
                                                         style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                                                         <strong
-                                                            style="color: var(--accent-color); font-family: monospace; font-size: 1.1rem;">
-                                                            <%= cmd.trigger %>
+                                                            style="color: #FBBF24; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; letter-spacing: 0.5px;">
+                                                            !<%= cmd.trigger %>
                                                         </strong>
                                                     </div>
                                                     <p
-                                                        style="margin: 0; color: var(--text-secondary); font-size: 0.9rem; white-space: pre-wrap; word-break: break-word;">
+                                                        style="margin: 0; color: rgba(255,255,255,0.9); font-size: 0.95rem; white-space: pre-wrap; word-break: break-word; line-height: 1.5;">
                                                         <%= cmd.response %>
                                                     </p>
                                                 </div>
@@ -546,7 +546,7 @@
                                             <% }) %>
                                                 <% if (customCommands.length===0) { %>
                                                     <div
-                                                        style="text-align: center; padding: 3rem; color: var(--text-muted); border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px;">
+                                                        style="text-align: center; padding: 3rem; color: rgba(255,255,255,0.4); border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px;">
                                                         <i class="fa-solid fa-terminal"
                                                             style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
                                                         <p>尚無自訂指令</p>

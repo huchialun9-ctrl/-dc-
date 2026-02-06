@@ -9,11 +9,12 @@
   /* White Cards */
   --bg-hover: rgba(0, 0, 0, 0.05);
 
-  --text-primary: #1A1A1A;
-  /* Light Black (Dark Grey) */
-  --text-secondary: #4A4A4A;
-  /* Medium Grey */
-  --text-muted: #888888;
+  --text-primary: #111827;
+  /* Darker Grey for Light Theme */
+  --text-secondary: #374151;
+  /* Slate Grey */
+  --text-muted: #6B7280;
+  /* Better contrast for secondary info */
 
   --accent-color: #F59E0B;
   /* Keep Gold/Amber */
