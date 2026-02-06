@@ -339,12 +339,13 @@
                     <div id="modules-config">
 
                         <!-- Announcement Config -->
-                        <div id="config-announcement" class="config-section">
-                            <div class="config-header">
+                        <div id="config-announcement" class="config-section glass-panel"
+                            style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
+                            <div class="section-header-modern">
+                                <h3><i class="fa-solid fa-bullhorn" style="color: #F87171;"></i> 發送公告設定</h3>
                                 <button class="btn-back" onclick="closeConfig()">
-                                    <i class="fa-solid fa-arrow-left"></i> 返回模組列表
+                                    <i class="fa-solid fa-arrow-left"></i> 返回
                                 </button>
-                                <h3><i class="fa-solid fa-bullhorn" style="color: #F87171;"></i> 發送公告</h3>
                             </div>
                             <form action="/dashboard/settings" method="POST">
                                 <input type="hidden" name="action" value="send_announcement">
@@ -562,7 +563,7 @@
         </div>
 
         <script>
-            // Toast System
+            // --- Global Utilities ---
             function showToast(message, type = 'success') {
                 let container = document.querySelector('.toast-container');
                 if (!container) {
@@ -570,48 +571,52 @@
                     container.className = 'toast-container';
                     document.body.appendChild(container);
                 }
-
                 const toast = document.createElement('div');
                 toast.className = `toast ${type}`;
                 toast.innerHTML = type === 'success'
                     ? `<i class="fa-solid fa-check-circle" style="color: #22C55E;"></i> <span>${message}</span>`
                     : `<i class="fa-solid fa-exclamation-circle" style="color: #EF4444;"></i> <span>${message}</span>`;
-
                 container.appendChild(toast);
-
                 setTimeout(() => {
                     toast.style.animation = 'fadeOut 0.3s ease-out forwards';
                     setTimeout(() => toast.remove(), 300);
                 }, 3000);
             }
 
-            // Interactive Module Logic
+            function openConfig(moduleId) {
+                console.log('Opening Config for:', moduleId);
+                const grid = document.getElementById('modules-grid');
+                if (grid) grid.style.display = 'none';
+
+                document.querySelectorAll('.config-section').forEach(el => el.classList.remove('active'));
+                const target = document.getElementById('config-' + moduleId);
+                if (target) {
+                    target.classList.add('active');
+                    const mainContent = document.querySelector('.main-content');
+                    if (mainContent) mainContent.scrollTop = 0;
+                    console.log('Config section activated:', moduleId);
+                } else {
+                    console.error('Config target not found:', 'config-' + moduleId);
+                }
+            }
+
+            function closeConfig() {
+                console.log('Closing Config');
+                document.querySelectorAll('.config-section').forEach(el => el.classList.remove('active'));
+                const grid = document.getElementById('modules-grid');
+                if (grid) grid.style.display = 'grid';
+            }
+
             document.addEventListener('DOMContentLoaded', () => {
+                console.log('Settings Page Initialized');
 
                 // --- Instant Toggle Logic (AJAX) ---
                 document.querySelectorAll('.switch input[type="checkbox"]').forEach(toggle => {
                     toggle.addEventListener('change', async function () {
                         const form = this.closest('form');
-                        // Prevent form submission if it was going to submit normally (though type=checkbox usually doesn't)
-
-                        // Prepare Data
                         const formData = new FormData(form);
-                        // FormData only handles unchecked checkboxes by missing key. 
-                        // Key issue: The backend checks `if (req.body.welcome_enabled)`
-                        // So we must ensure it's sent properly.
-
-                        // We construct a JSON object
                         const data = {};
                         formData.forEach((value, key) => data[key] = value);
-
-                        // Explicitly handle the checkbox state because FormData might act weird if we just changed it? 
-                        // Actually FormData grabs current state.
-                        // If checked, it returns value (usually '1'). If unchecked, it returns nothing.
-                        // Let's ensure the backend gets what it needs.
-                        // Our backend logic: `const enabled = welcome_enabled ? 1 : 0;`
-                        // So if key is missing, enabled=0. Correct.
-
-                        // Force AJAX flag
                         data.ajax = true;
 
                         try {
@@ -625,72 +630,124 @@
                             });
 
                             const result = await response.json();
-
                             if (result.success) {
                                 showToast('設定已更新 (Updated)', 'success');
-                                // Remove "Dirty" state if this toggle caused it? 
-                                // Actually, we shouldn't trigger checkDirty for these toggles if they save instantly.
-                                // We should remove the 'change' listener that triggers checkDirty for THIS specific input?
-                                // Or simply reset the "initial" dataset value to current.
                                 this.dataset.initial = this.checked;
-                                window.checkDirty(this, form); // Re-check to update bar
+                                if (window.checkDirty) window.checkDirty(this, form);
                             } else {
                                 throw new Error(result.message);
                             }
                         } catch (err) {
-                            console.error(err);
+                            console.error('AJAX Toggle Error:', err);
                             showToast('更新失敗: ' + err.message, 'error');
-                            this.checked = !this.checked; // Revert
+                            this.checked = !this.checked;
                         }
                     });
-
-                    // Stop "checkDirty" from marking these as unsaved if we handle them instantly?
-                    // The `window.checkDirty` function listens to 'change'.
-                    // We can modify checkDirty to ignore class .switch inputs? 
-                    // Or we simply update the `dataset.initial` immediately after success (done above).
                 });
 
+                // --- Unsaved Changes Logic ---
+                window.dirtyForms = new Set();
+                const bar = document.getElementById('unsaved-bar');
+                const btnSave = document.getElementById('btn-save');
+                const btnReset = document.getElementById('btn-reset');
 
-                // --- Existing Logic ---
-
-                // Auto-Open Config from URL
-                const urlParams = new URLSearchParams(window.location.search);
-                const openModule = urlParams.get('open');
-                if (openModule) {
-                    // Check if it's an internal config
-                    const configSection = document.getElementById('config-' + openModule);
-                    if (configSection) {
-                        openConfig(openModule);
+                window.checkDirty = function (input, form) {
+                    let isDirty = false;
+                    if (input.type === 'checkbox' || input.type === 'radio') {
+                        isDirty = input.checked.toString() !== input.dataset.initial;
                     } else {
-                        // It might be an external module (Music, Economy) or just a visual cue needed?
-                        // For now, just scroll to the card?
-                        const card = document.querySelector(`.settings-card[data-module="${openModule}"]`);
-                        if (card) {
-                            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            card.style.border = '2px solid var(--accent-color)';
-                            setTimeout(() => card.style.border = '', 2000);
+                        isDirty = input.value !== input.dataset.initial;
+                    }
+
+                    if (isDirty) {
+                        window.dirtyForms.add(form);
+                        form.classList.add('is-dirty');
+                    } else {
+                        let formActuallyDirty = false;
+                        form.querySelectorAll('input, textarea, select').forEach(el => {
+                            if (el.type === 'hidden' && !el.classList.contains('plugin-state')) return;
+                            let d = false;
+                            if (el.type === 'checkbox' || el.type === 'radio') {
+                                d = el.checked.toString() !== el.dataset.initial;
+                            } else {
+                                d = el.value !== el.dataset.initial;
+                            }
+                            if (d) formActuallyDirty = true;
+                        });
+
+                        if (!formActuallyDirty) {
+                            window.dirtyForms.delete(form);
+                            form.classList.remove('is-dirty');
                         }
                     }
+
+                    if (window.dirtyForms.size > 0) {
+                        bar.classList.add('visible');
+                    } else {
+                        bar.classList.remove('visible');
+                    }
                 }
+
+                document.querySelectorAll('form.track-changes').forEach(form => {
+                    form.querySelectorAll('input, textarea, select').forEach(input => {
+                        if (input.type === 'hidden' && !input.classList.contains('plugin-state')) return;
+                        if (input.type === 'checkbox' || input.type === 'radio') {
+                            input.dataset.initial = input.checked;
+                        } else {
+                            input.dataset.initial = input.value;
+                        }
+                        input.addEventListener('change', () => window.checkDirty(input, form));
+                        input.addEventListener('input', () => window.checkDirty(input, form));
+                    });
+                });
+
+                btnReset.addEventListener('click', () => {
+                    if (confirm('確定要放棄所有變更嗎？')) location.reload();
+                });
+
+                btnSave.addEventListener('click', async () => {
+                    if (window.dirtyForms.size === 0) return;
+                    const originalText = btnSave.innerText;
+                    btnSave.innerText = '儲存中... (Saving...)';
+                    btnSave.disabled = true;
+
+                    try {
+                        const promises = [];
+                        for (const form of window.dirtyForms) {
+                            const actionUrl = form.getAttribute('action');
+                            const formData = new FormData(form);
+                            const params = new URLSearchParams(formData);
+                            promises.push(fetch(actionUrl, {
+                                method: 'POST',
+                                body: params,
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                            }).then(async res => {
+                                if (!res.ok) throw new Error(`Server returned ${res.status}`);
+                                return res;
+                            }));
+                        }
+                        await Promise.all(promises);
+                        btnSave.innerText = '已儲存! (Saved!)';
+                        btnSave.style.background = '#43b581';
+                        setTimeout(() => location.reload(), 500);
+                    } catch (error) {
+                        console.error('Batch Save Error:', error);
+                        btnSave.innerText = '失敗 (Failed)';
+                        btnSave.style.background = '#f04747';
+                        alert('儲存失敗：' + error.message);
+                        setTimeout(() => {
+                            btnSave.innerText = originalText;
+                            btnSave.disabled = false;
+                            btnSave.style.background = '';
+                        }, 2000);
+                    }
+                });
+
+                // --- URL Helper ---
+                const urlParams = new URLSearchParams(window.location.search);
+                const openModule = urlParams.get('open');
+                if (openModule) openConfig(openModule);
             });
-
-            // togglePlugin function removed (logic replaced by direct checkbox listeners)
-
-            function openConfig(moduleId) {
-                document.getElementById('modules-grid').style.display = 'none';
-                document.querySelectorAll('.config-section').forEach(el => el.classList.remove('active'));
-                const target = document.getElementById('config-' + moduleId);
-                if (target) {
-                    target.classList.add('active');
-                    // Scroll top
-                    document.querySelector('.main-content').scrollTop = 0;
-                }
-            }
-
-            function closeConfig() {
-                document.querySelectorAll('.config-section').forEach(el => el.classList.remove('active'));
-                document.getElementById('modules-grid').style.display = 'grid'; // Restore grid
-            }
         </script>
 
         </div>
@@ -707,142 +764,7 @@
                 </div>
             </div>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    window.dirtyForms = new Set();
-                    const bar = document.getElementById('unsaved-bar');
-                    const btnSave = document.getElementById('btn-save');
-                    const btnReset = document.getElementById('btn-reset');
 
-                    // Initialize tracking
-                    document.querySelectorAll('form.track-changes').forEach(form => {
-                        form.querySelectorAll('input, textarea, select').forEach(input => {
-                            // SKIP hidden inputs UNLESS they are plugin-state toggles
-                            if (input.type === 'hidden' && !input.classList.contains('plugin-state')) return;
-
-                            if (input.type === 'checkbox' || input.type === 'radio') {
-                                input.dataset.initial = input.checked;
-                            } else {
-                                input.dataset.initial = input.value;
-                            }
-
-                            input.addEventListener('change', () => window.checkDirty(input, form));
-                            input.addEventListener('input', () => window.checkDirty(input, form));
-                        });
-                    });
-
-                    window.checkDirty = function (input, form) {
-                        let isDirty = false;
-                        if (input.type === 'checkbox' || input.type === 'radio') {
-                            isDirty = input.checked.toString() !== input.dataset.initial;
-                        } else {
-                            isDirty = input.value !== input.dataset.initial;
-                        }
-
-                        if (isDirty) {
-                            window.dirtyForms.add(form);
-                            form.classList.add('is-dirty');
-                        } else {
-                            let formActuallyDirty = false;
-                            form.querySelectorAll('input, textarea, select').forEach(el => {
-                                // Same check here
-                                if (el.type === 'hidden' && !el.classList.contains('plugin-state')) return;
-
-                                let d = false;
-                                if (el.type === 'checkbox' || el.type === 'radio') {
-                                    d = el.checked.toString() !== el.dataset.initial;
-                                } else {
-                                    d = el.value !== el.dataset.initial;
-                                }
-                                if (d) formActuallyDirty = true;
-                            });
-
-                            if (!formActuallyDirty) {
-                                window.dirtyForms.delete(form);
-                                form.classList.remove('is-dirty');
-                            }
-                        }
-
-                        if (window.dirtyForms.size > 0) {
-                            bar.classList.add('visible');
-                        } else {
-                            bar.classList.remove('visible');
-                        }
-                    }
-
-                    btnReset.addEventListener('click', () => {
-                        if (confirm('確定要放棄所有變更嗎？')) {
-                            location.reload();
-                        }
-                    });
-
-                    btnSave.addEventListener('click', async () => {
-                        console.log('Save button clicked (EventListener)');
-
-                        if (window.dirtyForms.size === 0) {
-                            console.warn('No dirty forms found');
-                            alert('沒有偵測到變更 (No changes detected)');
-                            return;
-                        }
-
-                        const originalText = btnSave.innerText;
-                        btnSave.innerText = '儲存中... (Saving...)';
-                        btnSave.disabled = true;
-
-                        try {
-                            const promises = [];
-                            for (const form of window.dirtyForms) {
-                                const actionUrl = form.getAttribute('action');
-                                console.log('Submitting form:', actionUrl);
-                                const formData = new FormData(form);
-                                // Fix for checkboxes: FormData only declares them if checked.
-                                // If unchecked, they are missing. Express needs them to be false/0 or handled.
-                                // Our form logic uses value="1". If unchecked, it's missing.
-                                // Backend: const { economy_enabled } = req.body; const enabled = economy_enabled ? 1 : 0;
-                                // This works fine for x-www-form-urlencoded as long as it handles missing key as false.
-
-                                const params = new URLSearchParams(formData);
-
-                                promises.push(fetch(actionUrl, {
-                                    method: 'POST',
-                                    body: params,
-                                    headers: {
-                                        'Content-Type': 'application/x-www-form-urlencoded',
-                                    }
-                                }).then(async res => {
-                                    if (!res.ok) {
-                                        const text = await res.text();
-                                        throw new Error(`Server returned ${res.status}: ${text}`);
-                                    }
-                                    return res;
-                                }));
-                            }
-
-                            await Promise.all(promises);
-                            console.log('All promises resolved');
-
-                            btnSave.innerText = '已儲存! (Saved!)';
-                            btnSave.style.background = '#43b581';
-
-                            setTimeout(() => {
-                                location.reload();
-                            }, 500);
-
-                        } catch (error) {
-                            console.error('Save failed:', error);
-                            btnSave.innerText = '失敗 (Failed)';
-                            btnSave.style.background = '#f04747';
-                            alert('儲存失敗：' + error.message);
-
-                            setTimeout(() => {
-                                btnSave.innerText = originalText;
-                                btnSave.disabled = false;
-                                btnSave.style.background = ''; // reset
-                            }, 2000);
-                        }
-                    });
-                });
-            </script>
             <%- include('partials/cookie_consent') %>
 </body>
 
