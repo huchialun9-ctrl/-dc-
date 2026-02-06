@@ -540,51 +540,140 @@
 
                     </div>
 
-                    <script>
-                        // Interactive Module Logic
-                        document.addEventListener('DOMContentLoaded', () => {
-                            // Initialize hidden input tracking manually if needed, but the main checkDirty handles inputs.
-                            // togglePlugin modifies inputs programmatically, so we must trigger change events.
+        </div>
+        </div>
 
-                            // Auto-Open Config from URL
-                            const urlParams = new URLSearchParams(window.location.search);
-                            const openModule = urlParams.get('open');
-                            if (openModule) {
-                                // Check if it's an internal config
-                                const configSection = document.getElementById('config-' + openModule);
-                                if (configSection) {
-                                    openConfig(openModule);
-                                } else {
-                                    // It might be an external module (Music, Economy) or just a visual cue needed?
-                                    // For now, just scroll to the card?
-                                    const card = document.querySelector(`.settings-card[data-module="${openModule}"]`);
-                                    if (card) {
-                                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                        card.style.border = '2px solid var(--accent-color)';
-                                        setTimeout(() => card.style.border = '', 2000);
-                                    }
-                                }
+        <script>
+            // Toast System
+            function showToast(message, type = 'success') {
+                let container = document.querySelector('.toast-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.className = 'toast-container';
+                    document.body.appendChild(container);
+                }
+
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = type === 'success'
+                    ? `<i class="fa-solid fa-check-circle" style="color: #22C55E;"></i> <span>${message}</span>`
+                    : `<i class="fa-solid fa-exclamation-circle" style="color: #EF4444;"></i> <span>${message}</span>`;
+
+                container.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.animation = 'fadeOut 0.3s ease-out forwards';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+
+            // Interactive Module Logic
+            document.addEventListener('DOMContentLoaded', () => {
+
+                // --- Instant Toggle Logic (AJAX) ---
+                document.querySelectorAll('.switch input[type="checkbox"]').forEach(toggle => {
+                    toggle.addEventListener('change', async function () {
+                        const form = this.closest('form');
+                        // Prevent form submission if it was going to submit normally (though type=checkbox usually doesn't)
+
+                        // Prepare Data
+                        const formData = new FormData(form);
+                        // FormData only handles unchecked checkboxes by missing key. 
+                        // Key issue: The backend checks `if (req.body.welcome_enabled)`
+                        // So we must ensure it's sent properly.
+
+                        // We construct a JSON object
+                        const data = {};
+                        formData.forEach((value, key) => data[key] = value);
+
+                        // Explicitly handle the checkbox state because FormData might act weird if we just changed it? 
+                        // Actually FormData grabs current state.
+                        // If checked, it returns value (usually '1'). If unchecked, it returns nothing.
+                        // Let's ensure the backend gets what it needs.
+                        // Our backend logic: `const enabled = welcome_enabled ? 1 : 0;`
+                        // So if key is missing, enabled=0. Correct.
+
+                        // Force AJAX flag
+                        data.ajax = true;
+
+                        try {
+                            const response = await fetch('/dashboard/settings', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json'
+                                },
+                                body: JSON.stringify(data)
+                            });
+
+                            const result = await response.json();
+
+                            if (result.success) {
+                                showToast('設定已更新 (Updated)', 'success');
+                                // Remove "Dirty" state if this toggle caused it? 
+                                // Actually, we shouldn't trigger checkDirty for these toggles if they save instantly.
+                                // We should remove the 'change' listener that triggers checkDirty for THIS specific input?
+                                // Or simply reset the "initial" dataset value to current.
+                                this.dataset.initial = this.checked;
+                                window.checkDirty(this, form); // Re-check to update bar
+                            } else {
+                                throw new Error(result.message);
                             }
-                        });
-
-                        // togglePlugin function removed (logic replaced by direct checkbox listeners)
-
-                        function openConfig(moduleId) {
-                            document.getElementById('modules-grid').style.display = 'none';
-                            document.querySelectorAll('.config-section').forEach(el => el.classList.remove('active'));
-                            const target = document.getElementById('config-' + moduleId);
-                            if (target) {
-                                target.classList.add('active');
-                                // Scroll top
-                                document.querySelector('.main-content').scrollTop = 0;
-                            }
+                        } catch (err) {
+                            console.error(err);
+                            showToast('更新失敗: ' + err.message, 'error');
+                            this.checked = !this.checked; // Revert
                         }
+                    });
 
-                        function closeConfig() {
-                            document.querySelectorAll('.config-section').forEach(el => el.classList.remove('active'));
-                            document.getElementById('modules-grid').style.display = 'grid'; // Restore grid
+                    // Stop "checkDirty" from marking these as unsaved if we handle them instantly?
+                    // The `window.checkDirty` function listens to 'change'.
+                    // We can modify checkDirty to ignore class .switch inputs? 
+                    // Or we simply update the `dataset.initial` immediately after success (done above).
+                });
+
+
+                // --- Existing Logic ---
+
+                // Auto-Open Config from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const openModule = urlParams.get('open');
+                if (openModule) {
+                    // Check if it's an internal config
+                    const configSection = document.getElementById('config-' + openModule);
+                    if (configSection) {
+                        openConfig(openModule);
+                    } else {
+                        // It might be an external module (Music, Economy) or just a visual cue needed?
+                        // For now, just scroll to the card?
+                        const card = document.querySelector(`.settings-card[data-module="${openModule}"]`);
+                        if (card) {
+                            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            card.style.border = '2px solid var(--accent-color)';
+                            setTimeout(() => card.style.border = '', 2000);
                         }
-                    </script>
+                    }
+                }
+            });
+
+            // togglePlugin function removed (logic replaced by direct checkbox listeners)
+
+            function openConfig(moduleId) {
+                document.getElementById('modules-grid').style.display = 'none';
+                document.querySelectorAll('.config-section').forEach(el => el.classList.remove('active'));
+                const target = document.getElementById('config-' + moduleId);
+                if (target) {
+                    target.classList.add('active');
+                    // Scroll top
+                    document.querySelector('.main-content').scrollTop = 0;
+                }
+            }
+
+            function closeConfig() {
+                document.querySelectorAll('.config-section').forEach(el => el.classList.remove('active'));
+                document.getElementById('modules-grid').style.display = 'grid'; // Restore grid
+            }
+        </script>
 
         </div>
         <% } %>

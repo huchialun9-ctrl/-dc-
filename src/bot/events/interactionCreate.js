@@ -154,6 +154,109 @@ module.exports = {
             }
 
 
+
+            // --- Admin Panel Buttons ---
+            else if (interaction.isButton() && interaction.customId.startsWith('admin_')) {
+                const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+                const action = interaction.customId.split('_')[1]; // kick, ban, timeout, clear
+
+                const modal = new ModalBuilder()
+                    .setCustomId(`modal_admin_${action}`)
+                    .setTitle(`${action.toUpperCase()} User`);
+
+                if (action === 'kick' || action === 'ban') {
+                    const userIdInput = new TextInputBuilder()
+                        .setCustomId('target_id')
+                        .setLabel("Target User ID")
+                        .setStyle(TextInputStyle.Short)
+                        .setRequired(true);
+
+                    const reasonInput = new TextInputBuilder()
+                        .setCustomId('reason')
+                        .setLabel("Reason")
+                        .setStyle(TextInputStyle.Paragraph)
+                        .setRequired(false);
+
+                    modal.addComponents(
+                        new ActionRowBuilder().addComponents(userIdInput),
+                        new ActionRowBuilder().addComponents(reasonInput)
+                    );
+                } else if (action === 'timeout') {
+                    const userIdInput = new TextInputBuilder()
+                        .setCustomId('target_id')
+                        .setLabel("Target User ID")
+                        .setStyle(TextInputStyle.Short)
+                        .setRequired(true);
+
+                    const durationInput = new TextInputBuilder()
+                        .setCustomId('duration')
+                        .setLabel("Duration (minutes)")
+                        .setStyle(TextInputStyle.Short)
+                        .setRequired(true);
+
+                    modal.addComponents(
+                        new ActionRowBuilder().addComponents(userIdInput),
+                        new ActionRowBuilder().addComponents(durationInput)
+                    );
+                } else if (action === 'clear') {
+                    const amountInput = new TextInputBuilder()
+                        .setCustomId('amount')
+                        .setLabel("Amount (1-100)")
+                        .setStyle(TextInputStyle.Short)
+                        .setRequired(true);
+
+                    modal.addComponents(new ActionRowBuilder().addComponents(amountInput));
+                }
+
+                await interaction.showModal(modal);
+            }
+
+            // --- Admin Panel Modals ---
+            else if (interaction.isModalSubmit() && interaction.customId.startsWith('modal_admin_')) {
+                const action = interaction.customId.replace('modal_admin_', '');
+                await interaction.deferReply({ ephemeral: true });
+
+                try {
+                    const targetId = interaction.fields.getTextInputValue('target_id');
+
+                    if (action === 'clear') {
+                        const amount = parseInt(interaction.fields.getTextInputValue('amount'));
+                        if (isNaN(amount) || amount < 1 || amount > 100) {
+                            return interaction.editReply('❌ 請輸入 1-100 之間的數字。');
+                        }
+                        const deleted = await interaction.channel.bulkDelete(amount, true);
+                        return interaction.editReply(`🧹 已刪除 ${deleted.size} 條訊息。`);
+                    }
+
+                    // For interactions targeting members
+                    const member = await interaction.guild.members.fetch(targetId).catch(() => null);
+                    if (!member) {
+                        return interaction.editReply('❌ 找不到該成員 (Invalid ID)。');
+                    }
+
+                    if (action === 'kick') {
+                        const reason = interaction.fields.getTextInputValue('reason') || 'No reason provided';
+                        await member.kick(reason);
+                        return interaction.editReply(`🦶 已踢出 **${member.user.tag}**\n原因: ${reason}`);
+                    }
+                    else if (action === 'ban') {
+                        const reason = interaction.fields.getTextInputValue('reason') || 'No reason provided';
+                        await member.ban({ reason });
+                        return interaction.editReply(`🚫 已封鎖 **${member.user.tag}**\n原因: ${reason}`);
+                    }
+                    else if (action === 'timeout') {
+                        const duration = parseInt(interaction.fields.getTextInputValue('duration'));
+                        if (isNaN(duration)) return interaction.editReply('❌ 無效的時間 (需要分鐘數)。');
+                        await member.timeout(duration * 60 * 1000, 'Admin Panel Timeout');
+                        return interaction.editReply(`⏳ 已禁言 **${member.user.tag}** ${duration} 分鐘。`);
+                    }
+
+                } catch (error) {
+                    return interaction.editReply(`❌ 操作失敗: ${error.message}`);
+                }
+            }
+
+
         } catch (error) {
             logger.error('Interaction Error: ' + error.message);
             if (interaction.deferred || interaction.replied) {

@@ -462,6 +462,11 @@ router.post('/settings', async (req, res) => {
             // For now, let's just reload the grid for them.
         }
 
+        // AJAX Support for Instant Toggles
+        if (req.headers.accept && req.headers.accept.includes('application/json') || req.body.ajax) {
+            return res.json({ success: true, message: 'Settings updated successfully' });
+        }
+
         res.redirect(redirectUrl);
     } catch (error) {
         console.error('Settings Action Error:', error);

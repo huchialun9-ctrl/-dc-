@@ -1297,3 +1297,59 @@ input:focus+.slider {
   align-items: center;
   gap: 0.75rem;
 }
+
+/* Toast Notification */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: rgba(30, 30, 30, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: slideIn 0.3s ease-out;
+  min-width: 250px;
+}
+
+.toast.success {
+  border-left: 4px solid #22C55E;
+}
+
+.toast.error {
+  border-left: 4px solid #EF4444;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
