@@ -66,9 +66,9 @@ Role: Helpful Discord Bot
             }
 
             // 2. Auto-Moderation (Phase 2)
-            const settings = db.prepare('SELECT automod_links, automod_badwords FROM settings WHERE guild_id = ?').get(message.guild.id);
+            const settings = db.prepare('SELECT automod_links, automod_badwords, automod_enabled FROM settings WHERE guild_id = ?').get(message.guild.id);
 
-            if (settings) {
+            if (settings && settings.automod_enabled === 1) {
                 // A. Link Blocker
                 if (settings.automod_links === 1) {
                     const linkRegex = /(https?:\/\/[^\s]+)/g;
@@ -102,7 +102,7 @@ Role: Helpful Discord Bot
 
             // 3. Leveling System (Phase 3)
             // Check if enabled (Cache this ideally!)
-            const levelingSetting = db.prepare('SELECT leveling_enabled FROM settings WHERE guild_id = ?').get(message.guild.id);
+            const levelingSetting = db.prepare('SELECT leveling_enabled, leveling_rate FROM settings WHERE guild_id = ?').get(message.guild.id);
             if (levelingSetting && levelingSetting.leveling_enabled === 1) {
                 const userId = message.author.id;
                 const guildId = message.guild.id;
@@ -121,8 +121,10 @@ Role: Helpful Discord Bot
                 const lastXpTime = userLevel.last_xp_time || 0;
 
                 if (now - lastXpTime > 60000) {
-                    // Award XP (Random 15-25)
-                    const xpGain = Math.floor(Math.random() * 11) + 15;
+                    // Award XP (Random 15-25) * Rate
+                    const rate = levelingSetting.leveling_rate || 1.0;
+                    const baseGain = Math.floor(Math.random() * 11) + 15;
+                    const xpGain = Math.floor(baseGain * rate);
                     const newXp = userLevel.xp + xpGain;
 
                     // Calculate Level

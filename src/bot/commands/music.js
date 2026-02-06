@@ -54,10 +54,18 @@ module.exports = {
                 const query = options.getString('query');
                 await interaction.reply({ content: `🔍 正在搜尋: \`${query}\`...`, ephemeral: true });
 
-                distube.play(voiceChannel, query, {
+                const queue = distube.play(voiceChannel, query, {
                     member: member,
                     textChannel: channel
                 });
+
+                // Apply default volume from settings
+                if (settings.music_volume !== undefined) {
+                    setTimeout(() => {
+                        const activeQueue = distube.getQueue(guild);
+                        if (activeQueue) activeQueue.setVolume(settings.music_volume);
+                    }, 2000); // Small delay to ensure queue is created
+                }
             }
 
             else if (subcommand === 'stop') {

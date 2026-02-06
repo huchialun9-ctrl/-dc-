@@ -23,7 +23,7 @@ module.exports = {
         const subcommand = options.getSubcommand();
 
         // Check if economy is enabled
-        const settings = db.prepare('SELECT economy_enabled FROM settings WHERE guild_id = ?').get(guild.id);
+        const settings = db.prepare('SELECT economy_enabled, economy_daily, economy_start_balance FROM settings WHERE guild_id = ?').get(guild.id);
         if (!settings || settings.economy_enabled !== 1) {
             return interaction.reply({ content: '❌ 此伺服器尚未啟用經濟系統！請管理員至Dashboard開啟。', ephemeral: true });
         }
@@ -55,14 +55,16 @@ module.exports = {
                 return interaction.reply({ content: `⏳ 您已經領過今天的獎勵了！請在 **${hours}小時 ${minutes}分** 後再來。`, ephemeral: true });
             }
 
-            const reward = Math.floor(Math.random() * 401) + 100; // 100 - 500
+            const dailyAmount = settings.economy_daily || 100;
+            const startBalance = settings.economy_start_balance || 0;
+            const reward = dailyAmount;
 
             if (data) {
                 db.prepare('UPDATE economy SET balance = balance + ?, last_daily = ? WHERE user_id = ? AND guild_id = ?')
                     .run(reward, new Date().toISOString(), user.id, guild.id);
             } else {
                 db.prepare('INSERT INTO economy (user_id, guild_id, balance, last_daily) VALUES (?, ?, ?, ?)')
-                    .run(user.id, guild.id, reward, new Date().toISOString());
+                    .run(user.id, guild.id, startBalance + reward, new Date().toISOString());
             }
 
             const embed = new EmbedBuilder()

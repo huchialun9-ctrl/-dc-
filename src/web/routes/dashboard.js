@@ -367,24 +367,21 @@ router.post('/settings', async (req, res) => {
             stmt.run(guild_id, enabled);
         }
 
-        else if (action === 'update_automod_toggle') {
-            // Reusing automod_links as the main toggle for now, or automod_enabled?
-            // The EJS sends 'automod_links'. Let's stick to that for backward compatibility or upgrade?
-            // Problem: EJS sends `automod_links` as the plugin state.
-            // But I added `automod_enabled` to DB.
-            // Let's use `automod_enabled` as the master switch in DB, and keeping `automod_links` as a detail setting?
-            // Actually, in settings.ejs I aliased the plugin state input name="automod_links".
-            // So I should just update automod_links here.
-            const { automod_links } = req.body;
-            const enabled = automod_links ? 1 : 0;
+        else if (action === 'update_automod_toggle' || action === 'automod') {
+            const { automod_enabled, enabled: ajaxEnabled, automod_links, automod_badwords } = req.body;
+            // Use automod_enabled if provided, otherwise fallback to ajaxEnabled
+            const enabled = (automod_enabled !== undefined ? automod_enabled : ajaxEnabled) ? 1 : 0;
+
             const stmt = db.prepare(`
-                INSERT INTO settings (guild_id, automod_links, updated_at)
-                VALUES (?, ?, CURRENT_TIMESTAMP)
+                INSERT INTO settings (guild_id, automod_enabled, automod_links, automod_badwords, updated_at)
+                VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
                 ON CONFLICT(guild_id) DO UPDATE SET
-                automod_links = excluded.automod_links,
+                automod_enabled = excluded.automod_enabled,
+                automod_links = COALESCE(excluded.automod_links, settings.automod_links),
+                automod_badwords = COALESCE(excluded.automod_badwords, settings.automod_badwords),
                 updated_at = CURRENT_TIMESTAMP
             `);
-            stmt.run(guild_id, enabled);
+            stmt.run(guild_id, enabled, automod_links !== undefined ? (automod_links ? 1 : 0) : null, automod_badwords || null);
         }
 
         else if (action === 'update_welcome_toggle' || action === 'welcome') {
