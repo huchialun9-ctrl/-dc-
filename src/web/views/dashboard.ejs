@@ -17,73 +17,77 @@
     <%- include('partials/sidebar', { path: '/dashboard' }) %>
 
         <div class="main-content">
-            <!-- New Hero Banner -->
-            <div class="hero-banner">
+            <!-- Premium Hero Banner -->
+            <div class="hero-banner"
+                style="background: var(--hero-gradient); border: none; box-shadow: 0 30px 60px rgba(99, 102, 241, 0.25);">
                 <div style="position: relative; z-index: 2;">
-                    <h1
-                        style="color: white; font-size: 3.2rem; margin-bottom: 0.75rem; font-weight: 800; letter-spacing: -0.02em; text-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                    <h1 class="text-gradient"
+                        style="font-size: 3.5rem; margin-bottom: 1rem; font-weight: 800; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));">
                         <% const hour=new Date().getHours(); let greeting='你好' ; if (hour < 5) greeting='凌晨好' ; else if
                             (hour < 12) greeting='早安' ; else if (hour < 14) greeting='中午好' ; else if (hour < 18)
                             greeting='午安' ; else greeting='晚安' ; %>
-                            <span
-                                style="background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(147, 197, 253, 0.3));">
-                                <%= greeting %>，<%= user.username %>！
-                            </span>
+                            <%= greeting %>，<%= user.username %>！
                     </h1>
                     <p
-                        style="color: rgba(255,255,255,0.95); font-size: 1.3rem; max-width: 700px; font-weight: 500; line-height: 1.5; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        style="color: rgba(255,255,255,0.9); font-size: 1.25rem; max-width: 650px; font-weight: 500; line-height: 1.6;">
                         歡迎回到 <span
-                            style="background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2);">VX6
-                            管理中心</span>。目前一切運作良好，準備好管理您的伺服器了嗎？
+                            style="background: rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);">VX6
+                            Premium</span>。系統目前處於最佳狀態，準備好探索新的管理功能了嗎？
                     </p>
                 </div>
                 <div class="animate-float"
-                    style="position: absolute; right: 5%; top: 20%; font-size: 5rem; color: rgba(255,255,255,0.1); z-index: 1;">
-                    <i class="fa-solid fa-rocket"></i>
+                    style="position: absolute; right: 8%; top: 15%; font-size: 6rem; color: rgba(255,255,255,0.15); z-index: 1; filter: blur(1px);">
+                    <i class="fa-solid fa-ghost"></i>
                 </div>
             </div>
 
-            <!-- Modern Status Grid -->
-            <div class="status-grid-new">
-                <div class="status-card-premium">
+            <!-- Enhanced Status Grid -->
+            <div class="status-grid-new" style="gap: 2rem;">
+                <div class="premium-card"
+                    style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem 2rem;">
                     <div class="status-icon-box"
-                        style="background: rgba(34, 197, 94, 0.1); color: #22C55E; box-shadow: var(--success-glow);">
-                        <i class="fa-solid fa-circle-check"></i>
+                        style="background: rgba(16, 185, 129, 0.1); color: #10B981; width: 60px; height: 60px; border-radius: 18px; font-size: 1.75rem;">
+                        <i class="fa-solid fa-heart-pulse"></i>
                     </div>
                     <div>
-                        <h4
-                            style="margin: 0; color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; font-weight: 600;">
-                            系統狀態</h4>
-                        <div style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary);">運作中 (Online)</div>
+                        <p
+                            style="margin: 0; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+                            System Status</p>
+                        <h4 style="margin: 0; font-size: 1.4rem; font-weight: 800; color: var(--text-primary);">
+                            Operational</h4>
                     </div>
                 </div>
 
-                <div class="status-card-premium">
+                <div class="premium-card"
+                    style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem 2rem;">
                     <div class="status-icon-box"
-                        style="background: rgba(59, 130, 246, 0.1); color: #3B82F6; box-shadow: var(--info-glow);">
-                        <i class="fa-solid fa-bolt"></i>
+                        style="background: rgba(99, 102, 241, 0.1); color: #6366F1; width: 60px; height: 60px; border-radius: 18px; font-size: 1.75rem;">
+                        <i class="fa-solid fa-gauge-high"></i>
                     </div>
                     <div>
-                        <h4
-                            style="margin: 0; color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; font-weight: 600;">
-                            網路延遲</h4>
-                        <div style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary);">
-                            <%= Math.floor(Math.random() * 20 + 10) %>ms
-                        </div>
+                        <p
+                            style="margin: 0; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+                            Latency</p>
+                        <h4 style="margin: 0; font-size: 1.4rem; font-weight: 800; color: var(--text-primary);">
+                            <%= Math.floor(Math.random() * 20 + 10) %> <span
+                                    style="font-size: 0.9rem; opacity: 0.7;">ms</span>
+                        </h4>
                     </div>
                 </div>
 
-                <div class="status-card-premium">
-                    <div class="status-icon-box" style="background: rgba(168, 85, 247, 0.1); color: #A855F7;">
+                <div class="premium-card"
+                    style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem 2rem;">
+                    <div class="status-icon-box"
+                        style="background: rgba(245, 158, 11, 0.1); color: #F59E0B; width: 60px; height: 60px; border-radius: 18px; font-size: 1.75rem;">
                         <i class="fa-solid fa-server"></i>
                     </div>
                     <div>
-                        <h4
-                            style="margin: 0; color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; font-weight: 600;">
-                            託管伺服器</h4>
-                        <div style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary);">
+                        <p
+                            style="margin: 0; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+                            Servers</p>
+                        <h4 style="margin: 0; font-size: 1.4rem; font-weight: 800; color: var(--text-primary);">
                             <%= stats.guilds %>
-                        </div>
+                        </h4>
                     </div>
                 </div>
             </div>

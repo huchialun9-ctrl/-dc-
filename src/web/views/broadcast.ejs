@@ -19,58 +19,65 @@
 
         <div class="main-content">
             <div class="topbar">
-                <h2 class="text-gradient">
-                    <%= t('sidebar.broadcast') %>
-                </h2>
-                <div class="user-menu border-gradient">
-                    <span>
-                        <%= user.username %>
-                    </span>
+                <div class="topbar-left">
+                    <h2 class="text-gradient">
+                        <%= t('sidebar.broadcast') %>
+                    </h2>
+                </div>
+                <div class="user-menu">
                     <% if(user.avatar) { %>
-                        <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png"
-                            class="user-avatar" alt="Avatar">
+                        <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="Avatar"
+                            class="user-avatar">
                         <% } %>
+                            <span>
+                                <%= user.username %>
+                            </span>
                 </div>
             </div>
 
-            <div class="settings-container">
-                <div class="settings-card premium-card">
+            <div style="max-width: 900px;">
+                <div class="premium-card">
                     <div class="card-header">
                         <i class="fa-solid fa-bullhorn" style="color: #F43F5E;"></i>
                         <h3>撰寫全域公告 (Write Global Broadcast)</h3>
                     </div>
 
-                    <form action="/dashboard/broadcast" method="POST" class="settings-form">
+                    <form action="/dashboard/broadcast" method="POST">
                         <div class="form-group">
                             <label>公告標題 (Title)</label>
-                            <input type="text" name="title" placeholder="例如：新功能上線！" required>
+                            <input type="text" name="title" class="modern-input" placeholder="例如：新功能上線！" required>
                         </div>
 
                         <div class="form-group">
                             <label>內容描述 (Content)</label>
-                            <textarea name="description" rows="5" placeholder="輸入公告詳細內容..." required></textarea>
+                            <textarea name="description" rows="5" class="modern-input" placeholder="輸入公告詳細內容..."
+                                required></textarea>
                         </div>
 
-                        <div class="form-group">
-                            <label>崁入顏色 (Embed Color)</label>
-                            <input type="color" name="color" value="#5865F2" style="height: 45px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>崁入顏色 (Embed Color)</label>
+                                <input type="color" name="color" value="#6366F1"
+                                    style="height: 50px; cursor: pointer; border: none; padding: 2px;">
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label>選擇目標伺服器 (Target Servers)</label>
-                            <div class="guild-selection-grid"
-                                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 0.5rem;">
-                                <label class="guild-checkbox-item"
-                                    style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border-color); cursor: pointer;">
-                                    <input type="checkbox" id="select-all" checked>
-                                    <span>全選 (Select All)</span>
+                            <div
+                                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                                <label class="premium-card"
+                                    style="padding: 1rem; display: flex; align-items: center; gap: 0.75rem; cursor: pointer; border-radius: 12px; background: rgba(255,255,255,0.03);">
+                                    <input type="checkbox" id="select-all" checked style="width: 18px; height: 18px;">
+                                    <span style="font-size: 0.9rem; font-weight: 600;">全選 (Select All)</span>
                                 </label>
                                 <% guilds.forEach(guild=> { %>
-                                    <label class="guild-checkbox-item"
-                                        style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border-color); cursor: pointer;">
+                                    <label class="premium-card"
+                                        style="padding: 1rem; display: flex; align-items: center; gap: 0.75rem; cursor: pointer; border-radius: 12px; background: rgba(255,255,255,0.03);">
                                         <input type="checkbox" name="target_guilds" value="<%= guild.id %>" checked
-                                            class="guild-cb">
-                                        <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                            class="guild-cb" style="width: 18px; height: 18px;">
+                                        <span
+                                            style="font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                             <%= guild.name %>
                                         </span>
                                     </label>
@@ -79,17 +86,18 @@
                         </div>
 
                         <div
-                            style="margin-top: 2rem; padding: 1rem; background: rgba(244, 63, 94, 0.1); border-radius: 12px; border: 1px solid rgba(244, 63, 94, 0.2);">
-                            <p style="color: #F43F5E; font-weight: 600; margin-bottom: 0.5rem;">
+                            style="margin-top: 3rem; padding: 1.5rem; background: rgba(244, 63, 94, 0.05); border-radius: 16px; border: 1px solid rgba(244, 63, 94, 0.1);">
+                            <p
+                                style="color: #F43F5E; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
                                 <i class="fa-solid fa-triangle-exclamation"></i> 注意 (Warning)
                             </p>
-                            <p style="font-size: 0.9rem; color: var(--text-secondary);">
-                                此操作將向所有選定的伺服器發送訊息。請確保內容符合規範。
+                            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                                此操作將向所有選定的伺服器發送訊息。發送後無法撤回，請務必確認公告內容。
                             </p>
                         </div>
 
                         <button type="submit" class="save-btn"
-                            style="margin-top: 1.5rem; width: 100%; justify-content: center; background: linear-gradient(135deg, #F43F5E 0%, #E11D48 100%);">
+                            style="margin-top: 2rem; width: 100%; justify-content: center; height: 55px; font-size: 1.1rem; background: linear-gradient(135deg, #F43F5E 0%, #E11D48 100%); box-shadow: 0 10px 20px rgba(244, 63, 94, 0.3);">
                             <i class="fa-solid fa-paper-plane"></i> 立即發送 (Broadcast Now)
                         </button>
                     </form>

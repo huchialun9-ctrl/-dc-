@@ -1,59 +1,57 @@
 <div class="sidebar">
     <div class="sidebar-logo">
-        <img src="/logo.png" alt="VX6" class="logo-img"> VX6
+        <div
+            style="width: 42px; height: 42px; background: var(--hero-gradient); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);">
+            <i class="fa-solid fa-bolt" style="color: white; font-size: 1.25rem;"></i>
+        </div>
+        <span class="text-gradient">VX6</span>
     </div>
     <nav class="sidebar-nav">
         <a href="/dashboard" class="<%= path === '/dashboard' ? 'active' : '' %>">
-            <i class="fa-solid fa-chart-pie"></i>
+            <i class="fa-solid fa-compass"></i>
             <%= t('sidebar.overview') %>
-        </a>
-        <a href="/invite" target="_blank">
-            <i class="fa-solid fa-plus"></i>
-            <%= t('sidebar.invite') %>
         </a>
         <a href="/dashboard/servers" class="<%= path === '/dashboard/servers' ? 'active' : '' %>">
             <i class="fa-solid fa-server"></i>
             <%= t('sidebar.servers') %>
         </a>
-        <a href="/dashboard/users" class="<%= path === '/dashboard/users' ? 'active' : '' %>">
-            <i class="fa-solid fa-users"></i>
-            <%= t('sidebar.users') %>
-        </a>
-        <a href="/dashboard/logs" class="<%= path === '/dashboard/logs' ? 'active' : '' %>">
-            <i class="fa-solid fa-list-ul"></i>
-            <%= t('sidebar.logs') %>
-        </a>
         <a href="/dashboard/broadcast" class="<%= path === '/dashboard/broadcast' ? 'active' : '' %>">
             <i class="fa-solid fa-bullhorn"></i>
             <%= t('sidebar.broadcast') %>
         </a>
+        <a href="/dashboard/logs" class="<%= path === '/dashboard/logs' ? 'active' : '' %>">
+            <i class="fa-solid fa-scroll"></i>
+            <%= t('sidebar.logs') %>
+        </a>
         <a href="/dashboard/settings" class="<%= path === '/dashboard/settings' ? 'active' : '' %>">
-            <i class="fa-solid fa-gear"></i>
+            <i class="fa-solid fa-sliders"></i>
             <%= t('sidebar.settings') %>
         </a>
         <a href="/docs" class="<%= path === '/docs' ? 'active' : '' %>">
-            <i class="fa-solid fa-book"></i>
+            <i class="fa-solid fa-book-open"></i>
             <%= t('sidebar.docs') %>
-        </a>
-        <a href="https://github.com/huchialun9-ctrl" target="_blank">
-            <i class="fa-brands fa-github"></i>
-            <%= t('sidebar.developer') %>: huchialun9-ctrl
         </a>
 
         <div style="flex-grow: 1;"></div>
 
-        <!-- Controls -->
-        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; padding: 0 0.5rem;">
-            <button onclick="toggleTheme()" class="icon-btn" title="切換主題 (Toggle Theme)">
-                <i class="fa-solid fa-moon" id="theme-icon"></i>
-            </button>
-            <button onclick="toggleLang()" class="icon-btn" title="切換語言 (Switch Language)">
-                <i class="fa-solid fa-language"></i>
-            </button>
+        <div
+            style="padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 2rem;">
+            <p
+                style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 1rem; letter-spacing: 0.05em;">
+                Preferences</p>
+            <div style="display: flex; gap: 1rem;">
+                <button onclick="toggleTheme()" class="icon-btn" title="Toggle Theme">
+                    <i class="fa-solid fa-moon" id="theme-icon"></i>
+                </button>
+                <button onclick="toggleLang()" class="icon-btn" title="Switch Language">
+                    <i class="fa-solid fa-language"></i>
+                </button>
+            </div>
         </div>
 
-        <a href="/auth/logout" style="color: var(--danger-color);">
-            <i class="fa-solid fa-right-from-bracket"></i>
+        <a href="/auth/logout"
+            style="color: var(--danger-color); background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.1);">
+            <i class="fa-solid fa-power-off"></i>
             <%= t('sidebar.logout') %>
         </a>
     </nav>
