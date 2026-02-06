@@ -53,6 +53,44 @@ db.prepare(`CREATE TABLE IF NOT EXISTS economy (
     PRIMARY KEY (user_id, guild_id)
 )`).run();
 
+// 9. Giveaways Table (CRITICAL FIX)
+db.prepare(`CREATE TABLE IF NOT EXISTS giveaways (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    message_id TEXT NOT NULL,
+    channel_id TEXT NOT NULL,
+    guild_id TEXT NOT NULL,
+    prize TEXT NOT NULL,
+    winners_count INTEGER DEFAULT 1,
+    end_time INTEGER NOT NULL,
+    hosted_by TEXT NOT NULL,
+    ended INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)`).run();
+
+// 10. Voice Master Tables
+db.prepare(`CREATE TABLE IF NOT EXISTS voice_master (
+    guild_id TEXT PRIMARY KEY,
+    category_id TEXT,
+    channel_id TEXT NOT NULL
+)`).run();
+
+db.prepare(`CREATE TABLE IF NOT EXISTS voice_channels (
+    channel_id TEXT PRIMARY KEY,
+    guild_id TEXT NOT NULL,
+    owner_id TEXT NOT NULL,
+    is_locked INTEGER DEFAULT 0,
+    is_hidden INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)`).run();
+
+// 11. Earthquake Subscriptions
+db.prepare(`CREATE TABLE IF NOT EXISTS earthquake_subs (
+    guild_id TEXT PRIMARY KEY,
+    channel_id TEXT NOT NULL,
+    min_intensity INTEGER DEFAULT 3,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)`).run();
+
 // --- Migrations ---
 const safeAlter = (stmt) => {
     try {
@@ -60,27 +98,29 @@ const safeAlter = (stmt) => {
         logger.debug(`Migration successful: ${stmt}`);
     } catch (e) {
         /* Ignore if column exists */
-        if (!e.message.includes('duplicate column name')) {
-            logger.warn(`Migration skipped/failed: ${e.message} (${stmt})`);
-        }
+        if (e.message.includes('duplicate column name')) return;
+        logger.warn(`Migration skipped/failed: ${e.message} (${stmt})`);
     }
 };
 
 logger.info('Running database migrations...');
 
+// Core Settings Expansion
+safeAlter("ALTER TABLE settings ADD COLUMN log_channel_id TEXT");
+safeAlter("ALTER TABLE settings ADD COLUMN created_at DATETIME DEFAULT CURRENT_TIMESTAMP");
 safeAlter("ALTER TABLE settings ADD COLUMN automod_badwords TEXT DEFAULT ''");
 safeAlter("ALTER TABLE settings ADD COLUMN automod_links INTEGER DEFAULT 0");
-
 safeAlter("ALTER TABLE settings ADD COLUMN ticket_categories TEXT");
 safeAlter("ALTER TABLE settings ADD COLUMN leveling_enabled INTEGER DEFAULT 0");
 safeAlter("ALTER TABLE settings ADD COLUMN economy_enabled INTEGER DEFAULT 0");
-safeAlter("ALTER TABLE settings ADD COLUMN ai_chat_enabled INTEGER DEFAULT 1"); // Default to 1 (Enabled)
-safeAlter("ALTER TABLE settings ADD COLUMN ai_channel_id TEXT"); // Optional: Restrict AI to specific channel
-
-// Phase 26: Plugin Store - Unified "Enabled" flags for all modules
+safeAlter("ALTER TABLE settings ADD COLUMN ai_chat_enabled INTEGER DEFAULT 1");
+safeAlter("ALTER TABLE settings ADD COLUMN ai_channel_id TEXT");
 safeAlter("ALTER TABLE settings ADD COLUMN announcement_enabled INTEGER DEFAULT 0");
 safeAlter("ALTER TABLE settings ADD COLUMN music_enabled INTEGER DEFAULT 0");
 safeAlter("ALTER TABLE settings ADD COLUMN custom_commands_enabled INTEGER DEFAULT 0");
-safeAlter("ALTER TABLE settings ADD COLUMN automod_enabled INTEGER DEFAULT 0"); // Generic master switch for automod
+safeAlter("ALTER TABLE settings ADD COLUMN automod_enabled INTEGER DEFAULT 0");
+
+// Activity Logs Expansion
+safeAlter("ALTER TABLE activity_logs ADD COLUMN ip_address TEXT");
 
 module.exports = db;
