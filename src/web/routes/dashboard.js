@@ -171,7 +171,6 @@ router.get('/leaderboard/:guild_id/economy', async (req, res) => {
 });
 
 router.post('/settings', async (req, res) => {
-    console.log('[Dashboard] Settings POST:', req.body); // DEBUG LOG
     const { action, guild_id, channel_id } = req.body;
     const client = require('../../bot/client');
     const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
@@ -199,21 +198,18 @@ router.post('/settings', async (req, res) => {
 
 
         else if (action === 'update_welcome') {
-            const { welcome_enabled, welcome_channel_id, welcome_message } = req.body;
-            // welcome_enabled is '1' if checked, or undefined if unchecked (standard HTML form behavior)
-            const isEnabled = welcome_enabled ? 1 : 0;
+            const { welcome_channel_id, welcome_message } = req.body;
 
             const stmt = db.prepare(`
-                INSERT INTO settings (guild_id, welcome_enabled, welcome_channel_id, welcome_message, updated_at)
-                VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+                INSERT INTO settings (guild_id, welcome_channel_id, welcome_message, updated_at)
+                VALUES (?, ?, ?, CURRENT_TIMESTAMP)
                 ON CONFLICT(guild_id) DO UPDATE SET
-                welcome_enabled = excluded.welcome_enabled,
                 welcome_channel_id = excluded.welcome_channel_id,
                 welcome_message = excluded.welcome_message,
                 updated_at = CURRENT_TIMESTAMP
             `);
 
-            stmt.run(guild_id, isEnabled, welcome_channel_id, welcome_message);
+            stmt.run(guild_id, welcome_channel_id, welcome_message);
         }
 
         else if (action === 'add_command') {
@@ -239,20 +235,18 @@ router.post('/settings', async (req, res) => {
         }
 
         else if (action === 'update_automod') {
-            const { automod_links, automod_badwords } = req.body;
-            const blockLinks = automod_links ? 1 : 0;
+            const { automod_badwords } = req.body;
             const badWords = automod_badwords || '';
 
             const stmt = db.prepare(`
-                INSERT INTO settings (guild_id, automod_links, automod_badwords, updated_at)
-                VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+                INSERT INTO settings (guild_id, automod_badwords, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
                 ON CONFLICT(guild_id) DO UPDATE SET
-                automod_links = excluded.automod_links,
                 automod_badwords = excluded.automod_badwords,
                 updated_at = CURRENT_TIMESTAMP
             `);
 
-            stmt.run(guild_id, blockLinks, badWords);
+            stmt.run(guild_id, badWords);
         }
 
         else if (action === 'update_leveling') {
@@ -470,6 +464,12 @@ router.post('/settings', async (req, res) => {
         res.redirect(redirectUrl);
     } catch (error) {
         console.error('Settings Action Error:', error);
+
+        // Support JSON Error Response
+        if (req.headers.accept && req.headers.accept.includes('application/json') || req.body.ajax) {
+            return res.status(500).json({ success: false, message: error.message });
+        }
+
         res.status(500).send(`Error: ${error.message}`);
     }
 });
