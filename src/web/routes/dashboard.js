@@ -304,6 +304,83 @@ router.post('/settings', async (req, res) => {
             stmt.run(guild_id, channelId);
         }
 
+        // --- Phase 26: Plugin Store Toggle Handlers ---
+
+        else if (action === 'update_announcement_toggle') {
+            const { announcement_enabled } = req.body;
+            const enabled = announcement_enabled ? 1 : 0;
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, announcement_enabled, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                announcement_enabled = excluded.announcement_enabled,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+            stmt.run(guild_id, enabled);
+        }
+
+        else if (action === 'update_music_toggle') {
+            const { music_enabled } = req.body;
+            const enabled = music_enabled ? 1 : 0;
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, music_enabled, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                music_enabled = excluded.music_enabled,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+            stmt.run(guild_id, enabled);
+        }
+
+        else if (action === 'update_commands_toggle') {
+            const { custom_commands_enabled } = req.body;
+            const enabled = custom_commands_enabled ? 1 : 0;
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, custom_commands_enabled, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                custom_commands_enabled = excluded.custom_commands_enabled,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+            stmt.run(guild_id, enabled);
+        }
+
+        else if (action === 'update_automod_toggle') {
+            // Reusing automod_links as the main toggle for now, or automod_enabled?
+            // The EJS sends 'automod_links'. Let's stick to that for backward compatibility or upgrade?
+            // Problem: EJS sends `automod_links` as the plugin state.
+            // But I added `automod_enabled` to DB.
+            // Let's use `automod_enabled` as the master switch in DB, and keeping `automod_links` as a detail setting?
+            // Actually, in settings.ejs I aliased the plugin state input name="automod_links".
+            // So I should just update automod_links here.
+            const { automod_links } = req.body;
+            const enabled = automod_links ? 1 : 0;
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, automod_links, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                automod_links = excluded.automod_links,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+            stmt.run(guild_id, enabled);
+        }
+
+        else if (action === 'update_welcome_toggle') {
+            // Logic already exists? Let's check.
+            // It was called inside update_welcome_toggle block if it exists?
+            // Let's ensure this block is consistent.
+            const { welcome_enabled } = req.body;
+            const enabled = welcome_enabled ? 1 : 0;
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, welcome_enabled, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                welcome_enabled = excluded.welcome_enabled,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+            stmt.run(guild_id, enabled);
+        }
+
         else if (action === 'add_ticket_category') {
             const { cat_label, cat_desc, cat_emoji } = req.body;
 

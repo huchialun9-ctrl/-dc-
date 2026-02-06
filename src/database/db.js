@@ -64,4 +64,10 @@ safeAlter("ALTER TABLE settings ADD COLUMN economy_enabled INTEGER DEFAULT 0");
 safeAlter("ALTER TABLE settings ADD COLUMN ai_chat_enabled INTEGER DEFAULT 1"); // Default to 1 (Enabled)
 safeAlter("ALTER TABLE settings ADD COLUMN ai_channel_id TEXT"); // Optional: Restrict AI to specific channel
 
+// Phase 26: Plugin Store - Unified "Enabled" flags for all modules
+safeAlter("ALTER TABLE settings ADD COLUMN announcement_enabled INTEGER DEFAULT 0");
+safeAlter("ALTER TABLE settings ADD COLUMN music_enabled INTEGER DEFAULT 0");
+safeAlter("ALTER TABLE settings ADD COLUMN custom_commands_enabled INTEGER DEFAULT 0");
+safeAlter("ALTER TABLE settings ADD COLUMN automod_enabled INTEGER DEFAULT 0"); // Generic master switch for automod
+
 module.exports = db;
