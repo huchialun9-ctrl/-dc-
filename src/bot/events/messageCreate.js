@@ -50,14 +50,18 @@ Role: Helpful Discord Bot
             // 1. Check Custom Commands
             // Simple robust check: exact match or starts with (if needed, but simple trigger usually implies exact or prefix)
             // For now, let's do "exact match" to be safe and simple 
-            // OR checks if message content STARTS with the trigger
 
-            const commands = db.prepare('SELECT trigger, response FROM custom_commands WHERE guild_id = ?').all(message.guild.id);
+            // Check if module is enabled first!
+            const cmdSettings = db.prepare('SELECT custom_commands_enabled FROM settings WHERE guild_id = ?').get(message.guild.id);
 
-            for (const cmd of commands) {
-                if (message.content === cmd.trigger) {
-                    await message.reply(cmd.response);
-                    return; // Stop processing after finding a match
+            if (cmdSettings && cmdSettings.custom_commands_enabled === 1) {
+                const commands = db.prepare('SELECT trigger, response FROM custom_commands WHERE guild_id = ?').all(message.guild.id);
+
+                for (const cmd of commands) {
+                    if (message.content === cmd.trigger) {
+                        await message.reply(cmd.response);
+                        return; // Stop processing after finding a match
+                    }
                 }
             }
 

@@ -41,6 +41,12 @@ module.exports = {
             return interaction.reply({ content: '❌ 請先加入語音頻道！', ephemeral: true });
         }
 
+        // Check Plugin Status
+        const settings = require('../../database/db').prepare('SELECT music_enabled FROM settings WHERE guild_id = ?').get(guild.id);
+        if (!settings || settings.music_enabled !== 1) {
+            return interaction.reply({ content: '❌ 此伺服器尚未啟用音樂系統！請管理員至 Dashboard 安裝插件。', ephemeral: true });
+        }
+
         const distube = interaction.client.distube;
 
         try {

@@ -97,6 +97,13 @@ module.exports = {
 
             // --- Music Button Actions ---
             else if (interaction.isButton() && interaction.customId.startsWith('music_')) {
+                // Check Plugin Status first
+                const db = require('../../database/db');
+                const settings = db.prepare('SELECT music_enabled FROM settings WHERE guild_id = ?').get(interaction.guildId);
+                if (!settings || settings.music_enabled !== 1) {
+                    return interaction.reply({ content: '❌ 音樂系統已停用 (Plugin Disabled)。', ephemeral: true });
+                }
+
                 const queue = interaction.client.distube.getQueue(interaction.guildId);
                 if (!queue) return interaction.reply({ content: '❌ 目前沒有音樂正在播放！', ephemeral: true });
 

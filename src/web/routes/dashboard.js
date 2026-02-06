@@ -178,6 +178,12 @@ router.post('/settings', async (req, res) => {
 
     try {
         if (action === 'send_announcement') {
+            // Check if Announcement plugin is enabled
+            const settings = db.prepare('SELECT announcement_enabled FROM settings WHERE guild_id = ?').get(guild_id);
+            if (!settings || settings.announcement_enabled !== 1) {
+                throw new Error('Announcement plugin is not installed/enabled.');
+            }
+
             const channel = client.channels.cache.get(channel_id);
             if (!channel) throw new Error('Channel not found');
 
@@ -213,6 +219,12 @@ router.post('/settings', async (req, res) => {
         else if (action === 'add_command') {
             const { trigger, response } = req.body;
             if (!trigger || !response) throw new Error('Trigger and Response are required');
+
+            // Check Plugin Status
+            const settings = db.prepare('SELECT custom_commands_enabled FROM settings WHERE guild_id = ?').get(guild_id);
+            if (!settings || settings.custom_commands_enabled !== 1) {
+                throw new Error('Custom Commands plugin is not enabled.');
+            }
 
             // Check if trigger already exists
             const existing = db.prepare('SELECT id FROM custom_commands WHERE guild_id = ? AND trigger = ?').get(guild_id, trigger);
