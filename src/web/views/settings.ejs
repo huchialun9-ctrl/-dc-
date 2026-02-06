@@ -605,7 +605,13 @@
                             }
 
                             // Trigger change event for unsaved bar
-                            input.dispatchEvent(new Event('change', { bubbles: true }));
+                            // Use global checker if available for robustness
+                            const form = card.querySelector('form');
+                            if (window.checkDirty && form) {
+                                window.checkDirty(input, form);
+                            } else {
+                                input.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
                         }
 
                         function openConfig(moduleId) {
@@ -641,7 +647,7 @@
 
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
-                    let dirtyForms = new Set();
+                    window.dirtyForms = new Set();
                     const bar = document.getElementById('unsaved-bar');
                     const btnSave = document.getElementById('btn-save');
                     const btnReset = document.getElementById('btn-reset');
@@ -658,12 +664,12 @@
                                 input.dataset.initial = input.value;
                             }
 
-                            input.addEventListener('change', () => checkDirty(input, form));
-                            input.addEventListener('input', () => checkDirty(input, form));
+                            input.addEventListener('change', () => window.checkDirty(input, form));
+                            input.addEventListener('input', () => window.checkDirty(input, form));
                         });
                     });
 
-                    function checkDirty(input, form) {
+                    window.checkDirty = function (input, form) {
                         let isDirty = false;
                         if (input.type === 'checkbox' || input.type === 'radio') {
                             isDirty = input.checked.toString() !== input.dataset.initial;
@@ -672,7 +678,7 @@
                         }
 
                         if (isDirty) {
-                            dirtyForms.add(form);
+                            window.dirtyForms.add(form);
                             form.classList.add('is-dirty');
                         } else {
                             let formActuallyDirty = false;
@@ -690,12 +696,12 @@
                             });
 
                             if (!formActuallyDirty) {
-                                dirtyForms.delete(form);
+                                window.dirtyForms.delete(form);
                                 form.classList.remove('is-dirty');
                             }
                         }
 
-                        if (dirtyForms.size > 0) {
+                        if (window.dirtyForms.size > 0) {
                             bar.classList.add('visible');
                         } else {
                             bar.classList.remove('visible');
@@ -711,7 +717,7 @@
                     btnSave.addEventListener('click', async () => {
                         console.log('Save button clicked (EventListener)');
 
-                        if (dirtyForms.size === 0) {
+                        if (window.dirtyForms.size === 0) {
                             console.warn('No dirty forms found');
                             alert('沒有偵測到變更 (No changes detected)');
                             return;
@@ -723,7 +729,7 @@
 
                         try {
                             const promises = [];
-                            for (const form of dirtyForms) {
+                            for (const form of window.dirtyForms) {
                                 const actionUrl = form.getAttribute('action');
                                 console.log('Submitting form:', actionUrl);
                                 const formData = new FormData(form);
