@@ -58,6 +58,9 @@ const safeAlter = (stmt) => {
     try { db.prepare(stmt).run(); } catch (e) { /* Ignore if column exists */ }
 };
 
+safeAlter("ALTER TABLE settings ADD COLUMN automod_badwords TEXT DEFAULT ''");
+safeAlter("ALTER TABLE settings ADD COLUMN automod_links INTEGER DEFAULT 0");
+
 safeAlter("ALTER TABLE settings ADD COLUMN ticket_categories TEXT");
 safeAlter("ALTER TABLE settings ADD COLUMN leveling_enabled INTEGER DEFAULT 0");
 safeAlter("ALTER TABLE settings ADD COLUMN economy_enabled INTEGER DEFAULT 0");
