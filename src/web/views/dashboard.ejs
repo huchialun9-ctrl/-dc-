@@ -172,37 +172,37 @@
                                 class="fa-solid fa-angle-right"></i></a>
                     </div>
                     <div class="activity-list">
-                        <% recentLogs.forEach(log=> { %>
-                            <% let actionUrl='/dashboard/logs' ; let targetGuildId='' ; // Logic to extract guild_id
-                                from details if needed later if (log.action.includes('CONFIG'))
-                                actionUrl='/dashboard/settings' ; if (log.action==='TICKET' )
-                                actionUrl='/dashboard/settings?open=tickets' ; if (log.action==='ECONOMY' )
-                                actionUrl='/dashboard/settings?open=economy' ; %>
-                                <a href="<%= actionUrl %>" class="activity-item actionable-log"
-                                    style="text-decoration: none; color: inherit; display: flex;">
-                                    <div class="activity-icon">
-                                        <i
-                                            class="fa-solid <%= log.action === 'LOGIN' ? 'fa-right-to-bracket' : 'fa-gear' %>"></i>
+                        <% recentLogs.forEach(log=> {
+                            let actionUrl = '/dashboard/logs';
+                            if (log.action.includes('CONFIG')) actionUrl = '/dashboard/settings';
+                            if (log.action === 'TICKET') actionUrl = '/dashboard/settings?open=tickets';
+                            if (log.action === 'ECONOMY') actionUrl = '/dashboard/settings?open=economy';
+                            %>
+                            <a href="<%= actionUrl %>" class="activity-item actionable-log"
+                                style="text-decoration: none; color: inherit; display: flex;">
+                                <div class="activity-icon">
+                                    <i
+                                        class="fa-solid <%= log.action === 'LOGIN' ? 'fa-right-to-bracket' : 'fa-gear' %>"></i>
+                                </div>
+                                <div class="activity-content" style="flex: 1;">
+                                    <p><strong>
+                                            <%= log.action %>
+                                        </strong>: <%= log.details %>
+                                    </p>
+                                    <span>
+                                        <%= new Date(log.created_at).toLocaleString() %>
+                                    </span>
+                                </div>
+                                <div class="activity-arrow">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </div>
+                            </a>
+                            <% }) %>
+                                <% if(recentLogs.length===0) { %>
+                                    <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                                        暫無最近活動紀錄。
                                     </div>
-                                    <div class="activity-content" style="flex: 1;">
-                                        <p><strong>
-                                                <%= log.action %>
-                                            </strong>: <%= log.details %>
-                                        </p>
-                                        <span>
-                                            <%= new Date(log.created_at).toLocaleString() %>
-                                        </span>
-                                    </div>
-                                    <div class="activity-arrow">
-                                        <i class="fa-solid fa-chevron-right"></i>
-                                    </div>
-                                </a>
-                                <% }) %>
-                                    <% if(recentLogs.length===0) { %>
-                                        <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
-                                            暫無最近活動紀錄。
-                                        </div>
-                                        <% } %>
+                                    <% } %>
                     </div>
                 </div>
 
