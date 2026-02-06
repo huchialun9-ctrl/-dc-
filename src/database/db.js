@@ -55,8 +55,18 @@ db.prepare(`CREATE TABLE IF NOT EXISTS economy (
 
 // --- Migrations ---
 const safeAlter = (stmt) => {
-    try { db.prepare(stmt).run(); } catch (e) { /* Ignore if column exists */ }
+    try {
+        db.prepare(stmt).run();
+        logger.debug(`Migration successful: ${stmt}`);
+    } catch (e) {
+        /* Ignore if column exists */
+        if (!e.message.includes('duplicate column name')) {
+            logger.warn(`Migration skipped/failed: ${e.message} (${stmt})`);
+        }
+    }
 };
+
+logger.info('Running database migrations...');
 
 safeAlter("ALTER TABLE settings ADD COLUMN automod_badwords TEXT DEFAULT ''");
 safeAlter("ALTER TABLE settings ADD COLUMN automod_links INTEGER DEFAULT 0");
