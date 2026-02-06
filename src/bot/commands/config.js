@@ -51,7 +51,7 @@ module.exports = {
 
         if (subcommand === 'announcement') {
             const channel = interaction.options.getChannel('channel');
-            db.prepare(`INSERT INTO settings (guild_id, announcement_channel_id, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP) ON CONFLICT(guild_id) DO UPDATE SET announcement_channel_id = excluded.announcement_channel_id, updated_at = CURRENT_TIMESTAMP`).run(guildId, channel.id);
+            db.prepare(`INSERT INTO settings (guild_id, announcement_channel_id, announcement_enabled, updated_at) VALUES (?, ?, 1, CURRENT_TIMESTAMP) ON CONFLICT(guild_id) DO UPDATE SET announcement_channel_id = excluded.announcement_channel_id, announcement_enabled = 1, updated_at = CURRENT_TIMESTAMP`).run(guildId, channel.id);
             embed.setTitle('📢 公告設定已更新').setDescription(`公告頻道已設置為 ${channel}`);
         }
 
@@ -60,11 +60,12 @@ module.exports = {
             const message = interaction.options.getString('message');
 
             const stmt = db.prepare(`
-                INSERT INTO settings (guild_id, welcome_channel_id, welcome_message, updated_at) 
-                VALUES (?, ?, ?, CURRENT_TIMESTAMP) 
+                INSERT INTO settings (guild_id, welcome_channel_id, welcome_message, welcome_enabled, updated_at) 
+                VALUES (?, ?, ?, 1, CURRENT_TIMESTAMP) 
                 ON CONFLICT(guild_id) DO UPDATE SET 
                 welcome_channel_id = excluded.welcome_channel_id, 
                 welcome_message = COALESCE(excluded.welcome_message, settings.welcome_message),
+                welcome_enabled = 1,
                 updated_at = CURRENT_TIMESTAMP
             `);
             stmt.run(guildId, channel.id, message || null);

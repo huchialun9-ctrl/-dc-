@@ -22,14 +22,10 @@ module.exports = {
         const { guild, user, options } = interaction;
         const subcommand = options.getSubcommand();
 
-        // Check if economy is enabled
-        const settings = db.prepare('SELECT economy_enabled, economy_daily, economy_start_balance, language FROM settings WHERE guild_id = ?').get(guild.id);
+        // Fetch Economy Settings
+        const settings = db.prepare('SELECT economy_daily, economy_start_balance, language FROM settings WHERE guild_id = ?').get(guild.id);
         const lang = settings ? (settings.language || 'zh') : 'zh';
         const { t } = require('../utils/i18n');
-
-        if (!settings || settings.economy_enabled !== 1) {
-            return interaction.reply({ content: t('bot.music_not_enabled', lang), ephemeral: true }); // Using existing error key for now or add a new one
-        }
 
         if (subcommand === 'balance') {
             const targetUser = options.getUser('user') || user;

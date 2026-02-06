@@ -7,10 +7,10 @@ module.exports = {
     async execute(member) {
         try {
             // Fetch Welcome Settings
-            const settings = db.prepare('SELECT welcome_channel_id, welcome_message, welcome_enabled, language FROM settings WHERE guild_id = ?').get(member.guild.id);
+            const settings = db.prepare('SELECT welcome_channel_id, welcome_message, language FROM settings WHERE guild_id = ?').get(member.guild.id);
 
-            // If not enabled or no channel set, return
-            if (!settings || !settings.welcome_enabled || !settings.welcome_channel_id) return;
+            // Trigger if a channel is configured
+            if (!settings || !settings.welcome_channel_id) return;
 
             const channel = member.guild.channels.cache.get(settings.welcome_channel_id);
             if (!channel) return;

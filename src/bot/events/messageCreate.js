@@ -13,20 +13,10 @@ module.exports = {
             // 0. AI Chat (Priority if Mentioned)
             // Check if mentioned
             if (message.mentions.has(message.client.user) && !message.mentions.everyone) {
-                let aiSetting = db.prepare('SELECT ai_chat_enabled FROM settings WHERE guild_id = ?').get(message.guild.id);
+                const aiSetting = db.prepare('SELECT ai_channel_id FROM settings WHERE guild_id = ?').get(message.guild.id);
 
-                // If settings missing, initialize with AI Enabled (Default behavior for better UX)
-                if (!aiSetting) {
-                    try {
-                        db.prepare('INSERT INTO settings (guild_id, ai_chat_enabled) VALUES (?, 1)').run(message.guild.id);
-                        aiSetting = { ai_chat_enabled: 1 };
-                        logger.info(`Initialized settings for guild ${message.guild.id} with AI enabled.`);
-                    } catch (e) {
-                        // Ignore unique constraint if race condition
-                    }
-                }
-
-                if (aiSetting && aiSetting.ai_chat_enabled === 1) {
+                // Features trigger if configuration exists (e.g. not specifically 'disabled' by ID check)
+                if (aiSetting) {
                     // Check Channel Binding
                     if (aiSetting.ai_channel_id && aiSetting.ai_channel_id !== message.channel.id) {
                         return; // Ignore if not in the bound channel
@@ -48,14 +38,10 @@ Role: Helpful Discord Bot
             }
 
             // 1. Check Custom Commands
-            // Simple robust check: exact match or starts with (if needed, but simple trigger usually implies exact or prefix)
-            // For now, let's do "exact match" to be safe and simple 
+            // Features run if custom commands exist in the database for this guild
+            const commands = db.prepare('SELECT trigger, response FROM custom_commands WHERE guild_id = ?').all(message.guild.id);
 
-            // Check if module is enabled first!
-            const cmdSettings = db.prepare('SELECT custom_commands_enabled FROM settings WHERE guild_id = ?').get(message.guild.id);
-
-            if (cmdSettings && cmdSettings.custom_commands_enabled === 1) {
-                const commands = db.prepare('SELECT trigger, response FROM custom_commands WHERE guild_id = ?').all(message.guild.id);
+            if (commands.length > 0) {
 
                 for (const cmd of commands) {
                     if (message.content === cmd.trigger) {
@@ -65,10 +51,10 @@ Role: Helpful Discord Bot
                 }
             }
 
-            // 2. Auto-Moderation (Phase 2)
-            const settings = db.prepare('SELECT automod_links, automod_badwords, automod_enabled FROM settings WHERE guild_id = ?').get(message.guild.id);
+            // 2. Auto-Moderation
+            const settings = db.prepare('SELECT automod_links, automod_badwords FROM settings WHERE guild_id = ?').get(message.guild.id);
 
-            if (settings && settings.automod_enabled === 1) {
+            if (settings) {
                 // A. Link Blocker
                 if (settings.automod_links === 1) {
                     const linkRegex = /(https?:\/\/[^\s]+)/g;
@@ -100,10 +86,10 @@ Role: Helpful Discord Bot
                 }
             }
 
-            // 3. Leveling System (Phase 3)
-            // Check if enabled (Cache this ideally!)
-            const levelingSetting = db.prepare('SELECT leveling_enabled, leveling_rate FROM settings WHERE guild_id = ?').get(message.guild.id);
-            if (levelingSetting && levelingSetting.leveling_enabled === 1) {
+            // 3. Leveling System
+            // Check if rate is set (Implies system is active)
+            const levelingSetting = db.prepare('SELECT leveling_rate FROM settings WHERE guild_id = ?').get(message.guild.id);
+            if (levelingSetting && levelingSetting.leveling_rate > 0) {
                 const userId = message.author.id;
                 const guildId = message.guild.id;
 
