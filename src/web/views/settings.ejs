@@ -177,11 +177,17 @@
                                     <p class="card-desc">提及機器人即可對話。</p>
                                 </div>
                                 <div class="card-controls">
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input detect-change" type="checkbox"
+                                    <div class="form-check form-switch" style="margin-right: auto;">
+                                        <input class="form-check-input detect-change module-toggle" type="checkbox"
                                             name="ai_chat_enabled" value="1" <%=settings.ai_chat_enabled ? 'checked'
-                                            : '' %>>
+                                            : '' %> data-target="btn-ai">
                                     </div>
+                                    <button type="button" id="btn-ai" class="btn-setting" onclick="openConfig('ai')"
+                                        <%=settings.ai_chat_enabled ? '' : 'disabled' %>
+                                        style="<%= settings.ai_chat_enabled ? '' : 'opacity: 0.5; cursor: not-allowed;'
+                                            %>">
+                                            <i class="fa-solid fa-gear"></i> 設定
+                                    </button>
                                 </div>
                             </form>
                             <div class="card-watermark">

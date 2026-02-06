@@ -27,6 +27,11 @@ module.exports = {
                 }
 
                 if (aiSetting && aiSetting.ai_chat_enabled === 1) {
+                    // Check Channel Binding
+                    if (aiSetting.ai_channel_id && aiSetting.ai_channel_id !== message.channel.id) {
+                        return; // Ignore if not in the bound channel
+                    }
+
                     await message.channel.sendTyping();
                     const prompt = message.content.replace(/<@!?[0-9]+>/g, '').trim();
                     if (!prompt) return; // Ignore empty mentions

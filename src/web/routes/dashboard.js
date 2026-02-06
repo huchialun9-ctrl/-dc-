@@ -288,6 +288,22 @@ router.post('/settings', async (req, res) => {
             stmt.run(guild_id, enabled);
         }
 
+        else if (action === 'update_ai_config') {
+            const { ai_channel_id } = req.body;
+            // If empty string, treat as NULL
+            const channelId = ai_channel_id ? ai_channel_id : null;
+
+            const stmt = db.prepare(`
+                INSERT INTO settings (guild_id, ai_channel_id, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(guild_id) DO UPDATE SET
+                ai_channel_id = excluded.ai_channel_id,
+                updated_at = CURRENT_TIMESTAMP
+            `);
+
+            stmt.run(guild_id, channelId);
+        }
+
         else if (action === 'add_ticket_category') {
             const { cat_label, cat_desc, cat_emoji } = req.body;
 
