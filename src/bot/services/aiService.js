@@ -6,7 +6,7 @@ let model = null;
 const init = () => {
     if (process.env.GEMINI_API_KEY) {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         logger.info('✅ AI (Gemini) Service Initialized');
     } else {
         logger.warn('⚠️ GEMINI_API_KEY missing. AI Chat will not work.');
@@ -23,7 +23,8 @@ const generateResponse = async (prompt, context = "") => {
         return response.text();
     } catch (error) {
         logger.error(`AI Generation Error: ${error.message}`);
-        return "❌ 系統暫時無法回應，請稍後再試。";
+        // Return actual error for debugging
+        return `❌ AI 系統暫時無法回應。\n錯誤詳情 (Error): ${error.message}`;
     }
 };
 
