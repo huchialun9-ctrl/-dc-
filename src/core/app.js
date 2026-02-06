@@ -66,6 +66,8 @@ passport.use(new DiscordStrategy({
     scope: ['identify', 'guilds']
 }, async (accessToken, refreshToken, profile, done) => {
     try {
+        logger.info(`Auth Attempt: ${profile.id} (${profile.username})`);
+
         // Upsert User to Database
         const stmt = db.prepare(`
             INSERT INTO users (id, username, avatar, last_login) 
@@ -81,11 +83,14 @@ passport.use(new DiscordStrategy({
         const logStmt = db.prepare('INSERT INTO activity_logs (user_id, action, details) VALUES (?, ?, ?)');
         logStmt.run(profile.id, 'LOGIN', `Logged in via Discord`);
 
+        logger.info(`Auth Success: ${profile.id}`);
+
         // Save guilds to session for dashboard access
         profile.guilds = profile.guilds || [];
         return done(null, profile);
     } catch (err) {
-        logger.error(`Auth Error: ${err.message}`);
+        logger.error(`Auth Callback Error: ${err.message}`);
+        console.error(err); // Full stack trace to console
         return done(err, null);
     }
 }));

@@ -3,3 +3,6 @@ node_modules
 .DS_Store
 *.sqlite
 database.sqlite
+logs/
+test-db.js
+database.sqlite*

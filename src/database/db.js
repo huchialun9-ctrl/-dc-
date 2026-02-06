@@ -98,6 +98,7 @@ const safeAlter = (stmt) => {
 logger.info('Running database migrations...');
 
 // Core Settings Expansion
+safeAlter("ALTER TABLE users ADD COLUMN guilds TEXT");
 safeAlter("ALTER TABLE settings ADD COLUMN log_channel_id TEXT");
 safeAlter("ALTER TABLE settings ADD COLUMN created_at DATETIME DEFAULT CURRENT_TIMESTAMP");
 safeAlter("ALTER TABLE settings ADD COLUMN automod_badwords TEXT DEFAULT ''");
