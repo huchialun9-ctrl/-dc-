@@ -431,80 +431,107 @@
                         </div>
 
                         <!-- AutoMod Config -->
-                        <div id="config-automod" class="config-section">
-                            <div class="config-header">
-                                <button class="btn-back" onclick="closeConfig()">
-                                    <i class="fa-solid fa-arrow-left"></i> 返回模組列表
-                                </button>
+                        <!-- AutoMod Config -->
+                        <div id="config-automod" class="config-section glass-panel"
+                            style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
+                            <div class="section-header-modern">
                                 <h3><i class="fa-solid fa-shield-halved" style="color: #34D399;"></i> 自動審核設定</h3>
+                                <button class="btn-back" onclick="closeConfig()">
+                                    <i class="fa-solid fa-arrow-left"></i> 返回
+                                </button>
                             </div>
                             <form action="/dashboard/settings" method="POST" class="track-changes">
                                 <input type="hidden" name="action" value="update_automod">
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
 
-                                <div class="form-group">
+                                <div class="form-group-modern">
                                     <label>禁止詞彙 (Bad Words)</label>
-                                    <input type="text" name="automod_badwords" class="form-control detect-change"
+                                    <input type="text" name="automod_badwords" class="modern-input detect-change"
                                         value="<%= settings.automod_badwords %>" placeholder="垃圾, 廣告 (用逗號分隔)">
-                                    <small style="color: var(--text-secondary);">包含這些詞彙的訊息將被自動刪除。</small>
+                                    <small
+                                        style="color: var(--text-secondary); display: block; margin-top: 0.5rem;">包含這些詞彙的訊息將被自動刪除。</small>
                                 </div>
                             </form>
                         </div>
 
                         <!-- Custom Commands Config -->
-                        <div id="config-commands" class="config-section">
-                            <div class="config-header">
-                                <button class="btn-back" onclick="closeConfig()">
-                                    <i class="fa-solid fa-arrow-left"></i> 返回模組列表
-                                </button>
+                        <!-- Custom Commands Config -->
+                        <div id="config-commands" class="config-section glass-panel"
+                            style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
+                            <div class="section-header-modern">
                                 <h3><i class="fa-solid fa-terminal" style="color: #2DD4BF;"></i> 自訂指令管理</h3>
+                                <button class="btn-back" onclick="closeConfig()">
+                                    <i class="fa-solid fa-arrow-left"></i> 返回
+                                </button>
                             </div>
 
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                                <!-- Add Command Form -->
                                 <div>
-                                    <h4>新增指令</h4>
+                                    <h4 style="margin-bottom: 1rem; color: var(--text-primary);">新增指令</h4>
                                     <form action="/dashboard/settings" method="POST"
-                                        style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px;">
+                                        style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
                                         <input type="hidden" name="guild_id" value="<%= guild.id %>">
                                         <input type="hidden" name="action" value="add_command">
-                                        <div class="form-group">
-                                            <label>觸發詞</label>
-                                            <input type="text" name="trigger" class="form-control" placeholder="!hello"
-                                                required>
+
+                                        <div class="form-group-modern">
+                                            <label>觸發詞 (Trigger)</label>
+                                            <div style="position: relative;">
+                                                <span
+                                                    style="position: absolute; left: 12px; top: 12px; color: var(--text-muted);">!</span>
+                                                <input type="text" name="trigger" class="modern-input"
+                                                    placeholder="hello" style="padding-left: 2rem;" required>
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label>回應</label>
-                                            <textarea name="response" class="form-control" rows="3" required></textarea>
+                                        <div class="form-group-modern">
+                                            <label>回應內容 (Response)</label>
+                                            <textarea name="response" class="modern-input" rows="4" required></textarea>
                                         </div>
-                                        <button type="submit" class="btn-setting" style="width: 100%;">新增</button>
+                                        <button type="submit" class="btn-setting"
+                                            style="width: 100%; justify-content: center;">
+                                            <i class="fa-solid fa-plus"></i> 新增指令
+                                        </button>
                                     </form>
                                 </div>
+
+                                <!-- Existing Commands List -->
                                 <div>
-                                    <h4>現有指令</h4>
-                                    <div style="max-height: 400px; overflow-y: auto;">
+                                    <h4 style="margin-bottom: 1rem; color: var(--text-primary);">現有指令 (<%=
+                                            customCommands.length %>)</h4>
+                                    <div style="max-height: 500px; overflow-y: auto; padding-right: 0.5rem;">
                                         <% customCommands.forEach(cmd=> { %>
                                             <div
-                                                style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
-                                                <div>
-                                                    <strong style="color: var(--accent-color);">
-                                                        <%= cmd.trigger %>
-                                                    </strong>
+                                                style="display: flex; justify-content: space-between; align-items: flex-start; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; margin-bottom: 0.8rem; border: 1px solid rgba(255,255,255,0.05);">
+                                                <div style="width: 100%; overflow: hidden;">
+                                                    <div
+                                                        style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                                        <strong
+                                                            style="color: var(--accent-color); font-family: monospace; font-size: 1.1rem;">
+                                                            <%= cmd.trigger %>
+                                                        </strong>
+                                                    </div>
                                                     <p
-                                                        style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">
+                                                        style="margin: 0; color: var(--text-secondary); font-size: 0.9rem; white-space: pre-wrap; word-break: break-word;">
                                                         <%= cmd.response %>
                                                     </p>
                                                 </div>
-                                                <form action="/dashboard/settings" method="POST" style="margin: 0;">
+                                                <form action="/dashboard/settings" method="POST"
+                                                    style="margin: 0; margin-left: 1rem;">
                                                     <input type="hidden" name="guild_id" value="<%= guild.id %>">
                                                     <input type="hidden" name="action" value="delete_command">
                                                     <input type="hidden" name="command_id" value="<%= cmd.id %>">
-                                                    <button type="submit" class="btn-remove"><i
+                                                    <button type="submit" class="btn-remove" title="刪除"><i
                                                             class="fa-solid fa-trash"></i></button>
                                                 </form>
                                             </div>
                                             <% }) %>
                                                 <% if (customCommands.length===0) { %>
-                                                    <p style="color: var(--text-muted); text-align: center;">無指令</p>
+                                                    <div
+                                                        style="text-align: center; padding: 3rem; color: var(--text-muted); border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px;">
+                                                        <i class="fa-solid fa-terminal"
+                                                            style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                                                        <p>尚無自訂指令</p>
+                                                    </div>
                                                     <% } %>
                                     </div>
                                 </div>
