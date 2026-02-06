@@ -61,5 +61,6 @@ const safeAlter = (stmt) => {
 safeAlter("ALTER TABLE settings ADD COLUMN ticket_categories TEXT");
 safeAlter("ALTER TABLE settings ADD COLUMN leveling_enabled INTEGER DEFAULT 0");
 safeAlter("ALTER TABLE settings ADD COLUMN economy_enabled INTEGER DEFAULT 0");
+safeAlter("ALTER TABLE settings ADD COLUMN ai_chat_enabled INTEGER DEFAULT 1"); // Default to 1 (Enabled)
 
 module.exports = db;

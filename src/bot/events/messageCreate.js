@@ -13,7 +13,19 @@ module.exports = {
             // 0. AI Chat (Priority if Mentioned)
             // Check if mentioned
             if (message.mentions.has(message.client.user) && !message.mentions.everyone) {
-                const aiSetting = db.prepare('SELECT ai_chat_enabled FROM settings WHERE guild_id = ?').get(message.guild.id);
+                let aiSetting = db.prepare('SELECT ai_chat_enabled FROM settings WHERE guild_id = ?').get(message.guild.id);
+
+                // If settings missing, initialize with AI Enabled (Default behavior for better UX)
+                if (!aiSetting) {
+                    try {
+                        db.prepare('INSERT INTO settings (guild_id, ai_chat_enabled) VALUES (?, 1)').run(message.guild.id);
+                        aiSetting = { ai_chat_enabled: 1 };
+                        logger.info(`Initialized settings for guild ${message.guild.id} with AI enabled.`);
+                    } catch (e) {
+                        // Ignore unique constraint if race condition
+                    }
+                }
+
                 if (aiSetting && aiSetting.ai_chat_enabled === 1) {
                     await message.channel.sendTyping();
                     const prompt = message.content.replace(/<@!?[0-9]+>/g, '').trim();
