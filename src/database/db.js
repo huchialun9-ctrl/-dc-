@@ -9,14 +9,23 @@ const db = new Database(dbPath, { verbose: (msg) => logger.debug(msg) });
 // Enable Write-Ahead Logging for concurrency
 db.pragma('journal_mode = WAL');
 
-// 1. Users Table
-db.prepare("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, username TEXT, avatar TEXT, guilds TEXT, last_login DATETIME)").run();
+// --- Table Initialization ---
+const initTable = (name, sql) => {
+    try {
+        db.prepare(sql).run();
+        logger.info(`✅ Database table initialized: ${name}`);
+    } catch (err) {
+        logger.error(`❌ Failed to initialize table ${name}: ${err.message}`);
+        // If it's a critical table and it fails, we might want to know why
+        if (!err.message.includes('already exists')) {
+            console.error(err);
+        }
+    }
+};
 
-// 2. Tickets Table
-db.prepare("CREATE TABLE IF NOT EXISTS tickets (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, channel_id TEXT, guild_id TEXT, status TEXT DEFAULT 'open', created_at DATETIME DEFAULT CURRENT_TIMESTAMP)").run();
-
-// 3. Settings Table
-db.prepare(`CREATE TABLE IF NOT EXISTS settings (
+initTable("Users", "CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, username TEXT, avatar TEXT, guilds TEXT, last_login DATETIME)");
+initTable("Tickets", "CREATE TABLE IF NOT EXISTS tickets (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, channel_id TEXT, guild_id TEXT, status TEXT DEFAULT 'open', created_at DATETIME DEFAULT CURRENT_TIMESTAMP)");
+initTable("Settings", `CREATE TABLE IF NOT EXISTS settings (
     guild_id TEXT PRIMARY KEY,
     welcome_enabled INTEGER DEFAULT 0,
     welcome_channel_id TEXT,
@@ -24,37 +33,25 @@ db.prepare(`CREATE TABLE IF NOT EXISTS settings (
     automod_badwords TEXT DEFAULT '',
     automod_links INTEGER DEFAULT 0,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)`).run();
-
-// 4. Activity Logs
-db.prepare("CREATE TABLE IF NOT EXISTS activity_logs (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, action TEXT, details TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)").run();
-
-// 5. Custom Commands
-db.prepare(`CREATE TABLE IF NOT EXISTS custom_commands (
+)`);
+initTable("Activity Logs", "CREATE TABLE IF NOT EXISTS activity_logs (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, action TEXT, details TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)");
+initTable("Custom Commands", `CREATE TABLE IF NOT EXISTS custom_commands (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     guild_id TEXT NOT NULL,
     trigger TEXT NOT NULL,
     response TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)`).run();
-
-// 6. Levels Table
-db.prepare("CREATE TABLE IF NOT EXISTS levels (user_id TEXT, guild_id TEXT, xp INTEGER DEFAULT 0, level INTEGER DEFAULT 0, last_xp_time DATETIME, PRIMARY KEY (user_id, guild_id))").run();
-
-// 7. Ticket Transcripts
-db.prepare("CREATE TABLE IF NOT EXISTS ticket_transcripts (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_name TEXT, guild_id TEXT, user_id TEXT, html_content TEXT, closed_at DATETIME DEFAULT CURRENT_TIMESTAMP)").run();
-
-// 8. Economy Table
-db.prepare(`CREATE TABLE IF NOT EXISTS economy (
+)`);
+initTable("Levels", "CREATE TABLE IF NOT EXISTS levels (user_id TEXT, guild_id TEXT, xp INTEGER DEFAULT 0, level INTEGER DEFAULT 0, last_xp_time DATETIME, PRIMARY KEY (user_id, guild_id))");
+initTable("Transcripts", "CREATE TABLE IF NOT EXISTS ticket_transcripts (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_name TEXT, guild_id TEXT, user_id TEXT, html_content TEXT, closed_at DATETIME DEFAULT CURRENT_TIMESTAMP)");
+initTable("Economy", `CREATE TABLE IF NOT EXISTS economy (
     user_id TEXT, 
     guild_id TEXT, 
     balance INTEGER DEFAULT 0, 
     last_daily DATETIME, 
     PRIMARY KEY (user_id, guild_id)
-)`).run();
-
-// 9. Giveaways Table (CRITICAL FIX)
-db.prepare(`CREATE TABLE IF NOT EXISTS giveaways (
+)`);
+initTable("Giveaways", `CREATE TABLE IF NOT EXISTS giveaways (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     message_id TEXT NOT NULL,
     channel_id TEXT NOT NULL,
@@ -65,31 +62,26 @@ db.prepare(`CREATE TABLE IF NOT EXISTS giveaways (
     hosted_by TEXT NOT NULL,
     ended INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)`).run();
-
-// 10. Voice Master Tables
-db.prepare(`CREATE TABLE IF NOT EXISTS voice_master (
+)`);
+initTable("Voice Master", `CREATE TABLE IF NOT EXISTS voice_master (
     guild_id TEXT PRIMARY KEY,
     category_id TEXT,
     channel_id TEXT NOT NULL
-)`).run();
-
-db.prepare(`CREATE TABLE IF NOT EXISTS voice_channels (
+)`);
+initTable("Voice Channels", `CREATE TABLE IF NOT EXISTS voice_channels (
     channel_id TEXT PRIMARY KEY,
     guild_id TEXT NOT NULL,
     owner_id TEXT NOT NULL,
     is_locked INTEGER DEFAULT 0,
     is_hidden INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)`).run();
-
-// 11. Earthquake Subscriptions
-db.prepare(`CREATE TABLE IF NOT EXISTS earthquake_subs (
+)`);
+initTable("Earthquake Subs", `CREATE TABLE IF NOT EXISTS earthquake_subs (
     guild_id TEXT PRIMARY KEY,
     channel_id TEXT NOT NULL,
     min_intensity INTEGER DEFAULT 3,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)`).run();
+)`);
 
 // --- Migrations ---
 const safeAlter = (stmt) => {

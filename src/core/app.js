@@ -108,6 +108,34 @@ app.use('/', require('../web/routes/index'));
 app.use('/auth', require('../web/routes/auth'));
 app.use('/dashboard', require('../web/routes/dashboard')); // Protected
 
+// Health Check & DB Status
+app.get('/health', (req, res) => {
+    try {
+        const tables = [
+            'users', 'tickets', 'settings', 'activity_logs',
+            'custom_commands', 'levels', 'economy', 'giveaways'
+        ];
+        const status = {};
+
+        tables.forEach(table => {
+            try {
+                const count = db.prepare(`SELECT count(*) as count FROM ${table}`).get();
+                status[table] = { exists: true, count: count.count };
+            } catch (e) {
+                status[table] = { exists: false, error: e.message };
+            }
+        });
+
+        res.json({
+            status: 'ok',
+            uptime: process.uptime(),
+            db: status
+        });
+    } catch (err) {
+        res.status(500).json({ status: 'error', message: err.message });
+    }
+});
+
 // Error Handler
 app.use((err, req, res, next) => {
     logger.error(err.stack);
