@@ -29,6 +29,7 @@
 
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
+  --font-handwritten: 'Kalam', cursive;
 
   --hero-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
   --premium-border: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
@@ -291,13 +292,61 @@ body {
   -webkit-backdrop-filter: blur(20px);
   border: var(--glass-border);
   border-radius: 28px;
-  padding: 2.5rem;
+  padding: 0;
+  /* Changed to accommodate illustrations */
   box-shadow: var(--shadow-xl);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+.card-illustration {
+  height: 160px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.card-illustration img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.premium-card:hover .card-illustration img {
+  transform: scale(1.1) rotate(1deg);
+}
+
+.card-content-wrap {
+  padding: 2.5rem;
+}
+
+.handwritten-note {
+  font-family: var(--font-handwritten);
+  color: var(--accent-secondary);
+  font-size: 1.1rem;
+  opacity: 0.8;
+  transform: rotate(-2deg);
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+.designer-tip {
+  position: absolute;
+  right: -20px;
+  top: 40px;
+  background: var(--warning-color);
+  color: #000;
+  padding: 4px 30px;
+  font-family: var(--font-handwritten);
+  font-size: 0.8rem;
+  transform: rotate(35deg);
+  box-shadow: var(--shadow-md);
+  z-index: 10;
 }
 
 .premium-card::before {

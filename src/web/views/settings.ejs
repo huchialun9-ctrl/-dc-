@@ -7,7 +7,7 @@
     <link rel="icon" href="/favicon.png" type="image/png">
     <link rel="stylesheet" href="/style.css">
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&family=Kalam:wght@300;400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -161,358 +161,533 @@
                     <!-- Plugin Grid -->
                     <div id="modules-grid" class="dashboard-grid">
 
-                        <!-- 1. Announcement Plugin Redesigned -->
+                        <!-- 1. Announcement Plugin -->
                         <div class="premium-card plugin-card" data-module="announcement">
-                            <div class="card-header">
-                                <div
-                                    style="width: 44px; height: 44px; background: rgba(244, 63, 94, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fa-solid fa-bullhorn" style="color: #f43f5e; font-size: 1.25rem;"></i>
-                                </div>
-                                <h3 style="font-size: 1.25rem;">廣播與公告系統</h3>
+                            <div class="designer-tip">重要廣播</div>
+                            <div class="card-illustration">
+                                <img src="/img/illustrations/announcement.png" alt="Announcement Illustration">
                             </div>
-                            <p
-                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
-                                向特定頻道發送精美的崁入式公告訊息，支援多種格式。</p>
+                            <div class="card-content-wrap">
+                                <div class="card-header">
+                                    <div
+                                        style="width: 32px; height: 32px; background: rgba(248, 113, 113, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-bullhorn" style="color: #F87171; font-size: 0.9rem;"></i>
+                                    </div>
+                                    <h3>廣播中心</h3>
+                                </div>
+                                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem;">
+                                    像電台一樣，對伺服器發送精美的崁入式公告。</p>
 
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
                                 <div
-                                    class="status-badge <%= settings.announcement_enabled ? 'status-enabled' : 'status-disabled' %>">
-                                    <i
-                                        class="fa-solid <%= settings.announcement_enabled ? 'fa-check-circle' : 'fa-circle-dot' %>"></i>
-                                    <%= settings.announcement_enabled ? '運作中' : '已暫停' %>
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
+                                        運行狀態: <span
+                                            class="<%= settings.announcement_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                            <%= settings.announcement_enabled ? '在線' : '離線' %>
+                                        </span>
+                                    </span>
+                                    <label class="switch">
+                                        <input type="checkbox" name="announcement_enabled"
+                                            <%=settings.announcement_enabled ? 'checked' : '' %>
+                                        onchange="togglePlugin('announcement', this.checked)">
+                                        <span class="slider round"></span>
+                                    </label>
                                 </div>
-                                <label class="switch">
-                                    <input type="checkbox" name="announcement_enabled" <%=settings.announcement_enabled
-                                        ? 'checked' : '' %>
-                                    onchange="togglePlugin('announcement_toggle', this.checked)">
-                                    <span class="slider round"></span>
-                                </label>
+
+                                <!-- Quick Sender Card -->
+                                <% if (settings.announcement_enabled) { %>
+                                    <div class="premium-card"
+                                        style="padding: 1.2rem; background: rgba(255,255,255,0.02); margin-top: 1rem; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px;">
+                                        <div
+                                            style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                            <i class="fa-solid fa-paper-plane"
+                                                style="color: var(--accent-secondary); font-size: 0.8rem;"></i>
+                                            <span
+                                                style="font-size: 0.75rem; font-weight: 800; opacity: 0.7;">即時廣播發送器</span>
+                                        </div>
+                                        <form action="/dashboard/settings" method="POST">
+                                            <input type="hidden" name="action" value="send_announcement">
+                                            <input type="hidden" name="guild_id" value="<%= guild.id %>">
+                                            <div class="form-group" style="margin-bottom: 0.8rem;">
+                                                <select name="channel_id" class="modern-input"
+                                                    style="padding: 0.5rem; font-size: 0.8rem;" required>
+                                                    <option value="">選擇接收頻道...</option>
+                                                    <% channels.forEach(c=> { %>
+                                                        <option value="<%= c.id %>"># <%= c.name %>
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                            </div>
+                                            <div class="form-group" style="margin-bottom: 1rem;">
+                                                <textarea name="description" class="modern-input" rows="2"
+                                                    placeholder="這是一則由管理員發出的廣播..."
+                                                    style="padding: 0.6rem; font-size: 0.8rem;" required></textarea>
+                                            </div>
+                                            <button type="submit" class="save-btn"
+                                                style="width: 100%; height: 36px; font-size: 0.8rem; justify-content: center;">
+                                                立即發佈廣播
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <% } %>
+                                        <div class="handwritten-note">"讓大家都能聽見你的聲音!"</div>
                             </div>
-
-                            <% if (settings.announcement_enabled) { %>
-                                <div class="plugin-info"
-                                    style="border: 1px solid rgba(255,255,255,0.05); padding: 1.25rem; border-radius: 16px; background: rgba(0,0,0,0.2);">
-                                    <h4
-                                        style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; letter-spacing: 0.05em;">
-                                        快速廣播器 (Quick Sender)</h4>
-                                    <form action="/dashboard/settings" method="POST">
-                                        <input type="hidden" name="action" value="send_announcement">
-                                        <input type="hidden" name="guild_id" value="<%= guild.id %>">
-
-                                        <div class="form-group" style="margin-bottom: 1rem;">
-                                            <select name="announcement_channel_id" class="modern-input"
-                                                style="padding: 0.75rem 1rem; font-size: 0.9rem;">
-                                                <option value="" disabled selected>選擇公告頻道...</option>
-                                                <% channels.forEach(c=> { %>
-                                                    <option value="<%= c.id %>"># <%= c.name %>
-                                                    </option>
-                                                    <% }) %>
-                                            </select>
-                                        </div>
-                                        <div class="form-group" style="margin-bottom: 1rem;">
-                                            <textarea name="announcement_message" rows="2" class="modern-input"
-                                                placeholder="輸入公告內容..."
-                                                style="padding: 0.75rem 1rem; font-size: 0.9rem; resize: none;"></textarea>
-                                        </div>
-                                        <button type="submit" class="save-btn"
-                                            style="width: 100%; border-radius: 12px; height: 44px; padding: 0; justify-content: center; font-size: 0.9rem;">
-                                            <i class="fa-solid fa-paper-plane"></i> 立即發送公告
-                                        </button>
-                                    </form>
-                                </div>
-                                <% } %>
-                                    <div class="card-watermark"><i class="fa-solid fa-bullhorn"></i></div>
                         </div>
 
-                        <!-- 2. Welcome Plugin Redesigned -->
+                        <!-- 2. Welcome Plugin -->
                         <div class="premium-card plugin-card" data-module="welcome">
-                            <div class="card-header">
-                                <div
-                                    style="width: 44px; height: 44px; background: rgba(99, 102, 241, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fa-solid fa-door-open" style="color: #6366f1; font-size: 1.25rem;"></i>
-                                </div>
-                                <h3 style="font-size: 1.25rem;">自動歡迎系統</h3>
+                            <div class="card-illustration">
+                                <img src="/img/illustrations/welcome.png" alt="Welcome Illustration">
                             </div>
-                            <p
-                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
-                                當新成員加入時發送溫暖的歡迎訊息，提供絕佳入群體驗。</p>
+                            <div class="card-content-wrap">
+                                <div class="card-header">
+                                    <div
+                                        style="width: 32px; height: 32px; background: rgba(99, 102, 241, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-door-open" style="color: #6366f1; font-size: 0.9rem;"></i>
+                                    </div>
+                                    <h3>迎接新朋友</h3>
+                                </div>
+                                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem;">
+                                    迎接每位新加入的成員，營造溫暖的第一印象。</p>
 
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
                                 <div
-                                    class="status-badge <%= settings.welcome_enabled ? 'status-enabled' : 'status-disabled' %>">
-                                    <i
-                                        class="fa-solid <%= settings.welcome_enabled ? 'fa-bolt' : 'fa-circle-dot' %>"></i>
-                                    <%= settings.welcome_enabled ? '監控中' : '已停用' %>
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
+                                        運行狀態: <span
+                                            class="<%= settings.welcome_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                            <%= settings.welcome_enabled ? '在線' : '離線' %>
+                                        </span>
+                                    </span>
+                                    <label class="switch">
+                                        <input type="checkbox" name="welcome_enabled" <%=settings.welcome_enabled
+                                            ? 'checked' : '' %>
+                                        onchange="togglePlugin('welcome', this.checked)">
+                                        <span class="slider round"></span>
+                                    </label>
                                 </div>
-                                <label class="switch">
-                                    <input type="checkbox" name="welcome_enabled" <%=settings.welcome_enabled
-                                        ? 'checked' : '' %>
-                                    onchange="togglePlugin('welcome_toggle', this.checked)">
-                                    <span class="slider round"></span>
-                                </label>
+
+                                <form action="/dashboard/settings" method="POST" class="track-changes">
+                                    <input type="hidden" name="action" value="update_welcome">
+                                    <input type="hidden" name="guild_id" value="<%= guild.id %>">
+
+                                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                                        <label style="font-size: 0.75rem;">迎接頻道</label>
+                                        <select name="welcome_channel_id" class="modern-input"
+                                            style="padding: 0.6rem; font-size: 0.8rem;">
+                                            <% channels.forEach(c=> { %>
+                                                <option value="<%= c.id %>" <%=settings.welcome_channel_id===c.id
+                                                    ? 'selected' : '' %>># <%= c.name %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size: 0.75rem;">迎接訊息 (支援變數 like {user})</label>
+                                        <textarea name="welcome_message" class="modern-input" rows="3"
+                                            placeholder="歡迎來到伺服器，{user}! 希望你在這裡玩得愉快。"
+                                            style="padding: 0.6rem; font-size: 0.8rem;"><%= settings.welcome_message %></textarea>
+                                    </div>
+                                </form>
+                                <div class="handwritten-note">"溫暖的開始是成功的全部~"</div>
                             </div>
-
-                            <% if (settings.welcome_enabled) { %>
-                                <div class="plugin-info"
-                                    style="border: 1px solid rgba(255,255,255,0.05); padding: 1.25rem; border-radius: 16px; background: rgba(0,0,0,0.2);">
-                                    <form action="/dashboard/settings" method="POST" class="track-changes">
-                                        <input type="hidden" name="action" value="update_welcome">
-                                        <input type="hidden" name="guild_id" value="<%= guild.id %>">
-
-                                        <div class="form-group" style="margin-bottom: 1rem;">
-                                            <label
-                                                style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.7;">歡迎頻道
-                                                (Target Channel)</label>
-                                            <select name="welcome_channel_id" class="modern-input"
-                                                style="padding: 0.75rem 1rem; font-size: 0.9rem;">
-                                                <% channels.forEach(c=> { %>
-                                                    <option value="<%= c.id %>" <%=settings.welcome_channel_id===c.id
-                                                        ? 'selected' : '' %>># <%= c.name %>
-                                                    </option>
-                                                    <% }) %>
-                                            </select>
-                                        </div>
-                                        <div class="form-group" style="margin-bottom: 1rem;">
-                                            <label
-                                                style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.7;">歡迎訊息
-                                                (Custom Message)</label>
-                                            <textarea name="welcome_message" rows="2" class="modern-input"
-                                                style="padding: 0.75rem 1rem; font-size: 0.9rem; resize: none;"><%= settings.welcome_message %></textarea>
-                                        </div>
-                                        <button type="submit" class="config-btn-small"
-                                            style="width: 100%; justify-content: center; height: 44px; border-radius: 12px;">
-                                            <i class="fa-solid fa-save"></i> 儲存設定
-                                        </button>
-                                    </form>
-                                </div>
-                                <% } %>
-                                    <div class="card-watermark"><i class="fa-solid fa-door-open"></i></div>
                         </div>
 
-                        <!-- 3. Economy Plugin Redesigned -->
+                        <!-- 3. Economy Plugin -->
                         <div class="premium-card plugin-card" data-module="economy">
-                            <div class="card-header">
-                                <div
-                                    style="width: 44px; height: 44px; background: rgba(251, 191, 36, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fa-solid fa-coins" style="color: #fbbf24; font-size: 1.25rem;"></i>
-                                </div>
-                                <h3 style="font-size: 1.25rem;">經濟與貨幣系統</h3>
+                            <div class="card-illustration">
+                                <img src="/img/illustrations/economy.png" alt="Economy Illustration">
                             </div>
-                            <p
-                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
-                                管理伺服器的虛擬經濟，包含錢包、簽到、轉帳與排行榜功能。</p>
-
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
-                                <div
-                                    class="status-badge <%= settings.economy_enabled ? 'status-enabled' : 'status-disabled' %>">
-                                    <i
-                                        class="fa-solid <%= settings.economy_enabled ? 'fa-wallet' : 'fa-circle-dot' %>"></i>
-                                    <%= settings.economy_enabled ? '已連線' : '離線中' %>
+                            <div class="card-content-wrap">
+                                <div class="card-header">
+                                    <div
+                                        style="width: 32px; height: 32px; background: rgba(251, 191, 36, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-coins" style="color: #fbbf24; font-size: 0.9rem;"></i>
+                                    </div>
+                                    <h3>數位金庫</h3>
                                 </div>
-                                <label class="switch">
-                                    <input type="checkbox" name="economy_enabled" <%=settings.economy_enabled
-                                        ? 'checked' : '' %>
-                                    onchange="togglePlugin('economy_toggle', this.checked)">
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
+                                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem;">
+                                    伺服器專屬經濟體系。讓成員透過參與互動賺取虛擬幣。</p>
 
-                            <button type="button" class="config-btn-small" onclick="openConfig('economy')"
-                                style="width: 100%; justify-content: center; height: 44px; border-radius: 12px;">
-                                <i class="fa-solid fa-sliders"></i> 進階參數配置
-                            </button>
-                            <div class="card-watermark"><i class="fa-solid fa-coins"></i></div>
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
+                                        運行狀態: <span
+                                            class="<%= settings.economy_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                            <%= settings.economy_enabled ? '在線' : '離線' %>
+                                        </span>
+                                    </span>
+                                    <label class="switch">
+                                        <input type="checkbox" name="economy_enabled" <%=settings.economy_enabled
+                                            ? 'checked' : '' %>
+                                        onchange="togglePlugin('economy', this.checked)">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+
+                                <div class="plugin-info">
+                                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem;">
+                                        <i class="fa-solid fa-wallet" style="color: #fbbf24; opacity: 0.5;"></i>
+                                        <span style="font-size: 0.85rem; color: var(--text-secondary);">已完成系統對接</span>
+                                    </div>
+                                    <button class="config-btn-small" onclick="openConfig('economy')"
+                                        style="width: 100%; justify-content: center;">
+                                        <i class="fa-solid fa-gear"></i> 管理金庫與物價
+                                    </button>
+                                </div>
+                                <div class="handwritten-note">"大家的口袋都很深呢!"</div>
+                            </div>
                         </div>
 
-                        <!-- 4. AI Chat Plugin Redesigned -->
+                        <!-- 4. AI Chat Plugin -->
                         <div class="premium-card plugin-card" data-module="ai">
-                            <div class="card-header">
-                                <div
-                                    style="width: 44px; height: 44px; background: rgba(167, 139, 250, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fa-solid fa-wand-magic-sparkles"
-                                        style="color: #a78bfa; font-size: 1.25rem;"></i>
-                                </div>
-                                <h3 style="font-size: 1.25rem;">AI 智慧對應系統</h3>
+                            <div class="card-illustration">
+                                <img src="/img/illustrations/ai.png" alt="AI Illustration">
                             </div>
-                            <p
-                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
-                                讓機器人具備智慧對答能力，支援脈絡理解與多語言互動。</p>
-
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
-                                <div
-                                    class="status-badge <%= settings.ai_chat_enabled ? 'status-enabled' : 'status-disabled' %>">
-                                    <i
-                                        class="fa-solid <%= settings.ai_chat_enabled ? 'fa-brain' : 'fa-circle-dot' %>"></i>
-                                    <%= settings.ai_chat_enabled ? '神經網路啟動' : '休眠中' %>
+                            <div class="card-content-wrap">
+                                <div class="card-header">
+                                    <div
+                                        style="width: 32px; height: 32px; background: rgba(167, 139, 250, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-brain" style="color: #a78bfa; font-size: 0.9rem;"></i>
+                                    </div>
+                                    <h3>數位大腦</h3>
                                 </div>
-                                <label class="switch">
-                                    <input type="checkbox" name="ai_chat_enabled" <%=settings.ai_chat_enabled
-                                        ? 'checked' : '' %>
-                                    onchange="togglePlugin('ai_chat_toggle', this.checked)">
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
+                                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem;">
+                                    深度集成神經網絡模型。讓機器人能像人類一樣對話與理解。</p>
 
-                            <button type="button" class="config-btn-small" onclick="openConfig('ai')"
-                                style="width: 100%; justify-content: center; height: 44px; border-radius: 12px;">
-                                <i class="fa-solid fa-brain"></i> 訓練與頻道配置
-                            </button>
-                            <div class="card-watermark"><i class="fa-solid fa-robot"></i></div>
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
+                                        運行狀態: <span
+                                            class="<%= settings.ai_chat_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                            <%= settings.ai_chat_enabled ? '在線' : '離線' %>
+                                        </span>
+                                    </span>
+                                    <label class="switch">
+                                        <input type="checkbox" name="ai_chat_enabled" <%=settings.ai_chat_enabled
+                                            ? 'checked' : '' %>
+                                        onchange="togglePlugin('ai_chat', this.checked)">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+
+                                <div class="plugin-info">
+                                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem;">
+                                        <i class="fa-solid fa-microchip" style="color: #a78bfa; opacity: 0.5;"></i>
+                                        <span style="font-size: 0.85rem; color: var(--text-secondary);">模型負載正常</span>
+                                    </div>
+                                    <button class="config-btn-small" onclick="openConfig('ai')"
+                                        style="width: 100%; justify-content: center;">
+                                        <i class="fa-solid fa-sliders"></i> 調校神經網絡參數
+                                    </button>
+                                </div>
+                                <div class="handwritten-note">"我有我自己的靈魂..."</div>
+                            </div>
                         </div>
 
-                        <!-- 5. AutoMod Plugin Redesigned -->
+                        <!-- 5. AutoMod Plugin -->
                         <div class="premium-card plugin-card" data-module="automod">
-                            <div class="card-header">
-                                <div
-                                    style="width: 44px; height: 44px; background: rgba(52, 211, 153, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fa-solid fa-shield-halved"
-                                        style="color: #34d399; font-size: 1.25rem;"></i>
-                                </div>
-                                <h3 style="font-size: 1.25rem;">全自動核准審議</h3>
+                            <div class="card-illustration">
+                                <img src="/img/illustrations/automod.png" alt="AutoMod Illustration">
                             </div>
-                            <p
-                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
-                                即時過濾非法連結、暴力詞彙與重複洗版。維護伺服器純淨環境。</p>
-
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
-                                <div
-                                    class="status-badge <%= settings.automod_links ? 'status-enabled' : 'status-disabled' %>">
-                                    <i
-                                        class="fa-solid <%= settings.automod_links ? 'fa-user-shield' : 'fa-circle-dot' %>"></i>
-                                    <%= settings.automod_links ? '防護層啟動' : '防護層關閉' %>
+                            <div class="card-content-wrap">
+                                <div class="card-header">
+                                    <div
+                                        style="width: 32px; height: 32px; background: rgba(52, 211, 153, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-shield-halved"
+                                            style="color: #34d399; font-size: 0.9rem;"></i>
+                                    </div>
+                                    <h3>智慧守護</h3>
                                 </div>
-                                <label class="switch">
-                                    <input type="checkbox" name="automod_links" <%=settings.automod_links ? 'checked'
-                                        : '' %>
-                                    onchange="togglePlugin('automod_toggle', this.checked)">
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
+                                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem;">
+                                    7/24 小時無間斷的安全監控。自動過濾惡意言論，維護社群和平。</p>
 
-                            <button type="button" class="config-btn-small" onclick="openConfig('automod')"
-                                style="width: 100%; justify-content: center; height: 44px; border-radius: 12px;">
-                                <i class="fa-solid fa-filter"></i> 管理規則與黑名單
-                            </button>
-                            <div class="card-watermark"><i class="fa-solid fa-shield-halved"></i></div>
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
+                                        運行狀態: <span
+                                            class="<%= settings.automod_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                            <%= settings.automod_enabled ? '在線' : '離線' %>
+                                        </span>
+                                    </span>
+                                    <label class="switch">
+                                        <input type="checkbox" name="automod_enabled" <%=settings.automod_enabled
+                                            ? 'checked' : '' %>
+                                        onchange="togglePlugin('automod', this.checked)">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+
+                                <div class="plugin-info">
+                                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem;">
+                                        <i class="fa-solid fa-bolt" style="color: #34d399; opacity: 0.5;"></i>
+                                        <span style="font-size: 0.85rem; color: var(--text-secondary);">實時攔截模式已啟動</span>
+                                    </div>
+                                    <button class="config-btn-small" onclick="openConfig('automod')"
+                                        style="width: 100%; justify-content: center;">
+                                        <i class="fa-solid fa-shield-check"></i> 設定規則與黑名單
+                                    </button>
+                                </div>
+                                <div class="handwritten-note">"我的防禦無堅不摧。"</div>
+                            </div>
                         </div>
 
-                        <!-- 6. Music Plugin Redesigned -->
+                        <!-- 6. Music Plugin -->
                         <div class="premium-card plugin-card" data-module="music">
-                            <div class="card-header">
-                                <div
-                                    style="width: 44px; height: 44px; background: rgba(251, 146, 60, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fa-solid fa-music" style="color: #fb923c; font-size: 1.25rem;"></i>
-                                </div>
-                                <h3 style="font-size: 1.25rem;">高效能串流音樂</h3>
+                            <div class="card-illustration">
+                                <img src="/img/illustrations/music.png" alt="Music Illustration">
                             </div>
-                            <p
-                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
-                                高音質語音串流，支援 YouTube、Spotify 等來源。內建網頁控制器。</p>
-
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
-                                <div
-                                    class="status-badge <%= settings.music_enabled ? 'status-enabled' : 'status-disabled' %>">
-                                    <i
-                                        class="fa-solid <%= settings.music_enabled ? 'fa-headphones' : 'fa-circle-dot' %>"></i>
-                                    <%= settings.music_enabled ? '串流引擎就緒' : '串流引擎關閉' %>
+                            <div class="card-content-wrap">
+                                <div class="card-header">
+                                    <div
+                                        style="width: 32px; height: 32px; background: rgba(251, 146, 60, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-music" style="color: #fb923c; font-size: 0.9rem;"></i>
+                                    </div>
+                                    <h3>音樂饗宴</h3>
                                 </div>
-                                <label class="switch">
-                                    <input type="checkbox" name="music_enabled" <%=settings.music_enabled ? 'checked'
-                                        : '' %>
-                                    onchange="togglePlugin('music_toggle', this.checked)">
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
+                                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem;">
+                                    高品質的串流播放。無論是放鬆還是派對，這裡都有最好的旋律。</p>
 
-                            <button type="button" class="config-btn-small" onclick="openConfig('music')"
-                                style="width: 100%; justify-content: center; height: 44px; border-radius: 12px;">
-                                <i class="fa-solid fa-compact-disc"></i> 控制器與音質
-                            </button>
-                            <div class="card-watermark"><i class="fa-solid fa-music"></i></div>
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
+                                        運行狀態: <span
+                                            class="<%= settings.music_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                            <%= settings.music_enabled ? '在線' : '離線' %>
+                                        </span>
+                                    </span>
+                                    <label class="switch">
+                                        <input type="checkbox" name="music_enabled" <%=settings.music_enabled
+                                            ? 'checked' : '' %>
+                                        onchange="togglePlugin('music', this.checked)">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+
+                                <div class="plugin-info">
+                                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem;">
+                                        <i class="fa-solid fa-volume-high" style="color: #fb923c; opacity: 0.5;"></i>
+                                        <span style="font-size: 0.85rem; color: var(--text-secondary);">音質優化引擎已開展</span>
+                                    </div>
+                                    <button class="config-btn-small" onclick="openConfig('music')"
+                                        style="width: 100%; justify-content: center;">
+                                        <i class="fa-solid fa-play"></i> 播放器控制器與音量
+                                    </button>
+                                </div>
+                                <div class="handwritten-note">"讓身體隨著節奏擺動吧!"</div>
+                            </div>
                         </div>
 
-                        <!-- 7. Leveling Plugin Redesigned -->
+                        <!-- 7. Leveling Plugin -->
                         <div class="premium-card plugin-card" data-module="leveling">
-                            <div class="card-header">
-                                <div
-                                    style="width: 44px; height: 44px; background: rgba(244, 114, 182, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fa-solid fa-chart-line" style="color: #f472b6; font-size: 1.25rem;"></i>
-                                </div>
-                                <h3 style="font-size: 1.25rem;">社交等級與經驗</h3>
+                            <div class="card-illustration">
+                                <img src="/img/illustrations/leveling.png" alt="Leveling Illustration">
                             </div>
-                            <p
-                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
-                                基於互動頻率的升級系統，追蹤活躍度並提供等級排行榜。</p>
-
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
-                                <div
-                                    class="status-badge <%= settings.leveling_enabled ? 'status-enabled' : 'status-disabled' %>">
-                                    <i
-                                        class="fa-solid <%= settings.leveling_enabled ? 'fa-medal' : 'fa-circle-dot' %>"></i>
-                                    <%= settings.leveling_enabled ? '數據追蹤中' : '數據暫停' %>
+                            <div class="card-content-wrap">
+                                <div class="card-header">
+                                    <div
+                                        style="width: 32px; height: 32px; background: rgba(244, 114, 182, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-chart-line"
+                                            style="color: #f472b6; font-size: 0.9rem;"></i>
+                                    </div>
+                                    <h3>榮耀勛章</h3>
                                 </div>
-                                <label class="switch">
-                                    <input type="checkbox" name="leveling_enabled" <%=settings.leveling_enabled
-                                        ? 'checked' : '' %>
-                                    onchange="togglePlugin('leveling_toggle', this.checked)">
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
+                                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem;">
+                                    激發成員得活躍度。記錄每位成員的貢獻，並授予相應的榮譽勳章。</p>
 
-                            <button type="button" class="config-btn-small" onclick="openConfig('leveling')"
-                                style="width: 100%; justify-content: center; height: 44px; border-radius: 12px;">
-                                <i class="fa-solid fa-chart-area"></i> 排行榜與權限設定
-                            </button>
-                            <div class="card-watermark"><i class="fa-solid fa-chart-line"></i></div>
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
+                                        運行狀態: <span
+                                            class="<%= settings.leveling_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                            <%= settings.leveling_enabled ? '在線' : '離線' %>
+                                        </span>
+                                    </span>
+                                    <label class="switch">
+                                        <input type="checkbox" name="leveling_enabled" <%=settings.leveling_enabled
+                                            ? 'checked' : '' %>
+                                        onchange="togglePlugin('leveling', this.checked)">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+
+                                <div class="plugin-info">
+                                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem;">
+                                        <i class="fa-solid fa-medal" style="color: #f472b6; opacity: 0.5;"></i>
+                                        <span style="font-size: 0.85rem; color: var(--text-secondary);">數據統計引擎正常</span>
+                                    </div>
+                                    <button class="config-btn-small" onclick="openConfig('leveling')"
+                                        style="width: 100%; justify-content: center;">
+                                        <i class="fa-solid fa-trophy"></i> 排行榜與權限設定
+                                    </button>
+                                </div>
+                                <div class="handwritten-note">"榮譽屬於每一位努力的人。"</div>
+                            </div>
                         </div>
 
-                        <!-- 8. Custom Commands Plugin Redesigned -->
+                        <!-- 8. Custom Commands Plugin -->
                         <div class="premium-card plugin-card" data-module="commands">
-                            <div class="card-header">
-                                <div
-                                    style="width: 44px; height: 44px; background: rgba(45, 212, 191, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fa-solid fa-terminal" style="color: #2dd4bf; font-size: 1.25rem;"></i>
-                                </div>
-                                <h3 style="font-size: 1.25rem;">自訂快捷指令</h3>
+                            <div class="card-illustration">
+                                <img src="/img/illustrations/commands.png" alt="Commands Illustration">
                             </div>
-                            <p
-                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
-                                建立伺服器專屬指令，支援自動回應、常用訊息與腳本執行。</p>
-
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
-                                <div
-                                    class="status-badge <%= settings.custom_commands_enabled ? 'status-enabled' : 'status-disabled' %>">
-                                    <i
-                                        class="fa-solid <%= settings.custom_commands_enabled ? 'fa-code' : 'fa-circle-dot' %>"></i>
-                                    <%= settings.custom_commands_enabled ? '指令解析引擎開啟' : '引擎封閉' %>
+                            <div class="card-content-wrap">
+                                <div class="card-header">
+                                    <div
+                                        style="width: 32px; height: 32px; background: rgba(45, 212, 191, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-code" style="color: #2dd4bf; font-size: 0.9rem;"></i>
+                                    </div>
+                                    <h3>指令腳本</h3>
                                 </div>
-                                <label class="switch">
-                                    <input type="checkbox" name="custom_commands_enabled"
-                                        <%=settings.custom_commands_enabled ? 'checked' : '' %>
-                                    onchange="togglePlugin('custom_commands_toggle', this.checked)">
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
+                                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem;">
+                                    為你的伺服器量身定做專屬指令。無限擴充機器人的對話與功能。</p>
 
-                            <button type="button" class="config-btn-small" onclick="openConfig('commands')"
-                                style="width: 100%; justify-content: center; height: 44px; border-radius: 12px;">
-                                <i class="fa-solid fa-list-check"></i> 指令資料庫管理
-                            </button>
-                            <div class="card-watermark"><i class="fa-solid fa-code"></i></div>
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
+                                        運行狀態: <span
+                                            class="<%= settings.custom_commands_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                            <%= settings.custom_commands_enabled ? '在線' : '離線' %>
+                                        </span>
+                                    </span>
+                                    <label class="switch">
+                                        <input type="checkbox" name="custom_commands_enabled"
+                                            <%=settings.custom_commands_enabled ? 'checked' : '' %>
+                                        onchange="togglePlugin('commands', this.checked)">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+
+                                <div class="plugin-info">
+                                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem;">
+                                        <i class="fa-solid fa-terminal" style="color: #2dd4bf; opacity: 0.5;"></i>
+                                        <span style="font-size: 0.85rem; color: var(--text-secondary);">資料庫腳本檢索中</span>
+                                    </div>
+                                    <button class="config-btn-small" onclick="openConfig('commands')"
+                                        style="width: 100%; justify-content: center;">
+                                        <i class="fa-solid fa-database"></i> 腳本資料庫管理
+                                    </button>
+                                </div>
+                                <div class="handwritten-note">"創意就從這裡開始發芽!"</div>
+                            </div>
                         </div>
 
                     </div> <!-- End Grid -->
 
                     <!-- 2. Detailed Configuration Sections (Hidden by default) -->
                     <div id="modules-config">
+
+                        <!-- Announcement Config -->
+                        <div id="config-announcement" class="config-section premium-card"
+                            style="max-width: 800px; margin: 0 auto;">
+                            <div class="card-header" style="justify-content: space-between; margin-bottom: 2.5rem;">
+                                <div style="display: flex; align-items: center; gap: 1.25rem;">
+                                    <div
+                                        style="width: 44px; height: 44px; background: rgba(99, 102, 241, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-bullhorn" style="color: #6366f1; font-size: 1.25rem;"></i>
+                                    </div>
+                                    <h3 style="font-size: 1.5rem;">廣播中心深度配置</h3>
+                                </div>
+                                <button class="btn-reset" onclick="closeConfig()"
+                                    style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                    <i class="fa-solid fa-reply"></i> 返回列表
+                                </button>
+                            </div>
+
+                            <form action="/dashboard/settings" method="POST" class="track-changes">
+                                <input type="hidden" name="action" value="update_announcement_toggle">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
+
+                                <div class="form-group" style="margin-bottom: 2.5rem;">
+                                    <label>預設廣播頻道 (Broadcast Channel)</label>
+                                    <div style="position: relative;">
+                                        <select name="announcement_channel_id" class="modern-input"
+                                            style="padding-left: 3rem;">
+                                            <option value="">請選擇頻道...</option>
+                                            <% channels.forEach(c=> { %>
+                                                <option value="<%= c.id %>" <%=settings.announcement_channel_id===c.id
+                                                    ? 'selected' : '' %>># <%= c.name %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                        <i class="fa-solid fa-hashtag"
+                                            style="position: absolute; left: 1rem; top: 1.1rem; color: var(--text-muted); opacity: 0.5;"></i>
+                                    </div>
+                                    <div class="designer-tip">
+                                        <i class="fa-solid fa-lightbulb"></i>
+                                        建議選擇一個專門的 #announcements 頻道，讓公告更顯眼。
+                                    </div>
+                                </div>
+
+                                <div
+                                    style="display: flex; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2.5rem;">
+                                    <button type="submit" class="save-btn"
+                                        style="min-width: 200px; justify-content: center; height: 50px;">
+                                        <i class="fa-solid fa-save"></i> 儲存廣播設定
+                                    </button>
+                                </div>
+                            </form>
+                            <div class="handwritten-note" style="bottom: 20px; right: 20px;">"大聲說出你想說的話吧!"</div>
+                        </div>
+
+                        <!-- Welcome Config -->
+                        <div id="config-welcome" class="config-section premium-card"
+                            style="max-width: 800px; margin: 0 auto;">
+                            <div class="card-header" style="justify-content: space-between; margin-bottom: 2.5rem;">
+                                <div style="display: flex; align-items: center; gap: 1.25rem;">
+                                    <div
+                                        style="width: 44px; height: 44px; background: rgba(34, 197, 94, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-door-open"
+                                            style="color: #22c55e; font-size: 1.25rem;"></i>
+                                    </div>
+                                    <h3 style="font-size: 1.5rem;">迎賓大道細節調整</h3>
+                                </div>
+                                <button class="btn-reset" onclick="closeConfig()"
+                                    style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                    <i class="fa-solid fa-reply"></i> 返回列表
+                                </button>
+                            </div>
+
+                            <form action="/dashboard/settings" method="POST" class="track-changes">
+                                <input type="hidden" name="action" value="update_welcome">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
+
+                                <div class="form-group" style="margin-bottom: 2rem;">
+                                    <label>迎賓頻道 (Reception Hall)</label>
+                                    <div style="position: relative;">
+                                        <select name="welcome_channel_id" class="modern-input"
+                                            style="padding-left: 3rem;">
+                                            <option value="">請選擇頻道...</option>
+                                            <% channels.forEach(c=> { %>
+                                                <option value="<%= c.id %>" <%=settings.welcome_channel_id===c.id
+                                                    ? 'selected' : '' %>># <%= c.name %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                        <i class="fa-solid fa-hashtag"
+                                            style="position: absolute; left: 1rem; top: 1.1rem; color: var(--text-muted); opacity: 0.5;"></i>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="margin-bottom: 2rem;">
+                                    <label>定製歡迎訊息 (Customized Greeting)</label>
+                                    <textarea name="welcome_message" class="modern-input" rows="4"
+                                        placeholder="歡迎 {user} 加入我們的大家庭！"
+                                        style="padding: 1rem; resize: none;"><%= settings.welcome_message %></textarea>
+                                    <div class="designer-tip">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                        使用 {user} 標記新成員，讓問候更有溫度。
+                                    </div>
+                                </div>
+
+                                <div
+                                    style="display: flex; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2.5rem;">
+                                    <button type="submit" class="save-btn"
+                                        style="min-width: 200px; justify-content: center; height: 50px;">
+                                        <i class="fa-solid fa-check"></i> 部署迎賓規則
+                                    </button>
+                                </div>
+                            </form>
+                            <div class="handwritten-note">"第一印象決定了一切。"</div>
+                        </div>
 
 
                         <!-- Economy Config Redesigned -->
@@ -524,7 +699,7 @@
                                         style="width: 44px; height: 44px; background: rgba(251, 191, 36, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
                                         <i class="fa-solid fa-coins" style="color: #fbbf24; font-size: 1.25rem;"></i>
                                     </div>
-                                    <h3 style="font-size: 1.5rem;">經濟系統進階設定</h3>
+                                    <h3 style="font-size: 1.5rem;">數位金庫運作參數量</h3>
                                 </div>
                                 <button class="btn-reset" onclick="closeConfig()"
                                     style="padding: 0.5rem 1rem; font-size: 0.85rem;">
@@ -539,7 +714,7 @@
                                 <div
                                     style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem;">
                                     <div class="form-group">
-                                        <label>每日簽到獎勵 (Daily Bonus)</label>
+                                        <label>每日簽到津貼 (Daily Allowance)</label>
                                         <div style="position: relative;">
                                             <input type="number" name="economy_daily" class="modern-input"
                                                 value="<%= settings.economy_daily || 100 %>" min="0"
@@ -547,10 +722,10 @@
                                             <i class="fa-solid fa-sack-dollar"
                                                 style="position: absolute; left: 1rem; top: 1.1rem; color: var(--text-muted); opacity: 0.5;"></i>
                                         </div>
-                                        <small style="color: var(--text-muted);">發送 /daily 指令時可獲得的金額。</small>
+                                        <div class="designer-tip">推薦設定在 100-500 點之間，保持經濟平衡。</div>
                                     </div>
                                     <div class="form-group">
-                                        <label>初始開戶金額 (Starting Balance)</label>
+                                        <label>初始創業啟動金 (Startup Fund)</label>
                                         <div style="position: relative;">
                                             <input type="number" name="economy_start_balance" class="modern-input"
                                                 value="<%= settings.economy_start_balance || 0 %>" min="0"
@@ -558,7 +733,7 @@
                                             <i class="fa-solid fa-vault"
                                                 style="position: absolute; left: 1rem; top: 1.1rem; color: var(--text-muted); opacity: 0.5;"></i>
                                         </div>
-                                        <small style="color: var(--text-muted);">新成員加入經濟系統時的初始平衡。</small>
+                                        <div class="designer-tip">讓新成員一加入就有點資本參與互動。</div>
                                     </div>
                                 </div>
 
@@ -570,10 +745,11 @@
                                     </a>
                                     <button type="submit" class="save-btn"
                                         style="flex: 1; justify-content: center; height: 50px;">
-                                        <i class="fa-solid fa-cloud-arrow-up"></i> 更新經濟參數量
+                                        <i class="fa-solid fa-cloud-arrow-up"></i> 更新金庫核心設定
                                     </button>
                                 </div>
                             </form>
+                            <div class="handwritten-note">"貨幣流動，社群才會繁榮。"</div>
                         </div>
 
                         <!-- Music Config Redesigned -->
@@ -585,7 +761,7 @@
                                         style="width: 44px; height: 44px; background: rgba(251, 146, 60, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
                                         <i class="fa-solid fa-music" style="color: #fb923c; font-size: 1.25rem;"></i>
                                     </div>
-                                    <h3 style="font-size: 1.5rem;">音樂播放引擎設定</h3>
+                                    <h3 style="font-size: 1.5rem;">音樂播放引擎核心調校</h3>
                                 </div>
                                 <button class="btn-reset" onclick="closeConfig()"
                                     style="padding: 0.5rem 1rem; font-size: 0.85rem;">
@@ -600,7 +776,7 @@
                                 <div class="form-group" style="margin-bottom: 3rem;">
                                     <div
                                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                                        <label style="margin-bottom: 0;">預設音量 (Default Volume Level)</label>
+                                        <label style="margin-bottom: 0;">預設音量分貝 (Default Decibel Level)</label>
                                         <span
                                             style="font-family: 'Outfit'; font-weight: 800; font-size: 1.5rem; color: var(--accent-secondary); text-shadow: 0 0 10px rgba(6, 182, 212, 0.3);">
                                             <%= settings.music_volume || 50 %>%
@@ -608,13 +784,17 @@
                                     </div>
                                     <input type="range" name="music_volume" class="modern-input" min="1" max="100"
                                         value="<%= settings.music_volume || 50 %>"
-                                        style="width: 100%; height: 6px; appearance: none; background: rgba(255,255,255,0.1); border-radius: 3px; outline: none;"
+                                        style="width: 100%; height: 6px; appearance: none; background: rgba(255,255,255,0.1); border-radius: 3px; outline: none; cursor: pointer;"
                                         oninput="this.parentElement.querySelector('span').innerText = this.value + '%'">
                                     <div
                                         style="display: flex; justify-content: space-between; margin-top: 1rem; color: var(--text-muted); font-size: 0.75rem;">
-                                        <span>最小 (1%)</span>
-                                        <span>環境音量</span>
-                                        <span>震撼音效 (100%)</span>
+                                        <span>靜謐沉穩 (1%)</span>
+                                        <span style="color: var(--accent-secondary); opacity: 0.7;">完美平衡點 (50%)</span>
+                                        <span>派對狂歡 (100%)</span>
+                                    </div>
+                                    <div class="designer-tip" style="margin-top: 2rem;">
+                                        <i class="fa-solid fa-headphones"></i>
+                                        音樂引擎已自動進行音質補償，在任何音量下都能維持清晰。
                                     </div>
                                 </div>
 
@@ -622,13 +802,14 @@
                                     style="display: flex; gap: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2.5rem;">
                                     <a href="/dashboard/music/<%= guild.id %>" class="save-btn"
                                         style="text-decoration: none; background: var(--warning-color); color: black; flex: 1; justify-content: center; height: 50px;">
-                                        <i class="fa-solid fa-circle-play"></i> 開啟網頁控制器
+                                        <i class="fa-solid fa-circle-play"></i> 開啟核心網頁控制器
                                     </a>
                                     <button type="submit" class="config-btn-small" style="padding: 0 2rem;">
-                                        <i class="fa-solid fa-save"></i> 儲存變更
+                                        <i class="fa-solid fa-save"></i> 儲存引擎設定
                                     </button>
                                 </div>
                             </form>
+                            <div class="handwritten-note">"好音樂不該被打擾。"</div>
                         </div>
 
                         <!-- Leveling Config Redesigned -->
@@ -641,7 +822,7 @@
                                         <i class="fa-solid fa-chart-line"
                                             style="color: #f472b6; font-size: 1.25rem;"></i>
                                     </div>
-                                    <h3 style="font-size: 1.5rem;">等級系統進階配置</h3>
+                                    <h3 style="font-size: 1.5rem;">榮耀勛章進階配置</h3>
                                 </div>
                                 <button class="btn-reset" onclick="closeConfig()"
                                     style="padding: 0.5rem 1rem; font-size: 0.85rem;">
@@ -654,41 +835,48 @@
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
 
                                 <div class="form-group" style="margin-bottom: 2.5rem;">
-                                    <label>經驗值獲取速度 (Global Experience Rate)</label>
-                                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                                    <label>全域經驗值獲取速度 (Global Experience Tempo)</label>
+                                    <div
+                                        style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1.5rem;">
                                         <% [0.5, 1.0, 1.5, 2.0].forEach(rate=> { %>
                                             <label style="cursor: pointer;">
                                                 <input type="radio" name="leveling_rate" value="<%= rate %>"
                                                     <%=(settings.leveling_rate || 1.0)==rate ? 'checked' : '' %>
                                                 style="display: none;">
-                                                <div style="padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02); text-align: center; transition: all 0.2s;"
+                                                <div style="padding: 1.25rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02); text-align: center; transition: all 0.3s;"
                                                     class="rate-option">
                                                     <div
-                                                        style="font-family: 'Outfit'; font-weight: 800; font-size: 1.25rem; color: <%= rate >= 1.5 ? 'var(--warning-color)' : 'var(--text-primary)' %>">
+                                                        style="font-family: 'Outfit'; font-weight: 800; font-size: 1.5rem; color: <%= rate >= 1.5 ? 'var(--warning-color)' : 'var(--text-primary)' %>">
                                                         <%= rate %>x
                                                     </div>
-                                                    <div style="font-size: 0.75rem; color: var(--text-muted);">
-                                                        <%= rate==0.5 ? '緩慢' : (rate==1.0 ? '標準' : (rate==1.5 ? '加速'
-                                                            : '雙倍' )) %>
+                                                    <div
+                                                        style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">
+                                                        <%= rate==0.5 ? '慢慢品味' : (rate==1.0 ? '標準節奏' : (rate==1.5
+                                                            ? '加速邁進' : '疾速狂飆' )) %>
                                                     </div>
                                                 </div>
                                             </label>
                                             <% }) %>
+                                    </div>
+                                    <div class="designer-tip" style="margin-top: 2rem;">
+                                        <i class="fa-solid fa-medal"></i>
+                                        較高的倍率能顯著提升社群活躍度，但也可能導致頭銜濫發。
                                     </div>
                                 </div>
 
                                 <div
                                     style="display: flex; gap: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2.5rem;">
                                     <a href="/dashboard/leaderboard/<%= guild.id %>" class="config-btn-small"
-                                        style="text-decoration: none; background: rgba(255,255,255,0.05);">
+                                        style="text-decoration: none; background: rgba(255,255,255,0.05); padding: 0 2rem;">
                                         <i class="fa-solid fa-medal" style="color: #f472b6;"></i> 查看完整榮譽榜
                                     </a>
                                     <button type="submit" class="save-btn"
                                         style="flex: 1; justify-content: center; height: 50px;">
-                                        <i class="fa-solid fa-floppy-disk"></i> 套用權限與速率
+                                        <i class="fa-solid fa-floppy-disk"></i> 套用勛章獲取參數
                                     </button>
                                 </div>
                             </form>
+                            <div class="handwritten-note">"記錄下每一滴努力的汗水。"</div>
                         </div>
 
                         <!-- AI Chat Config Redesigned -->
@@ -700,7 +888,7 @@
                                         style="width: 44px; height: 44px; background: rgba(167, 139, 250, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
                                         <i class="fa-solid fa-brain" style="color: #a78bfa; font-size: 1.25rem;"></i>
                                     </div>
-                                    <h3 style="font-size: 1.5rem;">AI 神經網絡模型設定</h3>
+                                    <h3 style="font-size: 1.5rem;">AI 思考維度與頻道設定</h3>
                                 </div>
                                 <button class="btn-reset" onclick="closeConfig()"
                                     style="padding: 0.5rem 1rem; font-size: 0.85rem;">
@@ -713,8 +901,8 @@
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
 
                                 <div class="form-group" style="margin-bottom: 2.5rem;">
-                                    <label>專屬 AI 交流頻道 (Dedicated AI Channel)</label>
-                                    <div style="position: relative;">
+                                    <label>專屬 AI 思維空間 (Dedicated AI Channel)</label>
+                                    <div style="position: relative; margin-top: 1rem;">
                                         <select name="ai_channel_id" class="modern-input" style="padding-left: 3rem;">
                                             <option value="">所有頻道 (具備對話權限)</option>
                                             <% channels.forEach(c=> { %>
@@ -726,14 +914,9 @@
                                         <i class="fa-solid fa-hashtag"
                                             style="position: absolute; left: 1rem; top: 1.1rem; color: var(--text-muted); opacity: 0.5;"></i>
                                     </div>
-                                    <div
-                                        style="background: rgba(99, 102, 241, 0.05); border: 1px solid rgba(99, 102, 241, 0.1); border-radius: 12px; padding: 1rem; margin-top: 1.5rem;">
-                                        <div
-                                            style="display: flex; gap: 0.75rem; color: #a78bfa; font-size: 0.85rem; align-items: flex-start;">
-                                            <i class="fa-solid fa-circle-info" style="margin-top: 3px;"></i>
-                                            <p style="margin: 0; line-height: 1.5;">若指定特定頻道，AI
-                                                模組將僅在該頻道內解析訊息。這有助於集中對話流量並減少其他頻道的干擾。</p>
-                                        </div>
+                                    <div class="designer-tip" style="margin-top: 2rem;">
+                                        <i class="fa-solid fa-microchip"></i>
+                                        限制在單一頻道內對話，能讓 AI 的回應更具上下文邏輯，且不干擾其他討論。
                                     </div>
                                 </div>
 
@@ -741,13 +924,13 @@
                                     style="display: flex; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2.5rem;">
                                     <button type="submit" class="save-btn"
                                         style="min-width: 200px; justify-content: center; height: 50px;">
-                                        <i class="fa-solid fa-sync"></i> 更新神經網絡設定
+                                        <i class="fa-solid fa-sync"></i> 重新掛載思維模組
                                     </button>
                                 </div>
                             </form>
+                            <div class="handwritten-note">"我在聽，我在思考。"</div>
                         </div>
 
-                        <!-- AutoMod Config -->
                         <!-- AutoMod Config Redesigned -->
                         <div id="config-automod" class="config-section premium-card"
                             style="max-width: 800px; margin: 0 auto;">
@@ -758,7 +941,7 @@
                                         <i class="fa-solid fa-shield-halved"
                                             style="color: #34d399; font-size: 1.25rem;"></i>
                                     </div>
-                                    <h3 style="font-size: 1.5rem;">自動審核與過濾設定</h3>
+                                    <h3 style="font-size: 1.5rem;">自動審核與過濾核心</h3>
                                 </div>
                                 <button class="btn-reset" onclick="closeConfig()"
                                     style="padding: 0.5rem 1rem; font-size: 0.85rem;">
@@ -771,36 +954,37 @@
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
 
                                 <div class="form-group" style="margin-bottom: 2.5rem;">
-                                    <label>敏感詞彙黑名單 (Bad Words Filter)</label>
-                                    <div style="position: relative;">
+                                    <label>敏感詞彙深度過濾 (Bad Words Filter)</label>
+                                    <div style="position: relative; margin-top: 1rem;">
                                         <input type="text" name="automod_badwords" class="modern-input"
                                             value="<%= settings.automod_badwords %>" placeholder="垃圾, 廣告, 詐騙 (請以逗號分隔)"
                                             style="padding-left: 3rem;">
                                         <i class="fa-solid fa-comment-slash"
                                             style="position: absolute; left: 1rem; top: 1.1rem; color: var(--text-muted); opacity: 0.5;"></i>
                                     </div>
-                                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
+                                    <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem; flex-wrap: wrap;">
                                         <span class="status-badge"
-                                            style="background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: none; font-size: 0.7rem;">自動刪除</span>
+                                            style="background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: none; font-size: 0.7rem; padding: 4px 12px;">立即攔截</span>
                                         <span class="status-badge"
-                                            style="background: rgba(251, 191, 36, 0.1); color: #fbbf24; border: none; font-size: 0.7rem;">全域監控</span>
+                                            style="background: rgba(251, 191, 36, 0.1); color: #fbbf24; border: none; font-size: 0.7rem; padding: 4px 12px;">全時段監控</span>
                                         <span class="status-badge"
-                                            style="background: rgba(99, 102, 241, 0.1); color: #6366f1; border: none; font-size: 0.7rem;">日誌記錄</span>
+                                            style="background: rgba(99, 102, 241, 0.1); color: #6366f1; border: none; font-size: 0.7rem; padding: 4px 12px;">智能警報</span>
                                     </div>
-                                    <small
-                                        style="color: var(--text-muted); display: block; margin-top: 1rem; line-height: 1.5;">
-                                        系統將自動比對訊息內容，若包含以上詞彙則會立即刪除並對用戶發出警告。
-                                    </small>
+                                    <div class="designer-tip" style="margin-top: 2rem;">
+                                        <i class="fa-solid fa-shield-virus"></i>
+                                        系統將自動比對訊息內容。若包含敏感詞，將立即刪除並對用戶發出柔性警告。
+                                    </div>
                                 </div>
 
                                 <div
                                     style="display: flex; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2.5rem;">
                                     <button type="submit" class="save-btn"
                                         style="min-width: 200px; justify-content: center; height: 50px;">
-                                        <i class="fa-solid fa-shield-check"></i> 更新防護規則
+                                        <i class="fa-solid fa-shield-check"></i> 部署防護演算法
                                     </button>
                                 </div>
                             </form>
+                            <div class="handwritten-note">"安全，是第一要務。"</div>
                         </div>
 
                         <!-- Custom Commands Config Redesigned -->
@@ -812,7 +996,7 @@
                                         style="width: 44px; height: 44px; background: rgba(45, 212, 191, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
                                         <i class="fa-solid fa-code" style="color: #2dd4bf; font-size: 1.25rem;"></i>
                                     </div>
-                                    <h3 style="font-size: 1.5rem;">自訂指令資料庫管理</h3>
+                                    <h3 style="font-size: 1.5rem;">指令腳本資料庫管理員</h3>
                                 </div>
                                 <button class="btn-reset" onclick="closeConfig()"
                                     style="padding: 0.5rem 1rem; font-size: 0.85rem;">
@@ -827,13 +1011,13 @@
                                     style="padding: 1.5rem; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">
                                     <h4
                                         style="margin-bottom: 1.5rem; font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">
-                                        指令產生器 (Creator)</h4>
+                                        指令產生器 (Creator Engine)</h4>
                                     <form action="/dashboard/settings" method="POST">
                                         <input type="hidden" name="guild_id" value="<%= guild.id %>">
                                         <input type="hidden" name="action" value="add_command">
 
                                         <div class="form-group">
-                                            <label style="font-size: 0.75rem;">觸發字句 (Trigger Phrase)</label>
+                                            <label style="font-size: 0.75rem;">啟動關鍵字 (Activation Key)</label>
                                             <div style="position: relative;">
                                                 <span
                                                     style="position: absolute; left: 1rem; top: 1.1rem; color: var(--accent-secondary); font-weight: 800;">!</span>
@@ -842,15 +1026,19 @@
                                             </div>
                                         </div>
                                         <div class="form-group" style="margin-bottom: 2rem;">
-                                            <label style="font-size: 0.75rem;">自動回應內容 (Auto Response)</label>
+                                            <label style="font-size: 0.75rem;">自動脈衝響應 (Pulse Response)</label>
                                             <textarea name="response" class="modern-input" rows="5"
                                                 placeholder="輸入機器人應回應的訊息..." style="padding: 1rem; resize: none;"
                                                 required></textarea>
                                         </div>
                                         <button type="submit" class="save-btn"
                                             style="width: 100%; justify-content: center; height: 48px;">
-                                            <i class="fa-solid fa-plus-circle"></i> 建立新指令
+                                            <i class="fa-solid fa-plus-circle"></i> 燒錄新指令
                                         </button>
+                                        <div class="designer-tip" style="margin-top: 1.5rem;">
+                                            <i class="fa-solid fa-code-merge"></i>
+                                            指令會立即生效，全伺服器通用。
+                                        </div>
                                     </form>
                                 </div>
 
@@ -859,9 +1047,9 @@
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
                                         <h4
                                             style="font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">
-                                            現有指令集 (<%= customCommands.length %>)</h4>
+                                            現存邏輯腳本 (<%= customCommands.length %>)</h4>
                                         <span class="status-badge"
-                                            style="font-size: 0.7rem; background: rgba(255,255,255,0.05); color: var(--text-muted);">雙擊內容可展開</span>
+                                            style="font-size: 0.7rem; background: rgba(255,255,255,0.05); color: var(--text-muted);">雙擊可展開內容</span>
                                     </div>
 
                                     <div style="max-height: 500px; overflow-y: auto; padding-right: 0.5rem;"

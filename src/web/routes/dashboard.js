@@ -328,9 +328,9 @@ router.post('/settings', async (req, res) => {
             stmt.run(guild_id, badWords);
         }
 
-        else if (action === 'update_leveling') {
-            const { leveling_enabled } = req.body;
-            const enabled = leveling_enabled ? 1 : 0;
+        else if (action === 'update_leveling' || action === 'leveling') {
+            const { leveling_enabled, enabled: ajaxEnabled } = req.body;
+            const enabled = (leveling_enabled !== undefined ? leveling_enabled : ajaxEnabled) ? 1 : 0;
 
             const stmt = db.prepare(`
                 INSERT INTO settings (guild_id, leveling_enabled, updated_at)
@@ -343,9 +343,9 @@ router.post('/settings', async (req, res) => {
             stmt.run(guild_id, enabled);
         }
 
-        else if (action === 'update_economy') {
-            const { economy_enabled } = req.body;
-            const enabled = economy_enabled ? 1 : 0;
+        else if (action === 'update_economy' || action === 'economy') {
+            const { economy_enabled, enabled: ajaxEnabled } = req.body;
+            const enabled = (economy_enabled !== undefined ? economy_enabled : ajaxEnabled) ? 1 : 0;
 
             const stmt = db.prepare(`
                 INSERT INTO settings (guild_id, economy_enabled, updated_at)
@@ -358,9 +358,9 @@ router.post('/settings', async (req, res) => {
             stmt.run(guild_id, enabled);
         }
 
-        else if (action === 'update_ai_chat') {
-            const { ai_chat_enabled } = req.body;
-            const enabled = ai_chat_enabled ? 1 : 0;
+        else if (action === 'update_ai_chat' || action === 'ai_chat') {
+            const { ai_chat_enabled, enabled: ajaxEnabled } = req.body;
+            const enabled = (ai_chat_enabled !== undefined ? ai_chat_enabled : ajaxEnabled) ? 1 : 0;
 
             const stmt = db.prepare(`
                 INSERT INTO settings (guild_id, ai_chat_enabled, updated_at)
@@ -392,21 +392,22 @@ router.post('/settings', async (req, res) => {
         // --- Phase 26: Plugin Store Toggle Handlers ---
 
         else if (action === 'update_announcement_toggle' || action === 'announcement') {
-            const { announcement_enabled, enabled: ajaxEnabled } = req.body;
+            const { announcement_enabled, enabled: ajaxEnabled, announcement_channel_id } = req.body;
             const enabled = (announcement_enabled !== undefined ? announcement_enabled : ajaxEnabled) ? 1 : 0;
             const stmt = db.prepare(`
-                INSERT INTO settings (guild_id, announcement_enabled, updated_at)
-                VALUES (?, ?, CURRENT_TIMESTAMP)
+                INSERT INTO settings (guild_id, announcement_enabled, announcement_channel_id, updated_at)
+                VALUES (?, ?, ?, CURRENT_TIMESTAMP)
                 ON CONFLICT(guild_id) DO UPDATE SET
                 announcement_enabled = excluded.announcement_enabled,
+                announcement_channel_id = COALESCE(excluded.announcement_channel_id, settings.announcement_channel_id),
                 updated_at = CURRENT_TIMESTAMP
             `);
-            stmt.run(guild_id, enabled);
+            stmt.run(guild_id, enabled, announcement_channel_id || null);
         }
 
-        else if (action === 'update_music_toggle') {
-            const { music_enabled } = req.body;
-            const enabled = music_enabled ? 1 : 0;
+        else if (action === 'update_music_toggle' || action === 'music') {
+            const { music_enabled, enabled: ajaxEnabled } = req.body;
+            const enabled = (music_enabled !== undefined ? music_enabled : ajaxEnabled) ? 1 : 0;
             const stmt = db.prepare(`
                 INSERT INTO settings (guild_id, music_enabled, updated_at)
                 VALUES (?, ?, CURRENT_TIMESTAMP)
@@ -417,9 +418,9 @@ router.post('/settings', async (req, res) => {
             stmt.run(guild_id, enabled);
         }
 
-        else if (action === 'update_commands_toggle') {
-            const { custom_commands_enabled } = req.body;
-            const enabled = custom_commands_enabled ? 1 : 0;
+        else if (action === 'update_commands_toggle' || action === 'commands') {
+            const { custom_commands_enabled, enabled: ajaxEnabled } = req.body;
+            const enabled = (custom_commands_enabled !== undefined ? custom_commands_enabled : ajaxEnabled) ? 1 : 0;
             const stmt = db.prepare(`
                 INSERT INTO settings (guild_id, custom_commands_enabled, updated_at)
                 VALUES (?, ?, CURRENT_TIMESTAMP)
