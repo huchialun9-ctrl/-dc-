@@ -28,6 +28,9 @@ router.get('/', (req, res) => {
 
     const guilds = client.guilds.cache.size;
 
+    // Fetch Recent Activity (New for Redesign)
+    const recentLogs = db.prepare('SELECT * FROM activity_logs ORDER BY created_at DESC LIMIT 5').all();
+
     res.render('dashboard', {
         user: req.user,
         stats: {
@@ -37,6 +40,7 @@ router.get('/', (req, res) => {
             guilds: guilds
         },
         commands: commandList,
+        recentLogs: recentLogs,
         // Chart data removed as per redesign, but keeping structure if needed for compatibility
         chart: { labels: [], data: [] }
     });
