@@ -11,6 +11,19 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .cmd-name {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-color);
+            font-weight: 800;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .public-layout header nav {
+            gap: 1.5rem;
+        }
+    </style>
 </head>
 
 <body class="public-layout">
@@ -19,9 +32,10 @@
             <i class="fa-solid fa-layer-group"></i> VX6 指令文檔
         </div>
         <nav>
-            <a href="#general">一般指令</a>
-            <a href="#config">管理設定</a>
+            <a href="#admin">核心管理</a>
+            <a href="#moderation">工具指令</a>
             <a href="#entertainment">娛樂互動</a>
+            <a href="#info">資訊回饋</a>
             <a href="/invite" class="auth-btn glow">邀請機器人 <i class="fa-solid fa-plus"></i></a>
         </nav>
     </header>
@@ -34,88 +48,145 @@
                 <p>我們移除了解決方案中的網頁儀表板，現在您可以直接在 Discord 中完成所有設定。快速、安全且無縫整合。</p>
                 <div class="cta-group">
                     <a href="/invite" class="btn-primary">立即部署</a>
-                    <a href="#general" class="btn-secondary">查看所有指令</a>
+                    <a href="#admin" class="btn-secondary">查看完整指令</a>
                 </div>
             </div>
         </section>
 
-        <section id="general" class="features-section">
-            <h2 style="text-align: left; margin-bottom: 2rem;"><i class="fa-solid fa-star"></i> 一般指令</h2>
-            <div class="grid">
-                <div class="feature-card">
-                    <div
-                        style="font-family: 'JetBrains Mono', monospace; color: var(--accent-color); font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem;">
-                        /help</div>
-                    <h3>獲取協助</h3>
-                    <p>顯示所有可用的指令列表與分類說明。</p>
-                </div>
-                <div class="feature-card">
-                    <div
-                        style="font-family: 'JetBrains Mono', monospace; color: var(--accent-color); font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem;">
-                        /ping</div>
-                    <h3>連線延遲</h3>
-                    <p>測試機器人與 Discord 伺服器間的連線速度。</p>
-                </div>
-                <div class="feature-card">
-                    <div
-                        style="font-family: 'JetBrains Mono', monospace; color: var(--accent-color); font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem;">
-                        /serverinfo</div>
-                    <h3>伺服器資訊</h3>
-                    <p>顯示當前伺服器的詳細統計資料與資訊。</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="config" class="features-section" style="background: rgba(255,255,255,0.02);">
-            <h2 style="text-align: left; margin-bottom: 2rem;"><i class="fa-solid fa-sliders"></i> 管理與設定 (Admins Only)
-            </h2>
+        <!-- Category: Core Admin -->
+        <section id="admin" class="features-section">
+            <h2 style="text-align: left; margin-bottom: 2rem;"><i class="fa-solid fa-sliders"></i> 🛠️ 核心管理</h2>
             <div class="grid">
                 <div class="feature-card" style="border-left: 4px solid var(--warning-color);">
-                    <div
-                        style="font-family: 'JetBrains Mono', monospace; color: var(--warning-color); font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem;">
-                        /config</div>
+                    <div class="cmd-name">/config</div>
                     <h3>核心配置中心</h3>
-                    <p>整合所有功能設定。您可以透過子指令配置公告、歡迎訊息、AI 模式、經驗倍率等。</p>
-                    <ul style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
-                        <li>• <code>announcement</code>: 設定公告頻道</li>
-                        <li>• <code>welcome</code>: 設定歡迎頻道與訊息</li>
-                        <li>• <code>leveling</code>: 調整經驗獲取速率</li>
-                    </ul>
+                    <p>管理公告、歡迎、經濟、AI、等級系統等全域設定。</p>
                 </div>
                 <div class="feature-card">
-                    <div
-                        style="font-family: 'JetBrains Mono', monospace; color: var(--warning-color); font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem;">
-                        /setup-ai</div>
-                    <h3>AI 快速初始化</h3>
-                    <p>專為 AI 聊天功能設計的快速設定指令。</p>
+                    <div class="cmd-name">/setup</div>
+                    <h3>快速初始化</h3>
+                    <p>設定工單紀錄 (Transcripts) 發送頻道。</p>
                 </div>
                 <div class="feature-card">
-                    <div
-                        style="font-family: 'JetBrains Mono', monospace; color: var(--warning-color); font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem;">
-                        /clear</div>
-                    <h3>訊息清理</h3>
-                    <p>快速刪除頻道中的歷史訊息，協助管理員維護秩序。</p>
+                    <div class="cmd-name">/setup-ai</div>
+                    <h3>AI 頻道配置</h3>
+                    <p>將 AI 對話功能綁定至指定頻道。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="cmd-name">/admin</div>
+                    <h3>管理控制台</h3>
+                    <p>一鍵進入踢出、封鎖、禁言等管理介面。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="cmd-name">/reactionrole</div>
+                    <h3>身分組領取</h3>
+                    <p>創建點擊按鈕即可領取身分組的精美訊息。</p>
                 </div>
             </div>
         </section>
 
-        <section id="entertainment" class="features-section">
-            <h2 style="text-align: left; margin-bottom: 2rem;"><i class="fa-solid fa-gamepad"></i> 娛樂與互動</h2>
+        <!-- Category: Moderation & Tools -->
+        <section id="moderation" class="features-section" style="background: rgba(255,255,255,0.02);">
+            <h2 style="text-align: left; margin-bottom: 2rem;"><i class="fa-solid fa-shield-halved"></i> 🛡️ 管理與工具</h2>
             <div class="grid">
                 <div class="feature-card">
-                    <i class="fa-solid fa-music"></i>
-                    <h3>音樂播放 (/music)</h3>
-                    <p>完整的音樂播放系統。支援播放、跳過、停止以及佇列管理。</p>
+                    <div class="cmd-name">/clear</div>
+                    <h3>訊息清理</h3>
+                    <p>批量刪除頻道中的歷史訊息 (1-100 則)。</p>
                 </div>
                 <div class="feature-card">
-                    <i class="fa-solid fa-coins"></i>
-                    <h3>經濟系統 (/economy)</h3>
-                    <p>包含每日簽到、餘額查詢、轉帳等社交互動功能。</p>
+                    <div class="cmd-name">/close</div>
+                    <h3>關閉工單</h3>
+                    <p>快速結束並關閉當前的支援工單頻道。</p>
                 </div>
                 <div class="feature-card">
-                    <i class="fa-solid fa-brain"></i>
-                    <h3>AI 智慧對談</h3>
-                    <p>在指定頻道中與 AI 進行自然語言交流。</p>
+                    <div class="cmd-name">/say</div>
+                    <h3>機器人發話</h3>
+                    <p>讓機器人以系統身份在指定頻道發送訊息。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="cmd-name">/voice</div>
+                    <h3>動態語音</h3>
+                    <p>管理語音頻道鎖定、隱藏、更名、踢出成員等。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="cmd-name">/panel</div>
+                    <h3>快捷面板</h3>
+                    <p>開啟包含抽獎、音樂、日誌的快速操作中心。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category: Entertainment -->
+        <section id="entertainment" class="features-section">
+            <h2 style="text-align: left; margin-bottom: 2rem;"><i class="fa-solid fa-gamepad"></i> 🎮 娛樂與互動</h2>
+            <div class="grid">
+                <div class="feature-card">
+                    <div class="cmd-name">/music</div>
+                    <h3>音樂播放</h3>
+                    <p>包含播放、停止、跳過、佇列、音量調整功能。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="cmd-name">/economy</div>
+                    <h3>經濟系統</h3>
+                    <p>提供餘額查詢、每日簽到、富豪榜排名。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="cmd-name">/giveaway</div>
+                    <h3>抽獎管理</h3>
+                    <p>輕鬆發起、結束或重新抽選活動獲獎者。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="cmd-name">/poll</div>
+                    <h3>簡易投票</h3>
+                    <p>快速建立是非或多選投票，收集社群意見。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="cmd-name">/earthquake</div>
+                    <h3>地震速報</h3>
+                    <p>配置中央氣象署地震即時通知訂閱系統。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="cmd-name">/dice</div>
+                    <h3>擲骰子</h3>
+                    <p>簡單的互動小工具，決定今日運氣。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category: Info -->
+        <section id="info" class="features-section" style="background: rgba(255,255,255,0.02);">
+            <h2 style="text-align: left; margin-bottom: 2rem;"><i class="fa-solid fa-circle-info"></i> ℹ️ 資訊與回饋</h2>
+            <div class="grid">
+                <div class="feature-card">
+                    <div class="cmd-name">/help</div>
+                    <h3>幫助清單</h3>
+                    <p>在 Discord 中查看所有指令的詳細分類說明。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="cmd-name">/ping</div>
+                    <h3>延遲測試</h3>
+                    <p>檢查機器人與 Discord API 的即時連線延遲。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="cmd-name">/serverinfo</div>
+                    <h3>伺服器資訊</h3>
+                    <p>顯示伺服器擁有者、建立時間、統計數據等。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="cmd-name">/userinfo</div>
+                    <h3>使用者資訊</h3>
+                    <p>查詢成員加入時間、身分組、ID 等詳細內容。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="cmd-name">/avatar</div>
+                    <h3>取得頭貼</h3>
+                    <p>獲取指定使用者的高解析度頭像連結。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="cmd-name">/donate</div>
+                    <h3>支持開發</h3>
+                    <p>獲取支持專案持續運行的贊助管道連結。</p>
                 </div>
             </div>
         </section>
