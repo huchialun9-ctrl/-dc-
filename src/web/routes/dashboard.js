@@ -10,45 +10,23 @@ router.get('/', (req, res) => {
     const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get().count;
     const ticketCount = db.prepare("SELECT COUNT(*) as count FROM tickets WHERE status = 'open'").get().count;
 
-    // Uptime from process
+    // Uptime
     const uptime = process.uptime();
 
-    // 4. Chart Data (Last 7 Days)
-    const chartLabels = [];
-    const chartData = [];
-
-    // Generate last 7 days labels
-    for (let i = 6; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        const dateStr = d.toISOString().split('T')[0]; // YYYY-MM-DD
-        chartLabels.push(dateStr);
-        chartData.push(0); // Init with 0
+    // Fetch Commands from Client
+    const client = require('../../bot/client');
+    let commandList = [];
+    if (client.commands) {
+        commandList = client.commands.map(cmd => ({
+            name: cmd.data.name,
+            description: cmd.data.description,
+            // Assuming usage is stored in data or custom property. If not, fallback.
+            usage: cmd.usage || `/${cmd.data.name}`,
+            permissions: cmd.permissions || 'Everyone'
+        }));
     }
 
-    // Query DB
-    const dailyStats = db.prepare(`
-        SELECT date(created_at) as date, COUNT(*) as count 
-        FROM tickets 
-        WHERE created_at >= date('now', '-6 days')
-        GROUP BY date(created_at)
-    `).all();
-
-    // Fill data
-    dailyStats.forEach(stat => {
-        const index = chartLabels.indexOf(stat.date);
-        if (index !== -1) {
-            chartData[index] = stat.count;
-        }
-    });
-
-    // Format labels for display (MM/DD)
-    const displayLabels = chartLabels.map(dateStr => {
-        const [y, m, d] = dateStr.split('-');
-        return `${m}/${d}`;
-    });
-
-    const guilds = '1 (Synced)'; // Restore missing variable
+    const guilds = client.guilds.cache.size;
 
     res.render('dashboard', {
         user: req.user,
@@ -58,10 +36,9 @@ router.get('/', (req, res) => {
             uptime: uptime,
             guilds: guilds
         },
-        chart: {
-            labels: displayLabels,
-            data: chartData
-        }
+        commands: commandList,
+        // Chart data removed as per redesign, but keeping structure if needed for compatibility
+        chart: { labels: [], data: [] }
     });
 });
 

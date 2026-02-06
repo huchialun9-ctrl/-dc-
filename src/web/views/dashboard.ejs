@@ -17,9 +17,13 @@
     <%- include('partials/sidebar', { path: '/dashboard' }) %>
 
         <div class="main-content">
+            <!-- Redesigned Topbar -->
             <div class="topbar">
-                <h2>系統總覽</h2>
-                <div class="user-menu">
+                <div>
+                    <h2 class="text-gradient">控制台首頁</h2>
+                    <p style="color: var(--text-secondary); margin: 0;">快速存取核心功能與指令查詢</p>
+                </div>
+                <div class="user-menu border-gradient">
                     <span>
                         <%= user.username %>
                     </span>
@@ -32,88 +36,242 @@
                 </div>
             </div>
 
-            <div class="dashboard-grid">
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h4>系統狀態</h4>
-                        <div class="stat-value" style="color: var(--success-color, #43b581);">正常運作</div>
+            <!-- 1. Feature Shortcuts (The "Super Buttons") -->
+            <div class="shortcuts-grid">
+
+                <!-- Giveaway Shortcut -->
+                <a href="/dashboard/settings" class="shortcut-card bg-gradient-purple">
+                    <div class="shortcut-icon"><i class="fa-solid fa-gift"></i></div>
+                    <div class="shortcut-info">
+                        <h3>一鍵抽獎</h3>
+                        <p>快速設定並開始活動</p>
                     </div>
-                    <div class="stat-icon"><i class="fa-solid fa-server"></i></div>
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                </a>
+
+                <!-- Music Shortcut -->
+                <a href="/dashboard/servers" class="shortcut-card bg-gradient-orange"
+                    onclick="alert('請先選擇一個伺服器來開啟音樂面板！');">
+                    <div class="shortcut-icon"><i class="fa-solid fa-music"></i></div>
+                    <div class="shortcut-info">
+                        <h3>音樂面板</h3>
+                        <p>開啟點歌與播放控制</p>
+                    </div>
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                </a>
+
+                <!-- Logs Shortcut -->
+                <a href="/dashboard/logs" class="shortcut-card bg-gradient-blue">
+                    <div class="shortcut-icon"><i class="fa-solid fa-list-ul"></i></div>
+                    <div class="shortcut-info">
+                        <h3>系統日誌</h3>
+                        <p>查看機器人運作紀錄</p>
+                    </div>
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                </a>
+
+                <!-- Docs Shortcut -->
+                <a href="/docs" class="shortcut-card bg-gradient-green">
+                    <div class="shortcut-icon"><i class="fa-solid fa-book"></i></div>
+                    <div class="shortcut-info">
+                        <h3>使用手冊</h3>
+                        <p>完整的指令與教學</p>
+                    </div>
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                </a>
+
+            </div>
+
+            <!-- 2. Command Reference (Replaces Stats) -->
+            <div class="command-ref-section border-gradient"
+                style="margin-top: 2rem; background: var(--bg-card); padding: 2rem; border-radius: var(--card-radius);">
+                <div style="margin-bottom: 2rem;">
+                    <h3 class="text-gradient"><i class="fa-solid fa-terminal"></i> 所有指令一覽</h3>
+                    <p style="color: var(--text-secondary);">機器人目前支援的所有指令與用法說明。</p>
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h4>所在伺服器數</h4>
-                        <div class="stat-value">
-                            <%= stats.guilds %>
+                <div class="command-grid">
+                    <% commands.forEach(cmd=> { %>
+                        <div class="command-item">
+                            <div class="cmd-header">
+                                <span class="cmd-name">/<%= cmd.name %></span>
+                                <span class="cmd-tag">
+                                    <%= cmd.permissions %>
+                                </span>
+                            </div>
+                            <p class="cmd-desc">
+                                <%= cmd.description %>
+                            </p>
+                            <div class="cmd-usage">
+                                <i class="fa-solid fa-code"></i> 用法: <span>
+                                    <%= cmd.usage %>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="stat-icon"><i class="fa-solid fa-shield-cat"></i></div>
-                </div>
+                        <% }) %>
 
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h4>未結案工單</h4>
-                        <div class="stat-value">
-                            <%= stats.tickets %>
-                        </div>
-                    </div>
-                    <div class="stat-icon"><i class="fa-solid fa-ticket"></i></div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h4>運行時間</h4>
-                        <div class="stat-value">
-                            <%= Math.floor(stats.uptime / 60) %> 分鐘
-                        </div>
-                    </div>
-                    <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+                            <% if(commands.length===0) { %>
+                                <div
+                                    style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);">
+                                    <i class="fa-solid fa-circle-exclamation"
+                                        style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                                    <p>目前無法讀取指令列表，請確保機器人已啟動。</p>
+                                </div>
+                                <% } %>
                 </div>
             </div>
 
-            <div class="chart-container">
-                <h3>工單量趨勢 (最近 7 天)</h3>
-                <canvas id="ticketChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Data Injection -->
-        <script id="chart-data" type="application/json">
-            <%- JSON.stringify(chart) %>
-        </script>
-
-        <script>
-            // Parse data from hidden script tag to avoid syntax errors and XSS issues
-            const chartData = JSON.parse(document.getElementById('chart-data').textContent);
-
-            const ctx = document.getElementById('ticketChart').getContext('2d');
-            const ticketChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: chartData.labels,
-                    datasets: [{
-                        label: '新增工單 (New Tickets)',
-                        data: chartData.data,
-                        backgroundColor: 'rgba(88, 101, 242, 0.2)',
-                        borderColor: 'rgba(88, 101, 242, 1)',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, grid: { color: '#222' }, ticks: { color: '#888' } },
-                        x: { grid: { color: 'transparent' }, ticks: { color: '#888' } }
-                    },
-                    plugins: { legend: { labels: { color: '#fff' } } }
+            <style>
+                /* Shortcuts Grid */
+                .shortcuts-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                    gap: 1.5rem;
+                    margin-bottom: 2rem;
                 }
-            });
-        </script>
-        <%- include('partials/cookie_consent') %>
+
+                .shortcut-card {
+                    display: flex;
+                    align-items: center;
+                    padding: 1.5rem;
+                    border-radius: 16px;
+                    text-decoration: none;
+                    color: white;
+                    position: relative;
+                    overflow: hidden;
+                    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                }
+
+                .shortcut-card:hover {
+                    transform: translateY(-5px);
+                }
+
+                .shortcut-card::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+                    pointer-events: none;
+                }
+
+                .shortcut-icon {
+                    font-size: 2rem;
+                    margin-right: 1rem;
+                    width: 50px;
+                    text-align: center;
+                }
+
+                .shortcut-info h3 {
+                    margin: 0 0 0.2rem 0;
+                    font-size: 1.2rem;
+                }
+
+                .shortcut-info p {
+                    margin: 0;
+                    opacity: 0.8;
+                    font-size: 0.9rem;
+                }
+
+                .shortcut-arrow {
+                    margin-left: auto;
+                    opacity: 0;
+                    transform: translateX(-10px);
+                    transition: all 0.3s;
+                }
+
+                .shortcut-card:hover .shortcut-arrow {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+
+                /* Gradients */
+                .bg-gradient-purple {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                }
+
+                .bg-gradient-orange {
+                    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                }
+
+                .bg-gradient-blue {
+                    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                }
+
+                .bg-gradient-green {
+                    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+                }
+
+                /* Command List Styles */
+                .command-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                    gap: 1.5rem;
+                }
+
+                .command-item {
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid var(--border-color);
+                    border-radius: 12px;
+                    padding: 1.2rem;
+                    transition: all 0.2s;
+                }
+
+                .command-item:hover {
+                    background: rgba(255, 255, 255, 0.06);
+                    border-color: var(--accent-color);
+                }
+
+                .cmd-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 0.8rem;
+                }
+
+                .cmd-name {
+                    font-weight: 800;
+                    font-family: monospace;
+                    color: var(--accent-color);
+                    font-size: 1.1rem;
+                    background: rgba(88, 101, 242, 0.1);
+                    padding: 0.2rem 0.6rem;
+                    border-radius: 6px;
+                }
+
+                .cmd-tag {
+                    font-size: 0.75rem;
+                    text-transform: uppercase;
+                    background: rgba(255, 255, 255, 0.1);
+                    padding: 0.2rem 0.5rem;
+                    border-radius: 4px;
+                    color: var(--text-muted);
+                }
+
+                .cmd-desc {
+                    color: var(--text-primary);
+                    margin-bottom: 1rem;
+                    font-size: 0.95rem;
+                    line-height: 1.4;
+                }
+
+                .cmd-usage {
+                    background: rgba(0, 0, 0, 0.3);
+                    padding: 0.8rem;
+                    border-radius: 6px;
+                    font-family: monospace;
+                    font-size: 0.85rem;
+                    color: var(--text-secondary);
+                }
+
+                .cmd-usage span {
+                    color: #A5B4FC;
+                }
+            </style>
+            <%- include('partials/cookie_consent') %>
 </body>
 
 </html>
