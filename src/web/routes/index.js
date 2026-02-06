@@ -14,7 +14,7 @@ router.get('/health', (req, res) => {
 router.get('/callback', passport.authenticate('discord', {
     failureRedirect: '/'
 }), (req, res) => {
-    res.redirect('/dashboard');
+    res.redirect('/');
 });
 
 // Invite Bot Support (Securely generates state)

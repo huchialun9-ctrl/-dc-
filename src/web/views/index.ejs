@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VX6 機器人 | 企業級支援系統</title>
+    <title>VX6 機器人 | 支援系統文檔</title>
     <link rel="icon" href="/favicon.png" type="image/png">
     <link rel="stylesheet" href="/style.css">
     <link
@@ -16,75 +16,106 @@
 <body class="public-layout">
     <header>
         <div class="logo">
-            <i class="fa-solid fa-layer-group"></i> VX6 機器人
+            <i class="fa-solid fa-layer-group"></i> VX6 指令文檔
         </div>
         <nav>
-            <a href="#features">功能特色</a>
-            <a href="https://buymeacoffee.com/lucas1126" target="_blank"><i class="fa-solid fa-mug-hot"></i> 贊助我</a>
-            <% if (user) { %>
-                <a href="/dashboard" class="auth-btn glow">控制台 <i class="fa-solid fa-arrow-right"></i></a>
-                <% } else { %>
-                    <a href="/auth/discord" class="auth-btn glow"><i class="fa-brands fa-discord"></i> 使用 Discord 登入</a>
-                    <% } %>
+            <a href="#general">一般指令</a>
+            <a href="#config">管理設定</a>
+            <a href="#entertainment">娛樂互動</a>
+            <a href="/invite" class="auth-btn glow">邀請機器人 <i class="fa-solid fa-plus"></i></a>
         </nav>
     </header>
 
     <main>
-        <section class="hero-section">
+        <section class="hero-section" style="padding: 4rem 2rem;">
             <div class="hero-content">
-                <span class="badge">v2.0 全新上線</span>
-                <h1>打造專業級的 <br><span class="gradient-text">社群支援體驗</span></h1>
-                <p>專為規模化設計的高級 Discord 工單系統。具備 HTML 對話紀錄、詳細數據分析與無縫整合功能。</p>
+                <span class="badge">指令優先模式</span>
+                <h1>精簡、強大 <br><span class="gradient-text">完全由指令驅動</span></h1>
+                <p>我們移除了解決方案中的網頁儀表板，現在您可以直接在 Discord 中完成所有設定。快速、安全且無縫整合。</p>
                 <div class="cta-group">
-                    <a href="/auth/discord" class="btn-primary">立即開始</a>
-                    <a href="/invite" class="btn-secondary" target="_blank">邀請機器人</a>
-                    <a href="#features" class="btn-secondary"
-                        style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">了解更多</a>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="glass-card float">
-                    <div class="card-header">
-                        <div class="dot red"></div>
-                        <div class="dot yellow"></div>
-                        <div class="dot green"></div>
-                    </div>
-                    <div class="card-body">
-                        <div class="msg">
-                            <div class="avatar"></div>
-                            <div class="lines">
-                                <div class="line short"></div>
-                                <div class="line long"></div>
-                            </div>
-                        </div>
-                        <div class="msg right">
-                            <div class="lines">
-                                <div class="line medium"></div>
-                            </div>
-                            <div class="avatar blue"></div>
-                        </div>
-                    </div>
+                    <a href="/invite" class="btn-primary">立即部署</a>
+                    <a href="#general" class="btn-secondary">查看所有指令</a>
                 </div>
             </div>
         </section>
 
-        <section id="features" class="features-section">
-            <h2>強大功能</h2>
+        <section id="general" class="features-section">
+            <h2 style="text-align: left; margin-bottom: 2rem;"><i class="fa-solid fa-star"></i> 一般指令</h2>
             <div class="grid">
                 <div class="feature-card">
-                    <i class="fa-solid fa-file-code"></i>
-                    <h3>HTML 對話紀錄</h3>
-                    <p>將對話紀錄匯出為精美易讀的 HTML 網頁格式，永久保存完整溝通內容。</p>
+                    <div
+                        style="font-family: 'JetBrains Mono', monospace; color: var(--accent-color); font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem;">
+                        /help</div>
+                    <h3>獲取協助</h3>
+                    <p>顯示所有可用的指令列表與分類說明。</p>
                 </div>
                 <div class="feature-card">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <h3>數據分析儀表板</h3>
-                    <p>透過即時圖表追蹤團隊績效與工單解決狀態。</p>
+                    <div
+                        style="font-family: 'JetBrains Mono', monospace; color: var(--accent-color); font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem;">
+                        /ping</div>
+                    <h3>連線延遲</h3>
+                    <p>測試機器人與 Discord 伺服器間的連線速度。</p>
                 </div>
                 <div class="feature-card">
-                    <i class="fa-solid fa-shield-halved"></i>
-                    <h3>進階安全性</h3>
-                    <p>採用角色權限控制與獨立的環境變數隔離，確保資料安全。</p>
+                    <div
+                        style="font-family: 'JetBrains Mono', monospace; color: var(--accent-color); font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem;">
+                        /serverinfo</div>
+                    <h3>伺服器資訊</h3>
+                    <p>顯示當前伺服器的詳細統計資料與資訊。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="config" class="features-section" style="background: rgba(255,255,255,0.02);">
+            <h2 style="text-align: left; margin-bottom: 2rem;"><i class="fa-solid fa-sliders"></i> 管理與設定 (Admins Only)
+            </h2>
+            <div class="grid">
+                <div class="feature-card" style="border-left: 4px solid var(--warning-color);">
+                    <div
+                        style="font-family: 'JetBrains Mono', monospace; color: var(--warning-color); font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem;">
+                        /config</div>
+                    <h3>核心配置中心</h3>
+                    <p>整合所有功能設定。您可以透過子指令配置公告、歡迎訊息、AI 模式、經驗倍率等。</p>
+                    <ul style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+                        <li>• <code>announcement</code>: 設定公告頻道</li>
+                        <li>• <code>welcome</code>: 設定歡迎頻道與訊息</li>
+                        <li>• <code>leveling</code>: 調整經驗獲取速率</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div
+                        style="font-family: 'JetBrains Mono', monospace; color: var(--warning-color); font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem;">
+                        /setup-ai</div>
+                    <h3>AI 快速初始化</h3>
+                    <p>專為 AI 聊天功能設計的快速設定指令。</p>
+                </div>
+                <div class="feature-card">
+                    <div
+                        style="font-family: 'JetBrains Mono', monospace; color: var(--warning-color); font-weight: 800; font-size: 1.25rem; margin-bottom: 1rem;">
+                        /clear</div>
+                    <h3>訊息清理</h3>
+                    <p>快速刪除頻道中的歷史訊息，協助管理員維護秩序。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="entertainment" class="features-section">
+            <h2 style="text-align: left; margin-bottom: 2rem;"><i class="fa-solid fa-gamepad"></i> 娛樂與互動</h2>
+            <div class="grid">
+                <div class="feature-card">
+                    <i class="fa-solid fa-music"></i>
+                    <h3>音樂播放 (/music)</h3>
+                    <p>完整的音樂播放系統。支援播放、跳過、停止以及佇列管理。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fa-solid fa-coins"></i>
+                    <h3>經濟系統 (/economy)</h3>
+                    <p>包含每日簽到、餘額查詢、轉帳等社交互動功能。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fa-solid fa-brain"></i>
+                    <h3>AI 智慧對談</h3>
+                    <p>在指定頻道中與 AI 進行自然語言交流。</p>
                 </div>
             </div>
         </section>
@@ -93,9 +124,8 @@
     <footer>
         <div class="container footer-content"
             style="text-align: center; padding: 2rem 0; color: var(--text-secondary);">
-            <p>&copy; 2024 VX6 System. 安全。高效。強大。</p>
+            <p>&copy; 2024 VX6 指令系統。快速。安全。強大。</p>
             <div class="footer-links" style="margin-top: 1rem;">
-                <a href="/docs" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px;">使用教學</a>
                 <a href="/terms" style="color: var(--text-secondary); text-decoration: none; margin: 0 10px;">服務條款</a>
                 <a href="/privacy"
                     style="color: var(--text-secondary); text-decoration: none; margin: 0 10px;">隱私權政策</a>
@@ -105,7 +135,6 @@
             </div>
         </div>
     </footer>
-    <%- include('partials/cookie_consent') %>
 </body>
 
 </html>

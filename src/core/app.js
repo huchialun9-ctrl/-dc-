@@ -120,7 +120,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/', require('../web/routes/index'));
 app.use('/auth', require('../web/routes/auth'));
-app.use('/dashboard', require('../web/routes/dashboard')); // Protected
+// app.use('/dashboard', require('../web/routes/dashboard')); // Protected
 
 // Health Check & DB Status
 app.get('/health', (req, res) => {
