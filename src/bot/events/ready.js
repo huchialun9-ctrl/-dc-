@@ -7,15 +7,26 @@ module.exports = {
     execute(client) {
         logger.info(`Logged in as ${client.user.tag}`);
 
-        // Set Presence to Custom Status
-        client.user.setPresence({
-            activities: [{
-                name: 'custom',
-                type: ActivityType.Custom,
-                state: '為民服務中'
-            }],
-            status: 'online',
-        });
+        // Rotating Presence
+        const statuses = [
+            { state: '為民服務中', type: ActivityType.Custom },
+            { name: 'VCT', type: ActivityType.Playing },
+            { name: 'Valorant', type: ActivityType.Playing }
+        ];
+
+        let i = 0;
+        setInterval(() => {
+            const status = statuses[i];
+            client.user.setPresence({
+                activities: [{
+                    name: status.name || 'custom',
+                    type: status.type,
+                    state: status.state
+                }],
+                status: 'online',
+            });
+            i = (i + 1) % statuses.length;
+        }, 10000);
 
         // Initialize Services
         if (client.giveawayService) {
