@@ -11,41 +11,43 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .role-row {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 1rem;
-            border-radius: 8px;
+        .plugin-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .btn-remove {
-            background: rgba(240, 71, 71, 0.2);
-            color: #f04747;
-            border: 1px solid rgba(240, 71, 71, 0.3);
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
+        .plugin-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            background: rgba(18, 18, 22, 0.85);
+        }
+
+        .plugin-info {
+            padding: 1.5rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            margin-top: 1rem;
+        }
+
+        .config-btn-small {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: all 0.3s;
         }
 
-        .btn-remove:hover {
-            background: rgba(240, 71, 71, 0.4);
-        }
-
-        .status-enabled {
-            color: #34D399;
-        }
-
-        .status-disabled {
-            color: #F87171;
+        .config-btn-small:hover {
+            background: var(--accent-color);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
     </style>
 </head>
@@ -54,87 +56,132 @@
     <%- include('partials/sidebar', { path: '/dashboard/settings' }) %>
 
         <div class="main-content">
+            <!-- Dashboard Header -->
             <div class="topbar">
                 <div class="topbar-left">
-                    <h2 class="text-gradient">
-                        <%= mode==='guild' ? `管理 ${guild.name}` : '全域設定' %>
+                    <h2 class="text-gradient" style="font-size: 2.2rem; font-weight: 900;">
+                        <i class="fa-solid fa-sliders" style="margin-right: 1rem; opacity: 0.8; font-size: 1.8rem;"></i>
+                        <%= mode==='guild' ? guild.name : '系統核心設定' %>
                     </h2>
+                    <div
+                        style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-solid fa-circle-check" style="color: var(--success-color); font-size: 0.8rem;"></i>
+                        控制台連線正常 (Connection Secure)
+                    </div>
                 </div>
-                <div class="user-menu">
+                <div class="user-menu" style="padding: 0.6rem 1.5rem; border-radius: 20px;">
                     <% if(user.avatar) { %>
                         <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="Avatar"
-                            class="user-avatar">
+                            class="user-avatar"
+                            style="width: 38px; height: 38px; border: 2px solid rgba(255,255,255,0.1);">
                         <% } else { %>
-                            <div style="width:32px;height:32px;background:var(--accent-color);border-radius:50%;"></div>
+                            <div
+                                style="width:38px;height:38px;background:var(--hero-gradient);border-radius:50%; border: 2px solid rgba(255,255,255,0.1);">
+                            </div>
                             <% } %>
-                                <span>
-                                    <%= user.username %>
-                                </span>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-weight: 800; font-size: 0.95rem;">
+                                        <%= user.username %>
+                                    </span>
+                                    <span
+                                        style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.8;">管理員模式</span>
+                                </div>
                 </div>
             </div>
 
             <% if (mode==='global' ) { %>
-                <!-- Global Settings -->
-                <div class="premium-card" style="max-width: 600px; margin-bottom: 3rem;">
+                <!-- Global Settings Redesigned -->
+                <div class="premium-card" style="max-width: 800px; margin-bottom: 4rem;">
                     <div class="card-header">
-                        <i class="fa-solid fa-triangle-exclamation" style="color: var(--warning-color);"></i>
-                        <h3>機器人全域設定</h3>
-                    </div>
-                    <form action="/dashboard/settings" method="POST">
-                        <input type="hidden" name="action" value="global_update">
-                        <div class="form-group">
-                            <label>機器人名稱</label>
-                            <input type="text" value="VX6 System" class="modern-input" disabled>
+                        <div
+                            style="width: 50px; height: 50px; background: rgba(251, 191, 36, 0.1); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fa-solid fa-microchip"
+                                style="color: var(--warning-color); font-size: 1.5rem;"></i>
                         </div>
-                        <button type="submit" class="save-btn">
-                            <i class="fa-solid fa-floppy-disk"></i> 儲存變更
+                        <div>
+                            <h3 style="margin-bottom: 0.25rem;">全域核心設定 (Core Engine)</h3>
+                            <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500;">控制 VX6 系統的底層運作參數
+                            </p>
+                        </div>
+                    </div>
+                    <form action="/dashboard/settings" method="POST" class="track-changes">
+                        <input type="hidden" name="action" value="global_update">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                            <div class="form-group">
+                                <label>系統實體名稱</label>
+                                <input type="text" value="VX6 Multiverse System" class="modern-input" disabled
+                                    style="opacity: 0.6; cursor: not-allowed;">
+                            </div>
+                            <div class="form-group">
+                                <label>核心版本</label>
+                                <input type="text" value="v2.4.0-premium" class="modern-input" disabled
+                                    style="opacity: 0.6; cursor: not-allowed;">
+                            </div>
+                        </div>
+                        <button type="submit" class="save-btn" style="margin-top: 1rem;">
+                            <i class="fa-solid fa-shield-halved"></i> 授權並重新啟動核心
                         </button>
                     </form>
                 </div>
                 <% } else { %>
-                    <!-- NEW: General Guild Settings -->
-                    <div class="premium-card" style="margin-bottom: 3rem;">
+                    <!-- General Guild Settings Redesigned -->
+                    <div class="premium-card"
+                        style="margin-bottom: 4rem; background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);">
                         <div class="card-header">
-                            <i class="fa-solid fa-globe" style="color: var(--accent-secondary);"></i>
-                            <h3>伺服器基本設定 (General Settings)</h3>
+                            <div
+                                style="width: 50px; height: 50px; background: rgba(5, 182, 212, 0.1); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa-solid fa-server"
+                                    style="color: var(--accent-secondary); font-size: 1.5rem;"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin-bottom: 0.25rem;">伺服器基本框架 (Basic Framework)</h3>
+                                <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500;">配置伺服器的基本互動邏輯
+                                </p>
+                            </div>
                         </div>
-                        <form action="/dashboard/settings" method="POST"
-                            style="display: flex; gap: 2rem; align-items: flex-end; flex-wrap: wrap;">
+                        <form action="/dashboard/settings" method="POST" class="track-changes"
+                            style="display: flex; gap: 2.5rem; align-items: flex-end; flex-wrap: wrap;">
                             <input type="hidden" name="action" value="update_language">
                             <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                            <div class="form-group" style="flex: 1; min-width: 250px; margin-bottom: 0;">
-                                <label>機器人語系 (Bot Language)</label>
+                            <div class="form-group" style="flex: 1; min-width: 300px; margin-bottom: 0;">
+                                <label>偏好語系 (Interaction Language)</label>
                                 <select name="language" class="modern-input" required>
-                                    <option value="zh" <%=settings.language==='zh' ? 'selected' : '' %>>中文 (繁體)</option>
-                                    <option value="en" <%=settings.language==='en' ? 'selected' : '' %>>English</option>
+                                    <option value="zh" <%=settings.language==='zh' ? 'selected' : '' %>>繁體中文 (Taiwan) -
+                                        精準翻譯</option>
+                                    <option value="en" <%=settings.language==='en' ? 'selected' : '' %>>English
+                                        (Universal) - Original</option>
                                 </select>
                             </div>
-                            <button type="submit" class="save-btn">
-                                <i class="fa-solid fa-floppy-disk"></i> 儲存 (Save)
+                            <button type="submit" class="save-btn" style="height: 54px;">
+                                <i class="fa-solid fa-square-check"></i> 同步基本資料
                             </button>
                         </form>
                     </div>
 
-                    <!-- NEW: Plugin Store Grid -->
+                    <!-- Plugin Grid -->
                     <div id="modules-grid" class="dashboard-grid">
 
-                        <!-- 1. Announcement Plugin -->
+                        <!-- 1. Announcement Plugin Redesigned -->
                         <div class="premium-card plugin-card" data-module="announcement">
                             <div class="card-header">
-                                <i class="fa-solid fa-bullhorn" style="color: #F87171;"></i>
-                                <h3>公告系統</h3>
+                                <div
+                                    style="width: 44px; height: 44px; background: rgba(244, 63, 94, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fa-solid fa-bullhorn" style="color: #f43f5e; font-size: 1.25rem;"></i>
+                                </div>
+                                <h3 style="font-size: 1.25rem;">廣播與公告系統</h3>
                             </div>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">
-                                發送崁入式公告訊息到指定頻道。</p>
+                            <p
+                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
+                                向特定頻道發送精美的崁入式公告訊息，支援多種格式。</p>
 
                             <div
-                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
-                                <span style="font-size: 0.9rem; font-weight: 600;">
-                                    狀態: <span
-                                        class="<%= settings.announcement_enabled ? 'status-enabled' : 'status-disabled' %>">
-                                        <%= settings.announcement_enabled ? '已啟用' : '已停用' %>
-                                    </span>
-                                </span>
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                <div
+                                    class="status-badge <%= settings.announcement_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                    <i
+                                        class="fa-solid <%= settings.announcement_enabled ? 'fa-check-circle' : 'fa-circle-dot' %>"></i>
+                                    <%= settings.announcement_enabled ? '運作中' : '已暫停' %>
+                                </div>
                                 <label class="switch">
                                     <input type="checkbox" name="announcement_enabled" <%=settings.announcement_enabled
                                         ? 'checked' : '' %>
@@ -143,749 +190,959 @@
                                 </label>
                             </div>
 
-                            <!-- Direct Announcement Sender -->
                             <% if (settings.announcement_enabled) { %>
-                                <div class="premium-card"
-                                    style="padding: 1.5rem; background: rgba(255,255,255,0.02); margin-top: 1rem; border: 1px solid rgba(255,255,255,0.05);">
+                                <div class="plugin-info"
+                                    style="border: 1px solid rgba(255,255,255,0.05); padding: 1.25rem; border-radius: 16px; background: rgba(0,0,0,0.2);">
+                                    <h4
+                                        style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; letter-spacing: 0.05em;">
+                                        快速廣播器 (Quick Sender)</h4>
                                     <form action="/dashboard/settings" method="POST">
                                         <input type="hidden" name="action" value="send_announcement">
                                         <input type="hidden" name="guild_id" value="<%= guild.id %>">
 
                                         <div class="form-group" style="margin-bottom: 1rem;">
-                                            <select name="channel_id" class="modern-input" required>
-                                                <option value="">發送至哪個頻道？</option>
+                                            <select name="announcement_channel_id" class="modern-input"
+                                                style="padding: 0.75rem 1rem; font-size: 0.9rem;">
+                                                <option value="" disabled selected>選擇公告頻道...</option>
                                                 <% channels.forEach(c=> { %>
-                                                    <option value="<%= c.id %>">#<%= c.name %>
+                                                    <option value="<%= c.id %>"># <%= c.name %>
                                                     </option>
                                                     <% }) %>
                                             </select>
                                         </div>
-                                        <input type="text" name="title" class="modern-input" placeholder="公告標題" required
-                                            style="margin-bottom: 1rem;">
-                                        <textarea name="description" rows="3" class="modern-input"
-                                            placeholder="公告內容 (支援 Markdown)..." required
-                                            style="margin-bottom: 1.5rem;"></textarea>
+                                        <div class="form-group" style="margin-bottom: 1rem;">
+                                            <textarea name="announcement_message" rows="2" class="modern-input"
+                                                placeholder="輸入公告內容..."
+                                                style="padding: 0.75rem 1rem; font-size: 0.9rem; resize: none;"></textarea>
+                                        </div>
                                         <button type="submit" class="save-btn"
-                                            style="width: 100%; justify-content: center;">
+                                            style="width: 100%; border-radius: 12px; height: 44px; padding: 0; justify-content: center; font-size: 0.9rem;">
                                             <i class="fa-solid fa-paper-plane"></i> 立即發送公告
                                         </button>
                                     </form>
                                 </div>
                                 <% } %>
+                                    <div class="card-watermark"><i class="fa-solid fa-bullhorn"></i></div>
                         </div>
-                        <div class="card-watermark"><i class="fa-solid fa-bullhorn"></i></div>
-                    </div>
 
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
-                        <span style="font-size: 0.9rem; font-weight: 600;">
-                            狀態: <span class="<%= settings.welcome_enabled ? 'status-enabled' : 'status-disabled' %>">
-                                <%= settings.welcome_enabled ? '已啟用' : '已停用' %>
-                            </span>
-                        </span>
-                        <label class="switch">
-                            <input type="checkbox" name="welcome_enabled" <%=settings.welcome_enabled ? 'checked' : ''
-                                %>
-                            onchange="togglePlugin('welcome_toggle', this.checked)">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-
-                    <!-- Direct Welcome Settings -->
-                    <% if (settings.welcome_enabled) { %>
-                        <div class="premium-card"
-                            style="padding: 1.5rem; background: rgba(255,255,255,0.02); margin-top: 1rem; border: 1px solid rgba(255,255,255,0.05);">
-                            <form action="/dashboard/settings" method="POST">
-                                <input type="hidden" name="action" value="update_welcome">
-                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
-
-                                <div class="form-group" style="margin-bottom: 1rem;">
-                                    <label style="font-size: 0.8rem; opacity: 0.7;">歡迎頻道</label>
-                                    <select name="welcome_channel_id" class="modern-input">
-                                        <% channels.forEach(c=> { %>
-                                            <option value="<%= c.id %>" <%=settings.welcome_channel_id===c.id
-                                                ? 'selected' : '' %>>#<%= c.name %>
-                                            </option>
-                                            <% }) %>
-                                    </select>
+                        <!-- 2. Welcome Plugin Redesigned -->
+                        <div class="premium-card plugin-card" data-module="welcome">
+                            <div class="card-header">
+                                <div
+                                    style="width: 44px; height: 44px; background: rgba(99, 102, 241, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fa-solid fa-door-open" style="color: #6366f1; font-size: 1.25rem;"></i>
                                 </div>
-                                style="resize: none;"><%= settings.welcome_message %></textarea>
-                        </div>
-                        <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem; font-style: italic;">
-                            * 修改後請使用下方「儲存變更」按鈕</p>
-                        </form>
-        </div>
-        <% } %>
-            </div>
-            <div class="card-watermark"><i class="fa-solid fa-door-open"></i></div>
-            </div>
+                                <h3 style="font-size: 1.25rem;">自動歡迎系統</h3>
+                            </div>
+                            <p
+                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
+                                當新成員加入時發送溫暖的歡迎訊息，提供絕佳入群體驗。</p>
 
-            <!-- 3. Economy Plugin -->
-            <div class="settings-card plugin-card" data-module="economy">
-                <form action="/dashboard/settings" method="POST" class="track-changes plugin-form">
-                    <input type="hidden" name="action" value="update_economy">
-                    <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                    <!-- Hidden Input Removed: Replaced by Toggle -->
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                <div
+                                    class="status-badge <%= settings.welcome_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                    <i
+                                        class="fa-solid <%= settings.welcome_enabled ? 'fa-bolt' : 'fa-circle-dot' %>"></i>
+                                    <%= settings.welcome_enabled ? '監控中' : '已停用' %>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="welcome_enabled" <%=settings.welcome_enabled
+                                        ? 'checked' : '' %>
+                                    onchange="togglePlugin('welcome_toggle', this.checked)">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
 
-                    <div class="card-header-content">
-                        <div class="card-title">
-                            <i class="fa-solid fa-coins" style="color: #FBBF24;"></i> 經濟系統
-                        </div>
-                        <p class="card-desc">簽到、錢包與商店功能。</p>
-                    </div>
+                            <% if (settings.welcome_enabled) { %>
+                                <div class="plugin-info"
+                                    style="border: 1px solid rgba(255,255,255,0.05); padding: 1.25rem; border-radius: 16px; background: rgba(0,0,0,0.2);">
+                                    <form action="/dashboard/settings" method="POST" class="track-changes">
+                                        <input type="hidden" name="action" value="update_welcome">
+                                        <input type="hidden" name="guild_id" value="<%= guild.id %>">
 
-                    <!-- New Toggle Layout -->
-                    <div class="card-controls-row">
-                        <button type="button" class="btn-settings-small" onclick="openConfig('economy')">
-                            <i class="fa-solid fa-gear"></i> 設定
-                        </button>
-
-                        <label class="switch">
-                            <input type="checkbox" name="economy_enabled" value="1" <%=settings.economy_enabled
-                                ? 'checked' : '' %>>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </form>
-                <div class="card-watermark"><i class="fa-solid fa-coins"></i></div>
-            </div>
-
-            <!-- 4. AI Chat Plugin -->
-            <div class="settings-card plugin-card" data-module="ai">
-                <form action="/dashboard/settings" method="POST" class="track-changes plugin-form">
-                    <input type="hidden" name="action" value="update_ai_chat">
-                    <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                    <!-- Hidden Input Removed: Replaced by Toggle -->
-
-                    <div class="card-header-content">
-                        <div class="card-title">
-                            <i class="fa-solid fa-wand-magic-sparkles" style="color: #A78BFA;"></i> AI 聊天
-                        </div>
-                        <p class="card-desc">提及機器人即可進行智慧對話。</p>
-                    </div>
-
-                    <!-- New Toggle Layout -->
-                    <div class="card-controls-row">
-                        <button type="button" class="btn-settings-small" onclick="openConfig('ai')">
-                            <i class="fa-solid fa-gear"></i> 設定
-                        </button>
-
-                        <label class="switch">
-                            <input type="checkbox" name="ai_chat_enabled" value="1" <%=settings.ai_chat_enabled
-                                ? 'checked' : '' %>>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </form>
-                <div class="card-watermark"><i class="fa-solid fa-robot"></i></div>
-            </div>
-
-            <!-- 5. AutoMod Plugin -->
-            <div class="settings-card plugin-card" data-module="automod">
-                <form action="/dashboard/settings" method="POST" class="track-changes plugin-form">
-                    <input type="hidden" name="action" value="update_automod_toggle">
-                    <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                    <!-- Reusing automod_links as the main toggle or use automod_enabled? -->
-                    <!-- DB has automod_links. I added automod_enabled in DB update. Let's use automod_enabled if possible, but route uses links. -->
-                    <!-- UPDATE: I added automod_enabled to DB but dashboard route uses automod_links. I should stick to automod_links for now or update route logic. -->
-                    <!-- To avoid breaking logic mid-task, I will use automod_links as the install flag for now, or assume enabling the plugin turns on link filter by default. -->
-                    <!-- Let's alias it: Install = Enable Link Filter + Bad Words (via hidden inputs). -->
-                    <!-- Actually, user might want bad words but not link filter. -->
-                    <!-- Better: Use automod_enabled as Master Switch. I need to update route handler to respect it. -->
-                    <!-- For now, let's map Install -> automod_links=1. It's the simplest path. -->
-                    <!-- Hidden Input Removed: Replaced by Toggle -->
-
-                    <div class="card-header-content">
-                        <div class="card-title">
-                            <i class="fa-solid fa-shield-halved" style="color: #34D399;"></i> 自動審核
-                        </div>
-                        <p class="card-desc">過濾惡意連結與詞彙。</p>
-                    </div>
-
-                    <!-- New Toggle Layout -->
-                    <div class="card-controls-row">
-                        <button type="button" class="btn-settings-small" onclick="openConfig('automod')">
-                            <i class="fa-solid fa-gear"></i> 設定
-                        </button>
-
-                        <label class="switch">
-                            <input type="checkbox" name="automod_links" value="1" <%=settings.automod_links ? 'checked'
-                                : '' %>>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </form>
-                <div class="card-watermark"><i class="fa-solid fa-gavel"></i></div>
-            </div>
-
-            <!-- 6. Music Plugin -->
-            <div class="settings-card plugin-card" data-module="music">
-                <form action="/dashboard/settings" method="POST" class="track-changes plugin-form">
-                    <input type="hidden" name="action" value="update_music_toggle">
-                    <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                    <!-- Hidden Input Removed: Replaced by Toggle -->
-
-                    <div class="card-header-content">
-                        <div class="card-title">
-                            <i class="fa-solid fa-music" style="color: #FB923C;"></i> 音樂播放器
-                        </div>
-                        <p class="card-desc">Web 音樂控制面板。</p>
-                    </div>
-
-                    <!-- New Toggle Layout -->
-                    <div class="card-controls-row">
-                        <button type="button" class="btn-settings-small" onclick="openConfig('music')">
-                            <i class="fa-solid fa-gear"></i> 設定
-                        </button>
-
-                        <label class="switch">
-                            <input type="checkbox" name="music_enabled" value="1" <%=settings.music_enabled ? 'checked'
-                                : '' %>>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </form>
-                <div class="card-watermark"><i class="fa-solid fa-music"></i></div>
-            </div>
-
-            <!-- 7. Leveling Plugin -->
-            <div class="settings-card plugin-card" data-module="leveling">
-                <form action="/dashboard/settings" method="POST" class="track-changes plugin-form">
-                    <input type="hidden" name="action" value="update_leveling">
-                    <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                    <!-- Hidden Input Removed: Replaced by Toggle -->
-
-                    <div class="card-header-content">
-                        <div class="card-title">
-                            <i class="fa-solid fa-chart-line" style="color: #F472B6;"></i> 等級系統
-                        </div>
-                        <p class="card-desc">聊天獲取經驗與等級。</p>
-                    </div>
-
-                    <!-- New Toggle Layout -->
-                    <div class="card-controls-row">
-                        <button type="button" class="btn-settings-small" onclick="openConfig('leveling')">
-                            <i class="fa-solid fa-gear"></i> 設定
-                        </button>
-
-                        <label class="switch">
-                            <input type="checkbox" name="leveling_enabled" value="1" <%=settings.leveling_enabled
-                                ? 'checked' : '' %>>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </form>
-                <div class="card-watermark"><i class="fa-solid fa-star"></i></div>
-            </div>
-
-            <!-- 8. Custom Commands Plugin -->
-            <div class="settings-card plugin-card" data-module="commands">
-                <form action="/dashboard/settings" method="POST" class="track-changes plugin-form">
-                    <input type="hidden" name="action" value="update_commands_toggle">
-                    <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                    <!-- Hidden Input Removed: Replaced by Toggle -->
-
-                    <div class="card-header-content">
-                        <div class="card-title">
-                            <i class="fa-solid fa-terminal" style="color: #2DD4BF;"></i> 自訂指令
-                        </div>
-                        <p class="card-desc">建立伺服器專屬指令。</p>
-                    </div>
-
-                    <!-- New Toggle Layout -->
-                    <div class="card-controls-row">
-                        <button type="button" class="btn-settings-small" onclick="openConfig('commands')">
-                            <i class="fa-solid fa-list-check"></i> 管理指令
-                        </button>
-
-                        <label class="switch">
-                            <input type="checkbox" name="custom_commands_enabled" value="1"
-                                <%=settings.custom_commands_enabled ? 'checked' : '' %>>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </form>
-                <div class="card-watermark"><i class="fa-solid fa-terminal"></i></div>
-            </div>
-
-            </div> <!-- End Grid -->
-
-            <!-- 2. Detailed Configuration Sections (Hidden by default) -->
-            <div id="modules-config">
-
-
-                <!-- Economy Config -->
-                <div id="config-economy" class="config-section glass-panel"
-                    style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
-                    <div class="section-header-modern">
-                        <h3><i class="fa-solid fa-coins" style="color: #FBBF24;"></i> 經濟系統設定</h3>
-                        <button class="btn-back" onclick="closeConfig()">
-                            <i class="fa-solid fa-arrow-left"></i> 返回
-                        </button>
-                    </div>
-                    <form action="/dashboard/settings" method="POST" class="track-changes">
-                        <input type="hidden" name="action" value="update_economy_config">
-                        <input type="hidden" name="guild_id" value="<%= guild.id %>">
-
-                        <div class="form-group-modern">
-                            <label style="color: white;">每日簽到獎金 (Daily Bonus)</label>
-                            <input type="number" name="economy_daily" class="modern-input detect-change"
-                                value="<%= settings.economy_daily || 100 %>" min="0">
-                        </div>
-                        <div class="form-group-modern">
-                            <label style="color: white;">初始金額 (Starting Balance)</label>
-                            <input type="number" name="economy_start_balance" class="modern-input detect-change"
-                                value="<%= settings.economy_start_balance || 0 %>" min="0">
-                        </div>
-                        <div style="margin-top: 2rem;">
-                            <a href="/dashboard/leaderboard/<%= guild.id %>/economy" class="btn-setting"
-                                style="display: inline-flex; text-decoration: none;">
-                                <i class="fa-solid fa-trophy"></i> 查看財富排行榜
-                            </a>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Music Config -->
-                <div id="config-music" class="config-section glass-panel"
-                    style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
-                    <div class="section-header-modern">
-                        <h3><i class="fa-solid fa-music" style="color: #FB923C;"></i> 音樂播放設定</h3>
-                        <button class="btn-back" onclick="closeConfig()">
-                            <i class="fa-solid fa-arrow-left"></i> 返回
-                        </button>
-                    </div>
-                    <form action="/dashboard/settings" method="POST" class="track-changes">
-                        <input type="hidden" name="action" value="update_music_config">
-                        <input type="hidden" name="guild_id" value="<%= guild.id %>">
-
-                        <div class="form-group-modern">
-                            <label style="color: white;">預設播放音量 (Default Volume)</label>
-                            <input type="range" name="music_volume" class="detect-change" min="1" max="100"
-                                value="<%= settings.music_volume || 50 %>" style="width: 100%; margin-top: 1rem;"
-                                oninput="this.nextElementSibling.innerText = this.value + '%'">
-                            <span style="color: var(--text-muted);">
-                                <%= settings.music_volume || 50 %>%
-                            </span>
+                                        <div class="form-group" style="margin-bottom: 1rem;">
+                                            <label
+                                                style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.7;">歡迎頻道
+                                                (Target Channel)</label>
+                                            <select name="welcome_channel_id" class="modern-input"
+                                                style="padding: 0.75rem 1rem; font-size: 0.9rem;">
+                                                <% channels.forEach(c=> { %>
+                                                    <option value="<%= c.id %>" <%=settings.welcome_channel_id===c.id
+                                                        ? 'selected' : '' %>># <%= c.name %>
+                                                    </option>
+                                                    <% }) %>
+                                            </select>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom: 1rem;">
+                                            <label
+                                                style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.7;">歡迎訊息
+                                                (Custom Message)</label>
+                                            <textarea name="welcome_message" rows="2" class="modern-input"
+                                                style="padding: 0.75rem 1rem; font-size: 0.9rem; resize: none;"><%= settings.welcome_message %></textarea>
+                                        </div>
+                                        <button type="submit" class="config-btn-small"
+                                            style="width: 100%; justify-content: center; height: 44px; border-radius: 12px;">
+                                            <i class="fa-solid fa-save"></i> 儲存設定
+                                        </button>
+                                    </form>
+                                </div>
+                                <% } %>
+                                    <div class="card-watermark"><i class="fa-solid fa-door-open"></i></div>
                         </div>
 
-                        <div style="margin-top: 2rem;">
-                            <a href="/dashboard/music/<%= guild.id %>" class="btn-setting"
-                                style="display: inline-flex; text-decoration: none; background: var(--warning-color); color: black;">
-                                <i class="fa-solid fa-play"></i> 開啟網頁控制器 (Web Player)
-                            </a>
+                        <!-- 3. Economy Plugin Redesigned -->
+                        <div class="premium-card plugin-card" data-module="economy">
+                            <div class="card-header">
+                                <div
+                                    style="width: 44px; height: 44px; background: rgba(251, 191, 36, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fa-solid fa-coins" style="color: #fbbf24; font-size: 1.25rem;"></i>
+                                </div>
+                                <h3 style="font-size: 1.25rem;">經濟與貨幣系統</h3>
+                            </div>
+                            <p
+                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
+                                管理伺服器的虛擬經濟，包含錢包、簽到、轉帳與排行榜功能。</p>
+
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                <div
+                                    class="status-badge <%= settings.economy_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                    <i
+                                        class="fa-solid <%= settings.economy_enabled ? 'fa-wallet' : 'fa-circle-dot' %>"></i>
+                                    <%= settings.economy_enabled ? '已連線' : '離線中' %>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="economy_enabled" <%=settings.economy_enabled
+                                        ? 'checked' : '' %>
+                                    onchange="togglePlugin('economy_toggle', this.checked)">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <button type="button" class="config-btn-small" onclick="openConfig('economy')"
+                                style="width: 100%; justify-content: center; height: 44px; border-radius: 12px;">
+                                <i class="fa-solid fa-sliders"></i> 進階參數配置
+                            </button>
+                            <div class="card-watermark"><i class="fa-solid fa-coins"></i></div>
                         </div>
-                    </form>
-                </div>
 
-                <!-- Leveling Config -->
-                <div id="config-leveling" class="config-section glass-panel"
-                    style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
-                    <div class="section-header-modern">
-                        <h3><i class="fa-solid fa-chart-line" style="color: #F472B6;"></i> 等級系統設定</h3>
-                        <button class="btn-back" onclick="closeConfig()">
-                            <i class="fa-solid fa-arrow-left"></i> 返回
-                        </button>
-                    </div>
-                    <form action="/dashboard/settings" method="POST" class="track-changes">
-                        <input type="hidden" name="action" value="update_leveling_config">
-                        <input type="hidden" name="guild_id" value="<%= guild.id %>">
+                        <!-- 4. AI Chat Plugin Redesigned -->
+                        <div class="premium-card plugin-card" data-module="ai">
+                            <div class="card-header">
+                                <div
+                                    style="width: 44px; height: 44px; background: rgba(167, 139, 250, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fa-solid fa-wand-magic-sparkles"
+                                        style="color: #a78bfa; font-size: 1.25rem;"></i>
+                                </div>
+                                <h3 style="font-size: 1.25rem;">AI 智慧對應系統</h3>
+                            </div>
+                            <p
+                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
+                                讓機器人具備智慧對答能力，支援脈絡理解與多語言互動。</p>
 
-                        <div class="form-group-modern">
-                            <label style="color: white;">經驗獲取倍率 (XP Rate)</label>
-                            <select name="leveling_rate" class="modern-input detect-change">
-                                <option value="0.5" <%=settings.leveling_rate===0.5 ? 'selected' : '' %>>慢
-                                    (0.5x)</option>
-                                <option value="1.0" <%=(!settings.leveling_rate || settings.leveling_rate===1.0)
-                                    ? 'selected' : '' %>>標準 (1.0x)</option>
-                                <option value="1.5" <%=settings.leveling_rate===1.5 ? 'selected' : '' %>>快
-                                    (1.5x)</option>
-                                <option value="2.0" <%=settings.leveling_rate===2.0 ? 'selected' : '' %>>極速
-                                    (2.0x)</option>
-                            </select>
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                <div
+                                    class="status-badge <%= settings.ai_chat_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                    <i
+                                        class="fa-solid <%= settings.ai_chat_enabled ? 'fa-brain' : 'fa-circle-dot' %>"></i>
+                                    <%= settings.ai_chat_enabled ? '神經網路啟動' : '休眠中' %>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="ai_chat_enabled" <%=settings.ai_chat_enabled
+                                        ? 'checked' : '' %>
+                                    onchange="togglePlugin('ai_chat_toggle', this.checked)">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <button type="button" class="config-btn-small" onclick="openConfig('ai')"
+                                style="width: 100%; justify-content: center; height: 44px; border-radius: 12px;">
+                                <i class="fa-solid fa-brain"></i> 訓練與頻道配置
+                            </button>
+                            <div class="card-watermark"><i class="fa-solid fa-robot"></i></div>
                         </div>
 
-                        <div style="margin-top: 2rem;">
-                            <a href="/dashboard/leaderboard/<%= guild.id %>" class="btn-setting"
-                                style="display: inline-flex; text-decoration: none;">
-                                <i class="fa-solid fa-medal"></i> 查看等級排行榜
-                            </a>
+                        <!-- 5. AutoMod Plugin Redesigned -->
+                        <div class="premium-card plugin-card" data-module="automod">
+                            <div class="card-header">
+                                <div
+                                    style="width: 44px; height: 44px; background: rgba(52, 211, 153, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fa-solid fa-shield-halved"
+                                        style="color: #34d399; font-size: 1.25rem;"></i>
+                                </div>
+                                <h3 style="font-size: 1.25rem;">全自動核准審議</h3>
+                            </div>
+                            <p
+                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
+                                即時過濾非法連結、暴力詞彙與重複洗版。維護伺服器純淨環境。</p>
+
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                <div
+                                    class="status-badge <%= settings.automod_links ? 'status-enabled' : 'status-disabled' %>">
+                                    <i
+                                        class="fa-solid <%= settings.automod_links ? 'fa-user-shield' : 'fa-circle-dot' %>"></i>
+                                    <%= settings.automod_links ? '防護層啟動' : '防護層關閉' %>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="automod_links" <%=settings.automod_links ? 'checked'
+                                        : '' %>
+                                    onchange="togglePlugin('automod_toggle', this.checked)">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <button type="button" class="config-btn-small" onclick="openConfig('automod')"
+                                style="width: 100%; justify-content: center; height: 44px; border-radius: 12px;">
+                                <i class="fa-solid fa-filter"></i> 管理規則與黑名單
+                            </button>
+                            <div class="card-watermark"><i class="fa-solid fa-shield-halved"></i></div>
                         </div>
-                    </form>
-                </div>
 
-                <!-- AI Chat Config -->
-                <div id="config-ai" class="config-section glass-panel"
-                    style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
-                    <div class="section-header-modern">
-                        <h3><i class="fa-solid fa-wand-magic-sparkles" style="color: #A78BFA;"></i> AI 聊天設定</h3>
-                        <button class="btn-back" onclick="closeConfig()">
-                            <i class="fa-solid fa-arrow-left"></i> 返回
-                        </button>
-                    </div>
-                    <form action="/dashboard/settings" method="POST" class="track-changes">
-                        <input type="hidden" name="action" value="update_ai_config">
-                        <input type="hidden" name="guild_id" value="<%= guild.id %>">
+                        <!-- 6. Music Plugin Redesigned -->
+                        <div class="premium-card plugin-card" data-module="music">
+                            <div class="card-header">
+                                <div
+                                    style="width: 44px; height: 44px; background: rgba(251, 146, 60, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fa-solid fa-music" style="color: #fb923c; font-size: 1.25rem;"></i>
+                                </div>
+                                <h3 style="font-size: 1.25rem;">高效能串流音樂</h3>
+                            </div>
+                            <p
+                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
+                                高音質語音串流，支援 YouTube、Spotify 等來源。內建網頁控制器。</p>
 
-                        <div class="form-group-modern">
-                            <label style="color: white;">指定 AI 頻道 (AI Only Channel)</label>
-                            <select name="ai_channel_id" class="modern-input detect-change">
-                                <option value="">所有頻道 (All Channels)</option>
-                                <% channels.forEach(c=> { %>
-                                    <option value="<%= c.id %>" <%=settings.ai_channel_id===c.id ? 'selected' : '' %>>#
-                                        <%= c.name %>
-                                    </option>
-                                    <% }) %>
-                            </select>
-                            <small style="color: rgba(255,255,255,0.7); display: block; margin-top: 0.5rem;">
-                                若選擇特定頻道，則 AI 只會在該頻道回應（仍需 @機器人）。
-                            </small>
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                <div
+                                    class="status-badge <%= settings.music_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                    <i
+                                        class="fa-solid <%= settings.music_enabled ? 'fa-headphones' : 'fa-circle-dot' %>"></i>
+                                    <%= settings.music_enabled ? '串流引擎就緒' : '串流引擎關閉' %>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="music_enabled" <%=settings.music_enabled ? 'checked'
+                                        : '' %>
+                                    onchange="togglePlugin('music_toggle', this.checked)">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <button type="button" class="config-btn-small" onclick="openConfig('music')"
+                                style="width: 100%; justify-content: center; height: 44px; border-radius: 12px;">
+                                <i class="fa-solid fa-compact-disc"></i> 控制器與音質
+                            </button>
+                            <div class="card-watermark"><i class="fa-solid fa-music"></i></div>
                         </div>
-                    </form>
-                </div>
 
-                <!-- AutoMod Config -->
-                <!-- AutoMod Config -->
-                <div id="config-automod" class="config-section glass-panel"
-                    style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
-                    <div class="section-header-modern">
-                        <h3><i class="fa-solid fa-shield-halved" style="color: #34D399;"></i> 自動審核設定</h3>
-                        <button class="btn-back" onclick="closeConfig()">
-                            <i class="fa-solid fa-arrow-left"></i> 返回
-                        </button>
-                    </div>
-                    <form action="/dashboard/settings" method="POST" class="track-changes">
-                        <input type="hidden" name="action" value="update_automod">
-                        <input type="hidden" name="guild_id" value="<%= guild.id %>">
+                        <!-- 7. Leveling Plugin Redesigned -->
+                        <div class="premium-card plugin-card" data-module="leveling">
+                            <div class="card-header">
+                                <div
+                                    style="width: 44px; height: 44px; background: rgba(244, 114, 182, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fa-solid fa-chart-line" style="color: #f472b6; font-size: 1.25rem;"></i>
+                                </div>
+                                <h3 style="font-size: 1.25rem;">社交等級與經驗</h3>
+                            </div>
+                            <p
+                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
+                                基於互動頻率的升級系統，追蹤活躍度並提供等級排行榜。</p>
 
-                        <div class="form-group-modern">
-                            <label style="color: white;">禁止詞彙 (Bad Words)</label>
-                            <input type="text" name="automod_badwords" class="modern-input detect-change"
-                                value="<%= settings.automod_badwords %>" placeholder="垃圾, 廣告 (用逗號分隔)">
-                            <small
-                                style="color: rgba(255,255,255,0.7); display: block; margin-top: 0.5rem;">包含這些詞彙的訊息將被自動刪除。</small>
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                <div
+                                    class="status-badge <%= settings.leveling_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                    <i
+                                        class="fa-solid <%= settings.leveling_enabled ? 'fa-medal' : 'fa-circle-dot' %>"></i>
+                                    <%= settings.leveling_enabled ? '數據追蹤中' : '數據暫停' %>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="leveling_enabled" <%=settings.leveling_enabled
+                                        ? 'checked' : '' %>
+                                    onchange="togglePlugin('leveling_toggle', this.checked)">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <button type="button" class="config-btn-small" onclick="openConfig('leveling')"
+                                style="width: 100%; justify-content: center; height: 44px; border-radius: 12px;">
+                                <i class="fa-solid fa-chart-area"></i> 排行榜與權限設定
+                            </button>
+                            <div class="card-watermark"><i class="fa-solid fa-chart-line"></i></div>
                         </div>
-                    </form>
-                </div>
 
-                <!-- Custom Commands Config -->
-                <!-- Custom Commands Config -->
-                <div id="config-commands" class="config-section glass-panel"
-                    style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);">
-                    <div class="section-header-modern">
-                        <h3><i class="fa-solid fa-terminal" style="color: #2DD4BF;"></i> 自訂指令管理</h3>
-                        <button class="btn-back" onclick="closeConfig()">
-                            <i class="fa-solid fa-arrow-left"></i> 返回
-                        </button>
-                    </div>
+                        <!-- 8. Custom Commands Plugin Redesigned -->
+                        <div class="premium-card plugin-card" data-module="commands">
+                            <div class="card-header">
+                                <div
+                                    style="width: 44px; height: 44px; background: rgba(45, 212, 191, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fa-solid fa-terminal" style="color: #2dd4bf; font-size: 1.25rem;"></i>
+                                </div>
+                                <h3 style="font-size: 1.25rem;">自訂快捷指令</h3>
+                            </div>
+                            <p
+                                style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.6;">
+                                建立伺服器專屬指令，支援自動回應、常用訊息與腳本執行。</p>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-                        <!-- Add Command Form -->
-                        <div>
-                            <h4 style="margin-bottom: 1rem; color: var(--text-primary);">新增指令</h4>
-                            <form action="/dashboard/settings" method="POST"
-                                style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                                <div
+                                    class="status-badge <%= settings.custom_commands_enabled ? 'status-enabled' : 'status-disabled' %>">
+                                    <i
+                                        class="fa-solid <%= settings.custom_commands_enabled ? 'fa-code' : 'fa-circle-dot' %>"></i>
+                                    <%= settings.custom_commands_enabled ? '指令解析引擎開啟' : '引擎封閉' %>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="custom_commands_enabled"
+                                        <%=settings.custom_commands_enabled ? 'checked' : '' %>
+                                    onchange="togglePlugin('custom_commands_toggle', this.checked)">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <button type="button" class="config-btn-small" onclick="openConfig('commands')"
+                                style="width: 100%; justify-content: center; height: 44px; border-radius: 12px;">
+                                <i class="fa-solid fa-list-check"></i> 指令資料庫管理
+                            </button>
+                            <div class="card-watermark"><i class="fa-solid fa-code"></i></div>
+                        </div>
+
+                    </div> <!-- End Grid -->
+
+                    <!-- 2. Detailed Configuration Sections (Hidden by default) -->
+                    <div id="modules-config">
+
+
+                        <!-- Economy Config Redesigned -->
+                        <div id="config-economy" class="config-section premium-card"
+                            style="max-width: 800px; margin: 0 auto;">
+                            <div class="card-header" style="justify-content: space-between; margin-bottom: 2.5rem;">
+                                <div style="display: flex; align-items: center; gap: 1.25rem;">
+                                    <div
+                                        style="width: 44px; height: 44px; background: rgba(251, 191, 36, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-coins" style="color: #fbbf24; font-size: 1.25rem;"></i>
+                                    </div>
+                                    <h3 style="font-size: 1.5rem;">經濟系統進階設定</h3>
+                                </div>
+                                <button class="btn-reset" onclick="closeConfig()"
+                                    style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                    <i class="fa-solid fa-reply"></i> 返回列表
+                                </button>
+                            </div>
+
+                            <form action="/dashboard/settings" method="POST" class="track-changes">
+                                <input type="hidden" name="action" value="update_economy_config">
                                 <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                                <input type="hidden" name="action" value="add_command">
 
-                                <div class="form-group-modern">
-                                    <label>觸發詞 (Trigger)</label>
-                                    <div style="position: relative;">
-                                        <span
-                                            style="position: absolute; left: 12px; top: 12px; color: var(--text-muted);">!</span>
-                                        <input type="text" name="trigger" class="modern-input" placeholder="hello"
-                                            style="padding-left: 2rem;" required>
+                                <div
+                                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem;">
+                                    <div class="form-group">
+                                        <label>每日簽到獎勵 (Daily Bonus)</label>
+                                        <div style="position: relative;">
+                                            <input type="number" name="economy_daily" class="modern-input"
+                                                value="<%= settings.economy_daily || 100 %>" min="0"
+                                                style="padding-left: 3rem;">
+                                            <i class="fa-solid fa-sack-dollar"
+                                                style="position: absolute; left: 1rem; top: 1.1rem; color: var(--text-muted); opacity: 0.5;"></i>
+                                        </div>
+                                        <small style="color: var(--text-muted);">發送 /daily 指令時可獲得的金額。</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>初始開戶金額 (Starting Balance)</label>
+                                        <div style="position: relative;">
+                                            <input type="number" name="economy_start_balance" class="modern-input"
+                                                value="<%= settings.economy_start_balance || 0 %>" min="0"
+                                                style="padding-left: 3rem;">
+                                            <i class="fa-solid fa-vault"
+                                                style="position: absolute; left: 1rem; top: 1.1rem; color: var(--text-muted); opacity: 0.5;"></i>
+                                        </div>
+                                        <small style="color: var(--text-muted);">新成員加入經濟系統時的初始平衡。</small>
                                     </div>
                                 </div>
-                                <div class="form-group-modern">
-                                    <label>回應內容 (Response)</label>
-                                    <textarea name="response" class="modern-input" rows="4" required></textarea>
+
+                                <div
+                                    style="display: flex; gap: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2.5rem;">
+                                    <a href="/dashboard/leaderboard/<%= guild.id %>/economy" class="config-btn-small"
+                                        style="text-decoration: none; background: rgba(255,255,255,0.05);">
+                                        <i class="fa-solid fa-crown" style="color: #fbbf24;"></i> 排行榜總覽
+                                    </a>
+                                    <button type="submit" class="save-btn"
+                                        style="flex: 1; justify-content: center; height: 50px;">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i> 更新經濟參數量
+                                    </button>
                                 </div>
-                                <button type="submit" class="btn-setting" style="width: 100%; justify-content: center;">
-                                    <i class="fa-solid fa-plus"></i> 新增指令
-                                </button>
                             </form>
                         </div>
 
-                        <!-- Existing Commands List -->
-                        <div>
-                            <h4 style="margin-bottom: 1rem; color: white;">現有指令 (<%= customCommands.length %>)
-                            </h4>
-                            <div style="max-height: 500px; overflow-y: auto; padding-right: 0.5rem;">
-                                <% customCommands.forEach(cmd=> { %>
+                        <!-- Music Config Redesigned -->
+                        <div id="config-music" class="config-section premium-card"
+                            style="max-width: 800px; margin: 0 auto;">
+                            <div class="card-header" style="justify-content: space-between; margin-bottom: 2.5rem;">
+                                <div style="display: flex; align-items: center; gap: 1.25rem;">
                                     <div
-                                        style="display: flex; justify-content: space-between; align-items: flex-start; background: rgba(0,0,0,0.3); padding: 1.2rem; border-radius: 12px; margin-bottom: 0.8rem; border: 1px solid rgba(255,255,255,0.1);">
-                                        <div style="width: 100%; overflow: hidden;">
-                                            <div
-                                                style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                                <strong
-                                                    style="color: #FBBF24; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; letter-spacing: 0.5px;">
-                                                    !<%= cmd.trigger %>
-                                                </strong>
-                                            </div>
-                                            <p
-                                                style="margin: 0; color: rgba(255,255,255,0.9); font-size: 0.95rem; white-space: pre-wrap; word-break: break-word; line-height: 1.5;">
-                                                <%= cmd.response %>
-                                            </p>
-                                        </div>
-                                        <form action="/dashboard/settings" method="POST"
-                                            style="margin: 0; margin-left: 1rem;">
-                                            <input type="hidden" name="guild_id" value="<%= guild.id %>">
-                                            <input type="hidden" name="action" value="delete_command">
-                                            <input type="hidden" name="command_id" value="<%= cmd.id %>">
-                                            <button type="submit" class="btn-remove" title="刪除"><i
-                                                    class="fa-solid fa-trash"></i></button>
-                                        </form>
+                                        style="width: 44px; height: 44px; background: rgba(251, 146, 60, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-music" style="color: #fb923c; font-size: 1.25rem;"></i>
                                     </div>
-                                    <% }) %>
-                                        <% if (customCommands.length===0) { %>
-                                            <div
-                                                style="text-align: center; padding: 3rem; color: rgba(255,255,255,0.4); border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px;">
-                                                <i class="fa-solid fa-terminal"
-                                                    style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                                                <p>尚無自訂指令</p>
+                                    <h3 style="font-size: 1.5rem;">音樂播放引擎設定</h3>
+                                </div>
+                                <button class="btn-reset" onclick="closeConfig()"
+                                    style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                    <i class="fa-solid fa-reply"></i> 返回列表
+                                </button>
+                            </div>
+
+                            <form action="/dashboard/settings" method="POST" class="track-changes">
+                                <input type="hidden" name="action" value="update_music_config">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
+
+                                <div class="form-group" style="margin-bottom: 3rem;">
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                        <label style="margin-bottom: 0;">預設音量 (Default Volume Level)</label>
+                                        <span
+                                            style="font-family: 'Outfit'; font-weight: 800; font-size: 1.5rem; color: var(--accent-secondary); text-shadow: 0 0 10px rgba(6, 182, 212, 0.3);">
+                                            <%= settings.music_volume || 50 %>%
+                                        </span>
+                                    </div>
+                                    <input type="range" name="music_volume" class="modern-input" min="1" max="100"
+                                        value="<%= settings.music_volume || 50 %>"
+                                        style="width: 100%; height: 6px; appearance: none; background: rgba(255,255,255,0.1); border-radius: 3px; outline: none;"
+                                        oninput="this.parentElement.querySelector('span').innerText = this.value + '%'">
+                                    <div
+                                        style="display: flex; justify-content: space-between; margin-top: 1rem; color: var(--text-muted); font-size: 0.75rem;">
+                                        <span>最小 (1%)</span>
+                                        <span>環境音量</span>
+                                        <span>震撼音效 (100%)</span>
+                                    </div>
+                                </div>
+
+                                <div
+                                    style="display: flex; gap: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2.5rem;">
+                                    <a href="/dashboard/music/<%= guild.id %>" class="save-btn"
+                                        style="text-decoration: none; background: var(--warning-color); color: black; flex: 1; justify-content: center; height: 50px;">
+                                        <i class="fa-solid fa-circle-play"></i> 開啟網頁控制器
+                                    </a>
+                                    <button type="submit" class="config-btn-small" style="padding: 0 2rem;">
+                                        <i class="fa-solid fa-save"></i> 儲存變更
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Leveling Config Redesigned -->
+                        <div id="config-leveling" class="config-section premium-card"
+                            style="max-width: 800px; margin: 0 auto;">
+                            <div class="card-header" style="justify-content: space-between; margin-bottom: 2.5rem;">
+                                <div style="display: flex; align-items: center; gap: 1.25rem;">
+                                    <div
+                                        style="width: 44px; height: 44px; background: rgba(244, 114, 182, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-chart-line"
+                                            style="color: #f472b6; font-size: 1.25rem;"></i>
+                                    </div>
+                                    <h3 style="font-size: 1.5rem;">等級系統進階配置</h3>
+                                </div>
+                                <button class="btn-reset" onclick="closeConfig()"
+                                    style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                    <i class="fa-solid fa-reply"></i> 返回列表
+                                </button>
+                            </div>
+
+                            <form action="/dashboard/settings" method="POST" class="track-changes">
+                                <input type="hidden" name="action" value="update_leveling_config">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
+
+                                <div class="form-group" style="margin-bottom: 2.5rem;">
+                                    <label>經驗值獲取速度 (Global Experience Rate)</label>
+                                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                                        <% [0.5, 1.0, 1.5, 2.0].forEach(rate=> { %>
+                                            <label style="cursor: pointer;">
+                                                <input type="radio" name="leveling_rate" value="<%= rate %>"
+                                                    <%=(settings.leveling_rate || 1.0)==rate ? 'checked' : '' %>
+                                                style="display: none;">
+                                                <div style="padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02); text-align: center; transition: all 0.2s;"
+                                                    class="rate-option">
+                                                    <div
+                                                        style="font-family: 'Outfit'; font-weight: 800; font-size: 1.25rem; color: <%= rate >= 1.5 ? 'var(--warning-color)' : 'var(--text-primary)' %>">
+                                                        <%= rate %>x
+                                                    </div>
+                                                    <div style="font-size: 0.75rem; color: var(--text-muted);">
+                                                        <%= rate==0.5 ? '緩慢' : (rate==1.0 ? '標準' : (rate==1.5 ? '加速'
+                                                            : '雙倍' )) %>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <% }) %>
+                                    </div>
+                                </div>
+
+                                <div
+                                    style="display: flex; gap: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2.5rem;">
+                                    <a href="/dashboard/leaderboard/<%= guild.id %>" class="config-btn-small"
+                                        style="text-decoration: none; background: rgba(255,255,255,0.05);">
+                                        <i class="fa-solid fa-medal" style="color: #f472b6;"></i> 查看完整榮譽榜
+                                    </a>
+                                    <button type="submit" class="save-btn"
+                                        style="flex: 1; justify-content: center; height: 50px;">
+                                        <i class="fa-solid fa-floppy-disk"></i> 套用權限與速率
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- AI Chat Config Redesigned -->
+                        <div id="config-ai" class="config-section premium-card"
+                            style="max-width: 800px; margin: 0 auto;">
+                            <div class="card-header" style="justify-content: space-between; margin-bottom: 2.5rem;">
+                                <div style="display: flex; align-items: center; gap: 1.25rem;">
+                                    <div
+                                        style="width: 44px; height: 44px; background: rgba(167, 139, 250, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-brain" style="color: #a78bfa; font-size: 1.25rem;"></i>
+                                    </div>
+                                    <h3 style="font-size: 1.5rem;">AI 神經網絡模型設定</h3>
+                                </div>
+                                <button class="btn-reset" onclick="closeConfig()"
+                                    style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                    <i class="fa-solid fa-reply"></i> 返回列表
+                                </button>
+                            </div>
+
+                            <form action="/dashboard/settings" method="POST" class="track-changes">
+                                <input type="hidden" name="action" value="update_ai_config">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
+
+                                <div class="form-group" style="margin-bottom: 2.5rem;">
+                                    <label>專屬 AI 交流頻道 (Dedicated AI Channel)</label>
+                                    <div style="position: relative;">
+                                        <select name="ai_channel_id" class="modern-input" style="padding-left: 3rem;">
+                                            <option value="">所有頻道 (具備對話權限)</option>
+                                            <% channels.forEach(c=> { %>
+                                                <option value="<%= c.id %>" <%=settings.ai_channel_id===c.id
+                                                    ? 'selected' : '' %>># <%= c.name %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                        <i class="fa-solid fa-hashtag"
+                                            style="position: absolute; left: 1rem; top: 1.1rem; color: var(--text-muted); opacity: 0.5;"></i>
+                                    </div>
+                                    <div
+                                        style="background: rgba(99, 102, 241, 0.05); border: 1px solid rgba(99, 102, 241, 0.1); border-radius: 12px; padding: 1rem; margin-top: 1.5rem;">
+                                        <div
+                                            style="display: flex; gap: 0.75rem; color: #a78bfa; font-size: 0.85rem; align-items: flex-start;">
+                                            <i class="fa-solid fa-circle-info" style="margin-top: 3px;"></i>
+                                            <p style="margin: 0; line-height: 1.5;">若指定特定頻道，AI
+                                                模組將僅在該頻道內解析訊息。這有助於集中對話流量並減少其他頻道的干擾。</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    style="display: flex; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2.5rem;">
+                                    <button type="submit" class="save-btn"
+                                        style="min-width: 200px; justify-content: center; height: 50px;">
+                                        <i class="fa-solid fa-sync"></i> 更新神經網絡設定
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- AutoMod Config -->
+                        <!-- AutoMod Config Redesigned -->
+                        <div id="config-automod" class="config-section premium-card"
+                            style="max-width: 800px; margin: 0 auto;">
+                            <div class="card-header" style="justify-content: space-between; margin-bottom: 2.5rem;">
+                                <div style="display: flex; align-items: center; gap: 1.25rem;">
+                                    <div
+                                        style="width: 44px; height: 44px; background: rgba(52, 211, 153, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-shield-halved"
+                                            style="color: #34d399; font-size: 1.25rem;"></i>
+                                    </div>
+                                    <h3 style="font-size: 1.5rem;">自動審核與過濾設定</h3>
+                                </div>
+                                <button class="btn-reset" onclick="closeConfig()"
+                                    style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                    <i class="fa-solid fa-reply"></i> 返回列表
+                                </button>
+                            </div>
+
+                            <form action="/dashboard/settings" method="POST" class="track-changes">
+                                <input type="hidden" name="action" value="update_automod">
+                                <input type="hidden" name="guild_id" value="<%= guild.id %>">
+
+                                <div class="form-group" style="margin-bottom: 2.5rem;">
+                                    <label>敏感詞彙黑名單 (Bad Words Filter)</label>
+                                    <div style="position: relative;">
+                                        <input type="text" name="automod_badwords" class="modern-input"
+                                            value="<%= settings.automod_badwords %>" placeholder="垃圾, 廣告, 詐騙 (請以逗號分隔)"
+                                            style="padding-left: 3rem;">
+                                        <i class="fa-solid fa-comment-slash"
+                                            style="position: absolute; left: 1rem; top: 1.1rem; color: var(--text-muted); opacity: 0.5;"></i>
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
+                                        <span class="status-badge"
+                                            style="background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: none; font-size: 0.7rem;">自動刪除</span>
+                                        <span class="status-badge"
+                                            style="background: rgba(251, 191, 36, 0.1); color: #fbbf24; border: none; font-size: 0.7rem;">全域監控</span>
+                                        <span class="status-badge"
+                                            style="background: rgba(99, 102, 241, 0.1); color: #6366f1; border: none; font-size: 0.7rem;">日誌記錄</span>
+                                    </div>
+                                    <small
+                                        style="color: var(--text-muted); display: block; margin-top: 1rem; line-height: 1.5;">
+                                        系統將自動比對訊息內容，若包含以上詞彙則會立即刪除並對用戶發出警告。
+                                    </small>
+                                </div>
+
+                                <div
+                                    style="display: flex; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2.5rem;">
+                                    <button type="submit" class="save-btn"
+                                        style="min-width: 200px; justify-content: center; height: 50px;">
+                                        <i class="fa-solid fa-shield-check"></i> 更新防護規則
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Custom Commands Config Redesigned -->
+                        <div id="config-commands" class="config-section premium-card"
+                            style="max-width: 1000px; margin: 0 auto;">
+                            <div class="card-header" style="justify-content: space-between; margin-bottom: 2.5rem;">
+                                <div style="display: flex; align-items: center; gap: 1.25rem;">
+                                    <div
+                                        style="width: 44px; height: 44px; background: rgba(45, 212, 191, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-code" style="color: #2dd4bf; font-size: 1.25rem;"></i>
+                                    </div>
+                                    <h3 style="font-size: 1.5rem;">自訂指令資料庫管理</h3>
+                                </div>
+                                <button class="btn-reset" onclick="closeConfig()"
+                                    style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                    <i class="fa-solid fa-reply"></i> 返回列表
+                                </button>
+                            </div>
+
+                            <div
+                                style="display: grid; grid-template-columns: 380px 1fr; gap: 2.5rem; align-items: start;">
+                                <!-- Left: Command Creator -->
+                                <div class="premium-card"
+                                    style="padding: 1.5rem; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">
+                                    <h4
+                                        style="margin-bottom: 1.5rem; font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">
+                                        指令產生器 (Creator)</h4>
+                                    <form action="/dashboard/settings" method="POST">
+                                        <input type="hidden" name="guild_id" value="<%= guild.id %>">
+                                        <input type="hidden" name="action" value="add_command">
+
+                                        <div class="form-group">
+                                            <label style="font-size: 0.75rem;">觸發字句 (Trigger Phrase)</label>
+                                            <div style="position: relative;">
+                                                <span
+                                                    style="position: absolute; left: 1rem; top: 1.1rem; color: var(--accent-secondary); font-weight: 800;">!</span>
+                                                <input type="text" name="trigger" class="modern-input"
+                                                    placeholder="例如: hello" style="padding-left: 2rem;" required>
                                             </div>
-                                            <% } %>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom: 2rem;">
+                                            <label style="font-size: 0.75rem;">自動回應內容 (Auto Response)</label>
+                                            <textarea name="response" class="modern-input" rows="5"
+                                                placeholder="輸入機器人應回應的訊息..." style="padding: 1rem; resize: none;"
+                                                required></textarea>
+                                        </div>
+                                        <button type="submit" class="save-btn"
+                                            style="width: 100%; justify-content: center; height: 48px;">
+                                            <i class="fa-solid fa-plus-circle"></i> 建立新指令
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Right: Commands List -->
+                                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <h4
+                                            style="font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">
+                                            現有指令集 (<%= customCommands.length %>)</h4>
+                                        <span class="status-badge"
+                                            style="font-size: 0.7rem; background: rgba(255,255,255,0.05); color: var(--text-muted);">雙擊內容可展開</span>
+                                    </div>
+
+                                    <div style="max-height: 500px; overflow-y: auto; padding-right: 0.5rem;"
+                                        class="premium-scrollbar">
+                                        <% customCommands.forEach(cmd=> { %>
+                                            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 1.25rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: flex-start; transition: all 0.3s;"
+                                                class="command-item-hover">
+                                                <div style="flex: 1;">
+                                                    <div
+                                                        style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                                        <div
+                                                            style="padding: 4px 10px; background: rgba(45, 212, 191, 0.1); border-radius: 6px; color: #2dd4bf; font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 0.95rem;">
+                                                            !<%= cmd.trigger %>
+                                                        </div>
+                                                    </div>
+                                                    <p
+                                                        style="margin: 0; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5; white-space: pre-wrap;">
+                                                        <%= cmd.response %>
+                                                    </p>
+                                                </div>
+                                                <form action="/dashboard/settings" method="POST"
+                                                    style="margin-left: 1rem;">
+                                                    <input type="hidden" name="guild_id" value="<%= guild.id %>">
+                                                    <input type="hidden" name="action" value="delete_command">
+                                                    <input type="hidden" name="command_id" value="<%= cmd.id %>">
+                                                    <button type="submit" class="btn-remove" title="永久移除"
+                                                        style="width: 38px; height: 38px;">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                            <% }) %>
+
+                                                <% if (customCommands.length===0) { %>
+                                                    <div
+                                                        style="text-align: center; padding: 4rem; color: var(--text-muted); border: 2px dashed rgba(255,255,255,0.05); border-radius: 20px;">
+                                                        <i class="fa-solid fa-terminal"
+                                                            style="font-size: 2.5rem; margin-bottom: 1.5rem; opacity: 0.2;"></i>
+                                                        <p style="font-size: 0.9rem;">目前尚未建立任何自訂指令</p>
+                                                    </div>
+                                                    <% } %>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
-                </div>
 
-            </div>
+        </div>
+        </div>
 
-            </div>
-            </div>
-
-            <script>
-                // --- Global Utilities ---
-                function showToast(message, type = 'success') {
-                    let container = document.querySelector('.toast-container');
-                    if (!container) {
-                        container = document.createElement('div');
-                        container.className = 'toast-container';
-                        document.body.appendChild(container);
-                    }
-                    const toast = document.createElement('div');
-                    toast.className = `toast ${type}`;
-                    toast.innerHTML = type === 'success'
-                        ? `<i class="fa-solid fa-check-circle" style="color: #22C55E;"></i> <span>${message}</span>`
-                        : `<i class="fa-solid fa-exclamation-circle" style="color: #EF4444;"></i> <span>${message}</span>`;
-                    container.appendChild(toast);
-                    setTimeout(() => {
-                        toast.style.animation = 'fadeOut 0.3s ease-out forwards';
-                        setTimeout(() => toast.remove(), 300);
-                    }, 3000);
+        <script>
+            // --- Global Utilities ---
+            function showToast(message, type = 'success') {
+                let container = document.querySelector('.toast-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.className = 'toast-container';
+                    document.body.appendChild(container);
                 }
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = type === 'success'
+                    ? `<i class="fa-solid fa-check-circle" style="color: #22C55E;"></i> <span>${message}</span>`
+                    : `<i class="fa-solid fa-exclamation-circle" style="color: #EF4444;"></i> <span>${message}</span>`;
+                container.appendChild(toast);
+                setTimeout(() => {
+                    toast.style.animation = 'fadeOut 0.3s ease-out forwards';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
 
-                function togglePlugin(action, enabled) {
-                    console.log('Toggling Plugin:', action, enabled);
-                    const guild_id = "<%= guild.id %>";
+            function togglePlugin(action, enabled) {
+                console.log('Toggling Plugin:', action, enabled);
+                const guild_id = "<%= guild.id %>";
 
-                    fetch('/dashboard/settings', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            action: action,
-                            guild_id: guild_id,
-                            enabled: enabled ? 1 : 0,
-                            ajax: true
-                        })
-                    }).then(res => res.json()).then(data => {
-                        if (data.success) {
-                            showToast('外掛狀態已更新', 'success');
-                            setTimeout(() => location.reload(), 500); // Reload to show/hide config area
-                        } else {
-                            showToast('更新失敗: ' + data.message, 'error');
-                        }
-                    }).catch(err => {
-                        console.error('Toggle Error:', err);
-                        showToast('網路錯誤', 'error');
-                    });
-                }
-
-                function openConfig(moduleId) {
-                    console.log('Opening Config for:', moduleId);
-                    const grid = document.getElementById('modules-grid');
-                    if (grid) grid.style.display = 'none';
-
-                    document.querySelectorAll('.config-section').forEach(el => el.classList.remove('active'));
-                    const target = document.getElementById('config-' + moduleId);
-                    if (target) {
-                        target.classList.add('active');
-                        const mainContent = document.querySelector('.main-content');
-                        if (mainContent) mainContent.scrollTop = 0;
-                        console.log('Config section activated:', moduleId);
+                fetch('/dashboard/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: action,
+                        guild_id: guild_id,
+                        enabled: enabled ? 1 : 0,
+                        ajax: true
+                    })
+                }).then(res => res.json()).then(data => {
+                    if (data.success) {
+                        showToast('外掛狀態已更新', 'success');
+                        setTimeout(() => location.reload(), 500); // Reload to show/hide config area
                     } else {
-                        console.error('Config target not found:', 'config-' + moduleId);
+                        showToast('更新失敗: ' + data.message, 'error');
                     }
+                }).catch(err => {
+                    console.error('Toggle Error:', err);
+                    showToast('網路錯誤', 'error');
+                });
+            }
+
+            function openConfig(moduleId) {
+                console.log('Opening Config for:', moduleId);
+                const grid = document.getElementById('modules-grid');
+                if (grid) grid.style.display = 'none';
+
+                document.querySelectorAll('.config-section').forEach(el => el.classList.remove('active'));
+                const target = document.getElementById('config-' + moduleId);
+                if (target) {
+                    target.classList.add('active');
+                    const mainContent = document.querySelector('.main-content');
+                    if (mainContent) mainContent.scrollTop = 0;
+                    console.log('Config section activated:', moduleId);
+                } else {
+                    console.error('Config target not found:', 'config-' + moduleId);
                 }
+            }
 
-                function closeConfig() {
-                    console.log('Closing Config');
-                    document.querySelectorAll('.config-section').forEach(el => el.classList.remove('active'));
-                    const grid = document.getElementById('modules-grid');
-                    if (grid) grid.style.display = 'grid';
-                }
+            function closeConfig() {
+                console.log('Closing Config');
+                document.querySelectorAll('.config-section').forEach(el => el.classList.remove('active'));
+                const grid = document.getElementById('modules-grid');
+                if (grid) grid.style.display = 'grid';
+            }
 
-                document.addEventListener('DOMContentLoaded', () => {
-                    console.log('Settings Page Initialized');
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('Settings Page Initialized');
 
-                    // --- Instant Toggle Logic (AJAX) ---
-                    document.querySelectorAll('.switch input[type="checkbox"]').forEach(toggle => {
-                        toggle.addEventListener('change', async function () {
-                            const form = this.closest('form');
-                            const formData = new FormData(form);
-                            const data = {};
-                            formData.forEach((value, key) => data[key] = value);
-                            data.ajax = true;
-
-                            try {
-                                const response = await fetch('/dashboard/settings', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'Accept': 'application/json'
-                                    },
-                                    body: JSON.stringify(data)
-                                });
-
-                                const result = await response.json();
-                                if (result.success) {
-                                    showToast('設定已更新 (Updated)', 'success');
-                                    this.dataset.initial = this.checked;
-                                    if (window.checkDirty) window.checkDirty(this, form);
-                                } else {
-                                    throw new Error(result.message);
-                                }
-                            } catch (err) {
-                                console.error('AJAX Toggle Error:', err);
-                                showToast('更新失敗: ' + err.message, 'error');
-                                this.checked = !this.checked;
-                            }
-                        });
-                    });
-
-                    // --- Unsaved Changes Logic ---
-                    window.dirtyForms = new Set();
-                    const bar = document.getElementById('unsaved-bar');
-                    const btnSave = document.getElementById('btn-save');
-                    const btnReset = document.getElementById('btn-reset');
-
-                    window.checkDirty = function (input, form) {
-                        let isDirty = false;
-                        if (input.type === 'checkbox' || input.type === 'radio') {
-                            isDirty = input.checked.toString() !== input.dataset.initial;
-                        } else {
-                            isDirty = input.value !== input.dataset.initial;
-                        }
-
-                        if (isDirty) {
-                            window.dirtyForms.add(form);
-                            form.classList.add('is-dirty');
-                        } else {
-                            let formActuallyDirty = false;
-                            form.querySelectorAll('input, textarea, select').forEach(el => {
-                                if (el.type === 'hidden' && !el.classList.contains('plugin-state')) return;
-                                let d = false;
-                                if (el.type === 'checkbox' || el.type === 'radio') {
-                                    d = el.checked.toString() !== el.dataset.initial;
-                                } else {
-                                    d = el.value !== el.dataset.initial;
-                                }
-                                if (d) formActuallyDirty = true;
-                            });
-
-                            if (!formActuallyDirty) {
-                                window.dirtyForms.delete(form);
-                                form.classList.remove('is-dirty');
-                            }
-                        }
-
-                        if (window.dirtyForms.size > 0) {
-                            bar.classList.add('visible');
-                        } else {
-                            bar.classList.remove('visible');
-                        }
-                    }
-
-                    document.querySelectorAll('form.track-changes').forEach(form => {
-                        form.querySelectorAll('input, textarea, select').forEach(input => {
-                            if (input.type === 'hidden' && !input.classList.contains('plugin-state')) return;
-                            if (input.type === 'checkbox' || input.type === 'radio') {
-                                input.dataset.initial = input.checked;
-                            } else {
-                                input.dataset.initial = input.value;
-                            }
-                            input.addEventListener('change', () => window.checkDirty(input, form));
-                            input.addEventListener('input', () => window.checkDirty(input, form));
-                        });
-                    });
-
-                    btnReset.addEventListener('click', () => {
-                        if (confirm('確定要放棄所有變更嗎？')) location.reload();
-                    });
-
-                    btnSave.addEventListener('click', async () => {
-                        if (window.dirtyForms.size === 0) return;
-                        const originalText = btnSave.innerText;
-                        btnSave.innerText = '儲存中... (Saving...)';
-                        btnSave.disabled = true;
+                // --- Instant Toggle Logic (AJAX) ---
+                document.querySelectorAll('.switch input[type="checkbox"]').forEach(toggle => {
+                    toggle.addEventListener('change', async function () {
+                        const form = this.closest('form');
+                        const formData = new FormData(form);
+                        const data = {};
+                        formData.forEach((value, key) => data[key] = value);
+                        data.ajax = true;
 
                         try {
-                            const promises = [];
-                            for (const form of window.dirtyForms) {
-                                const actionUrl = form.getAttribute('action');
-                                const formData = new FormData(form);
-                                const params = new URLSearchParams(formData);
-                                promises.push(fetch(actionUrl, {
-                                    method: 'POST',
-                                    body: params,
-                                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                                }).then(async res => {
-                                    if (!res.ok) throw new Error(`Server returned ${res.status}`);
-                                    return res;
-                                }));
+                            const response = await fetch('/dashboard/settings', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json'
+                                },
+                                body: JSON.stringify(data)
+                            });
+
+                            const result = await response.json();
+                            if (result.success) {
+                                showToast('設定已更新 (Updated)', 'success');
+                                this.dataset.initial = this.checked;
+                                if (window.checkDirty) window.checkDirty(this, form);
+                            } else {
+                                throw new Error(result.message);
                             }
-                            await Promise.all(promises);
-                            btnSave.innerText = '已儲存! (Saved!)';
-                            btnSave.style.background = '#43b581';
-                            setTimeout(() => location.reload(), 500);
-                        } catch (error) {
-                            console.error('Batch Save Error:', error);
-                            btnSave.innerText = '失敗 (Failed)';
-                            btnSave.style.background = '#f04747';
-                            alert('儲存失敗：' + error.message);
-                            setTimeout(() => {
-                                btnSave.innerText = originalText;
-                                btnSave.disabled = false;
-                                btnSave.style.background = '';
-                            }, 2000);
+                        } catch (err) {
+                            console.error('AJAX Toggle Error:', err);
+                            showToast('更新失敗: ' + err.message, 'error');
+                            this.checked = !this.checked;
                         }
                     });
-
-                    // --- URL Helper ---
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const openModule = urlParams.get('open');
-                    if (openModule) openConfig(openModule);
                 });
-            </script>
 
+                // --- Unsaved Changes Logic ---
+                window.dirtyForms = new Set();
+                const bar = document.getElementById('unsaved-bar');
+                const btnSave = document.getElementById('btn-save');
+                const btnReset = document.getElementById('btn-reset');
+
+                window.checkDirty = function (input, form) {
+                    let isDirty = false;
+                    if (input.type === 'checkbox' || input.type === 'radio') {
+                        isDirty = input.checked.toString() !== input.dataset.initial;
+                    } else {
+                        isDirty = input.value !== input.dataset.initial;
+                    }
+
+                    if (isDirty) {
+                        window.dirtyForms.add(form);
+                        form.classList.add('is-dirty');
+                    } else {
+                        let formActuallyDirty = false;
+                        form.querySelectorAll('input, textarea, select').forEach(el => {
+                            if (el.type === 'hidden' && !el.classList.contains('plugin-state')) return;
+                            let d = false;
+                            if (el.type === 'checkbox' || el.type === 'radio') {
+                                d = el.checked.toString() !== el.dataset.initial;
+                            } else {
+                                d = el.value !== el.dataset.initial;
+                            }
+                            if (d) formActuallyDirty = true;
+                        });
+
+                        if (!formActuallyDirty) {
+                            window.dirtyForms.delete(form);
+                            form.classList.remove('is-dirty');
+                        }
+                    }
+
+                    if (window.dirtyForms.size > 0) {
+                        bar.classList.add('visible');
+                    } else {
+                        bar.classList.remove('visible');
+                    }
+                }
+
+                document.querySelectorAll('form.track-changes').forEach(form => {
+                    form.querySelectorAll('input, textarea, select').forEach(input => {
+                        if (input.type === 'hidden' && !input.classList.contains('plugin-state')) return;
+                        if (input.type === 'checkbox' || input.type === 'radio') {
+                            input.dataset.initial = input.checked;
+                        } else {
+                            input.dataset.initial = input.value;
+                        }
+                        input.addEventListener('change', () => window.checkDirty(input, form));
+                        input.addEventListener('input', () => window.checkDirty(input, form));
+                    });
+                });
+
+                btnReset.addEventListener('click', () => {
+                    if (confirm('確定要放棄所有變更嗎？')) location.reload();
+                });
+
+                btnSave.addEventListener('click', async () => {
+                    if (window.dirtyForms.size === 0) return;
+                    const originalText = btnSave.innerText;
+                    btnSave.innerText = '儲存中... (Saving...)';
+                    btnSave.disabled = true;
+
+                    try {
+                        const promises = [];
+                        for (const form of window.dirtyForms) {
+                            const actionUrl = form.getAttribute('action');
+                            const formData = new FormData(form);
+                            const params = new URLSearchParams(formData);
+                            promises.push(fetch(actionUrl, {
+                                method: 'POST',
+                                body: params,
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                            }).then(async res => {
+                                if (!res.ok) throw new Error(`Server returned ${res.status}`);
+                                return res;
+                            }));
+                        }
+                        await Promise.all(promises);
+                        btnSave.innerText = '已儲存! (Saved!)';
+                        btnSave.style.background = '#43b581';
+                        setTimeout(() => location.reload(), 500);
+                    } catch (error) {
+                        console.error('Batch Save Error:', error);
+                        btnSave.innerText = '失敗 (Failed)';
+                        btnSave.style.background = '#f04747';
+                        alert('儲存失敗：' + error.message);
+                        setTimeout(() => {
+                            btnSave.innerText = originalText;
+                            btnSave.disabled = false;
+                            btnSave.style.background = '';
+                        }, 2000);
+                    }
+                });
+
+                // --- URL Helper ---
+                const urlParams = new URLSearchParams(window.location.search);
+                const openModule = urlParams.get('open');
+                if (openModule) openConfig(openModule);
+            });
+        </script>
+
+        </div>
+        <% } %>
             </div>
-            <% } %>
-                </div>
-                </div>
+            </div>
 
-                <!-- Unsaved Changes Floating Bar -->
-                <div id="unsaved-bar" class="unsaved-bar">
-                    <span>小心！你有未儲存的變更 (You have unsaved changes)</span>
-                    <div style="display: flex; gap: 10px;">
-                        <button id="btn-reset" type="button" class="btn-reset">重置 (Reset)</button>
-                        <button id="btn-save" type="button" class="btn-save">儲存變更 (Save)</button>
-                    </div>
+            <!-- Unsaved Changes Floating Bar -->
+            <div id="unsaved-bar" class="unsaved-bar">
+                <span>小心！你有未儲存的變更 (You have unsaved changes)</span>
+                <div style="display: flex; gap: 10px;">
+                    <button id="btn-reset" type="button" class="btn-reset">重置 (Reset)</button>
+                    <button id="btn-save" type="button" class="btn-save">儲存變更 (Save)</button>
                 </div>
+            </div>
 
 
-                <%- include('partials/cookie_consent') %>
+            <%- include('partials/cookie_consent') %>
 </body>
 
 </html>
