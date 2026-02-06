@@ -429,7 +429,28 @@ router.post('/settings', async (req, res) => {
             stmt.run(JSON.stringify(categories), guild_id);
         }
 
-        res.redirect(`/dashboard/settings?guild_id=${guild_id}`);
+        // Brace removed from here (it was line 432 in faulty version)
+
+        // Redirect Logic
+        let redirectUrl = `/dashboard/settings?guild_id=${guild_id}`;
+        if (req.body.open_module) {
+            redirectUrl += `&open=${req.body.open_module}`;
+        } else {
+            // Heuristic: If action was a toggle and enabled=1, auto-open.
+            // But managing this via hidden inputs in EJS is cleaner.
+            // Let's rely on the POST body carrying a hint if we want to open it?
+            // Or just hardcode mappings here.
+
+            if (action === 'update_welcome_toggle' && req.body.welcome_enabled) redirectUrl += '&open=welcome';
+            if (action === 'update_ai_chat' && req.body.ai_chat_enabled) redirectUrl += '&open=ai';
+            if (action === 'update_automod_toggle' && req.body.automod_links) redirectUrl += '&open=automod';
+            if (action === 'update_announcement_toggle' && req.body.announcement_enabled) redirectUrl += '&open=announcement';
+            if (action === 'update_commands_toggle' && req.body.custom_commands_enabled) redirectUrl += '&open=commands';
+            // External link modules (Music, Economy) - maybe just highlight them or scroll to them?
+            // For now, let's just reload the grid for them.
+        }
+
+        res.redirect(redirectUrl);
     } catch (error) {
         console.error('Settings Action Error:', error);
         res.status(500).send(`Error: ${error.message}`);
