@@ -6,7 +6,7 @@ let model = null;
 const init = () => {
     if (process.env.GEMINI_API_KEY) {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        model = genAI.getGenerativeModel({ model: "gemini-pro" });
         logger.info('✅ AI (Gemini) Service Initialized');
     } else {
         logger.warn('⚠️ GEMINI_API_KEY missing. AI Chat will not work.');
