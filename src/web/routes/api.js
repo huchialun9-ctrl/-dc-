@@ -15,10 +15,14 @@ const isAuthenticated = (req, res, next) => {
 router.get('/guilds', isAuthenticated, async (req, res) => {
     try {
         const userGuilds = req.user.guilds || [];
+        console.log(`[DEBUG] User ${req.user.username} has ${userGuilds.length} guilds in session`);
+
+        // Lenient filter: Any guild where they have Manage Server or Administrator
         const manageableGuilds = userGuilds.filter(g => {
-            const perms = Number(g.permissions);
-            const canManage = (perms & 0x20) === 0x20 || (perms & 0x8) === 0x8;
-            return canManage;
+            const perms = BigInt(g.permissions);
+            const MANAGE_GUILD = 1n << 5n;
+            const ADMINISTRATOR = 1n << 3n;
+            return (perms & MANAGE_GUILD) === MANAGE_GUILD || (perms & ADMINISTRATOR) === ADMINISTRATOR;
         });
 
         const guildsWithBot = manageableGuilds.map(g => {
