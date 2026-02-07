@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  background-color: #1e1f22;
-  color: #dbdee1;
+  background-color: #FAF9F6;
+  color: #1a1a1a;
 }
 
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
+  background-color: #FAF9F6;
+  color: #1a1a1a;
 }
