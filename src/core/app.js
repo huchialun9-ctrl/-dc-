@@ -44,65 +44,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(require('../web/middleware/i18nMiddleware'));
 
-// Serve Dashboard
-const dashboardPath = path.join(__dirname, '../web/dashboard/dist');
-app.use('/dashboard', express.static(dashboardPath));
-app.use('/dashboard', (req, res) => {
-    res.sendFile(path.join(dashboardPath, 'index.html'));
-});
-
-// Session
-const sessionConfig = {
-    secret: process.env.SESSION_SECRET || 'dev_secret',
-    resave: true, // Force session to be saved back to the store
-    saveUninitialized: true, // Force a session that is "uninitialized" to be saved to the store
-    name: 'vx6.sid',
-    cookie: {
-        secure: false, // Temporarily disabled to debug proxy/cookie issues
-        httpOnly: true,
-        sameSite: 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 1 week
-    }
-};
-
-if (process.env.NODE_ENV === 'production') {
-    logger.info('Production mode detected. Secure cookies enabled.');
-}
-
+// Session Configuration Moved Up
 app.use(session(sessionConfig));
-
-// Passport Config
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((obj, done) => done(null, obj));
-
-passport.use(new DiscordStrategy({
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: process.env.REDIRECT_URI,
-    scope: ['identify', 'guilds']
-}, async (accessToken, refreshToken, profile, done) => {
-    try {
-        console.log(`[AUTH DEBUG] Strategy triggered for: ${profile.username}`);
-        console.log(`[AUTH DEBUG] Profile guilds count: ${profile.guilds ? profile.guilds.length : 'NONE'}`);
-
-        // Upsert User to Database (SQLite for user session/metadata)
-        const stmt = db.prepare(`
-            INSERT INTO users (id, username, avatar, last_login) 
-            VALUES (?, ?, ?, CURRENT_TIMESTAMP)
-            ON CONFLICT(id) DO UPDATE SET 
-            username = excluded.username, 
-            avatar = excluded.avatar, 
-            last_login = CURRENT_TIMESTAMP
-        `);
-        stmt.run(profile.id, profile.username, profile.avatar);
-
-        return done(null, profile);
-    } catch (err) {
-        console.error(`[AUTH DEBUG] Error in strategy: ${err.message}`);
-        return done(err, null);
-    }
-}));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -110,6 +53,13 @@ app.use(passport.session());
 app.use((req, res, next) => {
     console.log(`[LOG] ${req.method} ${req.url} - Auth: ${req.isAuthenticated()} - SessionID: ${req.sessionID}`);
     next();
+});
+
+// Serve Dashboard
+const dashboardPath = path.join(__dirname, '../web/dashboard/dist');
+app.use('/dashboard', express.static(dashboardPath));
+app.use('/dashboard', (req, res) => {
+    res.sendFile(path.join(dashboardPath, 'index.html'));
 });
 
 // Routes

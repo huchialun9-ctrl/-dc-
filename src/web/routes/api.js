@@ -45,7 +45,21 @@ router.get('/guilds', isAuthenticated, async (req, res) => {
 
 // Debug: Get current user profile
 router.get('/user', isAuthenticated, (req, res) => {
-    res.json(req.user);
+    res.json({
+        auth: req.isAuthenticated(),
+        user: req.user
+    });
+});
+
+// Public Session Check (No Auth Required)
+router.get('/session-check', (req, res) => {
+    res.json({
+        sessionID: req.sessionID,
+        authenticated: req.isAuthenticated(),
+        userPresent: !!req.user,
+        guildsCount: req.user?.guilds?.length || 0,
+        cookies: req.cookies
+    });
 });
 
 // Generate structure from AI
