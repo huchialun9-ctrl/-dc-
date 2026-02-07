@@ -124,5 +124,6 @@ safeAlter("ALTER TABLE activity_logs ADD COLUMN ip_address TEXT");
 // Ticket System Expansion
 safeAlter("ALTER TABLE settings ADD COLUMN ticket_support_role_id TEXT");
 safeAlter("ALTER TABLE tickets ADD COLUMN staff_id TEXT");
+safeAlter("ALTER TABLE tickets ADD COLUMN category TEXT");
 
 module.exports = db;
