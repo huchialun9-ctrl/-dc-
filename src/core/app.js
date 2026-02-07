@@ -7,11 +7,15 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const { connectDB } = require('../database/mongo');
+const mongoose = require('mongoose');
 const logger = require('./logger');
 const db = require('../database/db'); // SQLite (Keep for legacy/existing features if needed)
 
 // Initialize App
 const app = express();
+
+// Set Mongoose Global Config
+mongoose.set('bufferCommands', false); // Fail fast if DB is disconnected
 
 // Connect to MongoDB
 connectDB();

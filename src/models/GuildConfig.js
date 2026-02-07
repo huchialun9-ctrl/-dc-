@@ -24,6 +24,9 @@ const GuildConfigSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
+}, {
+    bufferCommands: false, // Don't buffer commands if DB is disconnected
+    timestamps: true
 });
 
 module.exports = mongoose.model('GuildConfig', GuildConfigSchema);
