@@ -50,8 +50,9 @@ const sessionConfig = {
     resave: true, // Force session to be saved back to the store
     saveUninitialized: true, // Force a session that is "uninitialized" to be saved to the store
     name: 'vx6.sid',
+    proxy: true, // Required for Railway/Proxies
     cookie: {
-        secure: false, // Temporarily disabled to debug proxy/cookie issues
+        secure: true, // Re-enable secure but with proxy: true
         httpOnly: true,
         sameSite: 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000 // 1 week
@@ -65,8 +66,15 @@ if (process.env.NODE_ENV === 'production') {
 app.use(session(sessionConfig));
 
 // Passport Config
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((obj, done) => done(null, obj));
+passport.serializeUser((user, done) => {
+    console.log(`[AUTH DEBUG] Serializing user: ${user.id}`);
+    done(null, user);
+});
+
+passport.deserializeUser((obj, done) => {
+    console.log(`[AUTH DEBUG] Deserializing user: ${obj.id}`);
+    done(null, obj);
+});
 
 passport.use(new DiscordStrategy({
     clientID: process.env.CLIENT_ID,

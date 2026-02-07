@@ -15,11 +15,19 @@ router.get('/health', (req, res) => {
 router.get('/callback', (req, res, next) => {
     console.log('[AUTH DEBUG] Reached /callback');
     next();
-}, passport.authenticate('discord', {
-    failureRedirect: '/dashboard'
-}), (req, res) => {
-    console.log(`[AUTH DEBUG] Callback success for user: ${req.user?.username}`);
-    res.redirect('/dashboard');
+}, (req, res, next) => {
+    passport.authenticate('discord', { failureRedirect: '/dashboard' })(req, res, (err) => {
+        if (err) return next(err);
+        console.log(`[AUTH DEBUG] Callback success for user: ${req.user?.username}. Saving session...`);
+        req.session.save((err) => {
+            if (err) {
+                console.error('[AUTH DEBUG] Session save error:', err);
+                return res.redirect('/dashboard?error=session_save_failed');
+            }
+            console.log('[AUTH DEBUG] Session saved. Redirecting to dashboard.');
+            res.redirect('/dashboard');
+        });
+    });
 });
 
 // Invite Bot
