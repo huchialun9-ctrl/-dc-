@@ -121,10 +121,74 @@ app.use((req, res, next) => {
     next();
 });
 
-// Serve Dashboard
+// Serve Dashboard (with authentication check)
 const dashboardPath = path.join(__dirname, '../web/dashboard/dist');
 app.use('/dashboard', express.static(dashboardPath));
 app.use('/dashboard', (req, res) => {
+    // Check if user is authenticated
+    if (!req.isAuthenticated()) {
+        // Show login page instead of dashboard
+        return res.send(`
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Discord Server Architect - Login</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        h1 { color: #333; margin-bottom: 0.5rem; font-size: 1.8rem; }
+        p { color: #666; margin-bottom: 2rem; }
+        .btn {
+            background: #5865F2;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .btn:hover { background: #4752C4; transform: translateY(-2px); }
+        .icon { font-size: 4rem; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="icon">🤖</div>
+        <h1>AI Discord Server Architect</h1>
+        <p>使用 Discord 登入以開始建立您的伺服器</p>
+        <a href="/auth/discord" class="btn">
+            <svg width="20" height="20" style="vertical-align: middle; margin-right: 8px;" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
+            </svg>
+            使用 Discord 登入
+        </a>
+    </div>
+</body>
+</html>
+        `);
+    }
     res.sendFile(path.join(dashboardPath, 'index.html'));
 });
 
