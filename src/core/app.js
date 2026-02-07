@@ -58,7 +58,7 @@ const sessionConfig = {
     saveUninitialized: true, // Force a session that is "uninitialized" to be saved to the store
     name: 'vx6.sid',
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
+        secure: false, // Temporarily disabled to debug proxy/cookie issues
         httpOnly: true,
         sameSite: 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000 // 1 week

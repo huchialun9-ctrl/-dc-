@@ -3,7 +3,10 @@ const router = express.Router();
 const passport = require('passport');
 
 // Login Route
-router.get('/discord', passport.authenticate('discord', { scope: ['identify', 'guilds'] }));
+router.get('/discord', passport.authenticate('discord', {
+    scope: ['identify', 'guilds'],
+    prompt: 'consent'
+}));
 
 // Logout Route
 router.get('/logout', (req, res) => {
