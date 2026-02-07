@@ -28,7 +28,7 @@ const parseServerStructure = async (description, settings = {}) => {
 
     try {
         const response = await openai.chat.completions.create({
-            model: "openai/gpt-4o",
+            model: "gpt-4o",
             messages: [
                 {
                     role: "system",

@@ -93,11 +93,18 @@ const App = () => {
 
     try {
       const { data } = await axios.get(`/api/generate-structure?description=${encodeURIComponent(input)}&guildId=${selectedGuild.id}`);
-      setStructure(data);
-      setMessages(prev => [...prev, {
-        role: 'ai',
-        content: `I've generated a potential structure based on your request. You can preview it on the right. Would you like to apply it?`
-      }]);
+      if (data.error) {
+        setMessages(prev => [...prev, {
+          role: 'ai',
+          content: `Sorry, I encountered an error: ${data.error}`
+        }]);
+      } else {
+        setStructure(data);
+        setMessages(prev => [...prev, {
+          role: 'ai',
+          content: `I've generated a potential structure based on your request. You can preview it on the right. Would you like to apply it?`
+        }]);
+      }
     } catch (err) {
       setMessages(prev => [...prev, { role: 'ai', content: 'Sorry, I encountered an error while generating the structure.' }]);
     } finally {
