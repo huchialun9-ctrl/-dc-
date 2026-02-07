@@ -49,22 +49,27 @@ const MongoStore = require('connect-mongo');
 // Session Configuration
 const sessionConfig = {
     secret: process.env.SESSION_SECRET || 'dev_secret',
-    resave: false, // Recommended false when using MongoStore
-    saveUninitialized: false, // Recommended false to save space and comply with laws
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI,
-        collectionName: 'sessions',
-        ttl: 14 * 24 * 60 * 60 // 14 days
-    }),
+    resave: false,
+    saveUninitialized: false,
     name: 'vx6.sid',
-    proxy: true, // Required for Railway/Proxies
+    proxy: true,
     cookie: {
-        secure: false, // Set to false to test if proxy is stripping secure cookies
+        secure: true,
         httpOnly: true,
         sameSite: 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000 // 1 week
     }
 };
+
+if (process.env.MONGODB_URI) {
+    sessionConfig.store = MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI,
+        collectionName: 'sessions',
+        ttl: 14 * 24 * 60 * 60 // 14 days
+    });
+} else {
+    logger.warn('⚠️ Using MemoryStore for sessions. Login status might be unstable.');
+}
 
 if (process.env.NODE_ENV === 'production') {
     logger.info('Production mode detected. Secure cookies disabled.');

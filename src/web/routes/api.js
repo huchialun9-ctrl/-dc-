@@ -3,6 +3,7 @@ const router = express.Router();
 const aiService = require('../../bot/services/aiService');
 const executionService = require('../../bot/services/executionService');
 const GuildConfig = require('../../models/GuildConfig');
+const mongo = require('../../database/mongo');
 const client = require('../../bot/client');
 
 // Middleware to check if user is authenticated
@@ -84,26 +85,20 @@ router.post('/execute-build', isAuthenticated, async (req, res) => {
         const guild = client.guilds.cache.get(guildId);
         if (!guild) return res.status(404).json({ error: 'Bot is not in this guild' });
 
-        // Save to DB first
-        let config = await GuildConfig.findOne({ guildId });
-        if (!config) {
-            config = new GuildConfig({ guildId, guildName: guild.name, ownerId: guild.ownerId });
-        }
-
-        config.structures.push({
-            description: req.body.description || 'API Triggered',
-            jsonStructure: structure,
-            implemented: false
-        });
-        await config.save();
-
         // Run execution (async)
         executionService.executeBuild(guild, structure).then(async (result) => {
-            if (result.success) {
-                // Update implementation status
-                const latest = config.structures[config.structures.length - 1];
-                latest.implemented = true;
-                await config.save();
+            if (result.success && mongo.getIsConnected()) {
+                try {
+                    // Update implementation status if DB is available
+                    const config = await GuildConfig.findOne({ guildId });
+                    if (config) {
+                        const latest = config.structures[config.structures.length - 1];
+                        latest.implemented = true;
+                        await config.save();
+                    }
+                } catch (e) {
+                    console.error('Failed to update build status in DB:', e);
+                }
             }
         });
 
