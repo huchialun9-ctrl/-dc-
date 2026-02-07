@@ -21,9 +21,11 @@ const App = () => {
   const [botStatus, setBotStatus] = useState(null);
   const [activeTab, setActiveTab] = useState('chat'); // 'chat', 'settings'
   const [input, setInput] = useState('');
+  const [templates, setTemplates] = useState([]);
 
   useEffect(() => {
     fetchData();
+    fetchTemplates();
   }, []);
 
   useEffect(() => {
@@ -311,6 +313,26 @@ const App = () => {
                   /* Settings Tab */
                   <div className="flex-1 p-12 overflow-y-auto">
                     <div className="max-w-2xl flex flex-col gap-10">
+                      <div>
+                        <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                          <Layout className="w-7 h-7 text-discord-blurple" /> 快速模板
+                        </h3>
+                        <p className="text-sm text-gray-500 mb-4">選擇預設模板快速建立伺服器</p>
+                        <div className="grid grid-cols-3 gap-4">
+                          {templates.map(tmpl => (
+                            <button
+                              key={tmpl.id}
+                              onClick={() => applyTemplate(tmpl.id)}
+                              className="bg-discord-lighter border border-white/10 hover:border-discord-blurple rounded-xl p-4 text-left transition-all group"
+                            >
+                              <div className="text-3xl mb-2">{tmpl.icon}</div>
+                              <div className="font-bold text-white text-sm mb-1 group-hover:text-discord-blurple">{tmpl.name}</div>
+                              <div className="text-xs text-gray-500">{tmpl.description}</div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
                       <div>
                         <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                           <Globe className="w-7 h-7 text-discord-blurple" /> Localization

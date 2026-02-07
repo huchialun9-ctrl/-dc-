@@ -5,6 +5,8 @@ const executionService = require('../../bot/services/executionService');
 const GuildConfig = require('../../models/GuildConfig');
 const mongo = require('../../database/mongo');
 const client = require('../../bot/client');
+const { TEMPLATES } = require('../../config/templates');
+
 
 // Middleware to check if user is authenticated
 const isAuthenticated = (req, res, next) => {
@@ -61,6 +63,26 @@ router.get('/session-check', (req, res) => {
         guildsCount: req.user?.guilds?.length || 0,
         cookies: req.cookies
     });
+});
+
+// Get all available templates
+router.get('/templates', isAuthenticated, (req, res) => {
+    const templateList = Object.values(TEMPLATES).map(t => ({
+        id: t.id,
+        name: t.name,
+        icon: t.icon,
+        description: t.description
+    }));
+    res.json(templateList);
+});
+
+// Get specific template details
+router.get('/templates/:id', isAuthenticated, (req, res) => {
+    const template = TEMPLATES[req.params.id];
+    if (!template) {
+        return res.status(404).json({ error: 'Template not found' });
+    }
+    res.json(template);
 });
 
 // Generate structure from AI
