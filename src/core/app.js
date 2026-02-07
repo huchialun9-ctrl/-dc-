@@ -44,11 +44,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(require('../web/middleware/i18nMiddleware'));
 
+const MongoStore = require('connect-mongo');
+
 // Session Configuration
 const sessionConfig = {
     secret: process.env.SESSION_SECRET || 'dev_secret',
-    resave: true, // Force session to be saved back to the store
-    saveUninitialized: true, // Force a session that is "uninitialized" to be saved to the store
+    resave: false, // Recommended false when using MongoStore
+    saveUninitialized: false, // Recommended false to save space and comply with laws
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI,
+        collectionName: 'sessions',
+        ttl: 14 * 24 * 60 * 60 // 14 days
+    }),
     name: 'vx6.sid',
     proxy: true, // Required for Railway/Proxies
     cookie: {
