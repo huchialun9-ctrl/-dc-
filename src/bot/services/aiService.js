@@ -36,35 +36,20 @@ const parseServerStructure = async (description, settings = {}) => {
         console.log('[aiService] Making API request to OpenAI/OpenRouter...');
         const response = await openai.chat.completions.create({
             model: "openai/gpt-4o",
-            max_tokens: 3000, // Limit to prevent quota issues
+            max_tokens: 1500, // Reduced to minimize quota usage
+            temperature: 0.7,
             messages: [
                 {
                     role: "system",
-                    content: `You are a Discord server architect. Parse the user's description into a structured JSON format for creating a server.
-                    The JSON must follow this structure:
+                    content: `You are a Discord server architect. Generate a JSON structure for server creation.
+                    Required JSON format:
                     {
-                      "categories": [
-                        {
-                          "name": "Category Name",
-                          "channels": [
-                            { "name": "channel-name", "type": "text", "topic": "Brief channel description" },
-                            { "name": "voice-channel", "type": "voice" }
-                          ]
-                        }
-                      ],
-                      "roles": [
-                        { "name": "Role Name", "color": "#HEXCLR", "hoist": true }
-                      ],
-                      "rules": ["Rule 1", "Rule 2"],
-                      "welcomeMessage": "Custom greeting"
+                      "categories": [{"name": "Category", "channels": [{"name": "channel-name", "type": "text|voice", "topic": "description"}]}],
+                      "roles": [{"name": "Role", "color": "#HEX", "hoist": true}],
+                      "rules": ["Rule text"],
+                      "welcomeMessage": "Welcome text"
                     }
-                    Rules:
-                    1. Channel types must be 'text' or 'voice'.
-                    2. Use lowercase with hyphens for channel names.
-                    3. Output names and content in ${language}.
-                    4. Role colors should be hexadecimal.
-                    ${template ? `5. Follow this text template/style: ${template}` : ''}
-                    6. Strictly output JSON only.`
+                    Output language: ${language}. ${template ? 'Style: ' + template : ''} Output JSON only.`
                 },
                 {
                     role: "user",
