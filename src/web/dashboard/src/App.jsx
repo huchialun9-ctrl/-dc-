@@ -71,6 +71,29 @@ const App = () => {
     }
   };
 
+  const fetchTemplates = async () => {
+    try {
+      const { data } = await axios.get('/api/templates');
+      setTemplates(data);
+    } catch (err) {
+      console.error('Failed to fetch templates', err);
+    }
+  };
+
+  const applyTemplate = async (templateId) => {
+    try {
+      const { data } = await axios.get(`/api/templates/${templateId}`);
+      setStructure(data);
+      setMessages(prev => [...prev, {
+        role: 'ai',
+        content: `已套用「${data.name}」模板！您可以在右側預覽，準備好後點擊 Apply 建立伺服器。`
+      }]);
+      setActiveTab('chat');
+    } catch (err) {
+      console.error('Failed to apply template', err);
+    }
+  };
+
   const handleSaveSettings = async () => {
     if (!selectedGuild) return;
     setLoading(true);
