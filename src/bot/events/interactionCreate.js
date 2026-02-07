@@ -17,6 +17,24 @@ module.exports = {
                 const { values, guild, user } = interaction;
                 const categoryType = values[0];
 
+                if (categoryType === 'other') {
+                    const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+                    const modal = new ModalBuilder()
+                        .setCustomId('ticket_other_modal')
+                        .setTitle('📝 詳細敘述您的問題');
+
+                    const input = new TextInputBuilder()
+                        .setCustomId('ticket_reason')
+                        .setLabel('請簡短敘述您的需求或問題')
+                        .setPlaceholder('在此輸入內容...')
+                        .setStyle(TextInputStyle.Paragraph)
+                        .setRequired(true)
+                        .setMaxLength(500);
+
+                    modal.addComponents(new ActionRowBuilder().addComponents(input));
+                    return await interaction.showModal(modal);
+                }
+
                 await interaction.deferReply({ ephemeral: true });
 
                 try {
@@ -24,10 +42,26 @@ module.exports = {
                     if (result.error) {
                         return interaction.editReply({ content: result.error });
                     }
-                    await interaction.editReply({ content: `✅ Ticket created: ${result.channel}` });
+                    await interaction.editReply({ content: `✅ 工單已開啟：${result.channel}` });
                 } catch (err) {
                     logger.error(err);
-                    await interaction.editReply({ content: 'Failed to create ticket. Please contact admin.' });
+                    await interaction.editReply({ content: '開啟工單失敗，請聯繫管理員。' });
+                }
+            }
+
+            else if (interaction.isModalSubmit() && interaction.customId === 'ticket_other_modal') {
+                const reason = interaction.fields.getTextInputValue('ticket_reason');
+                await interaction.deferReply({ ephemeral: true });
+
+                try {
+                    const result = await TicketService.createTicket(interaction.guild, interaction.user, 'other', reason);
+                    if (result.error) {
+                        return interaction.editReply({ content: result.error });
+                    }
+                    await interaction.editReply({ content: `✅ 工單已開啟：${result.channel}` });
+                } catch (err) {
+                    logger.error(err);
+                    await interaction.editReply({ content: '開啟工單失敗，請聯繫管理員。' });
                 }
             }
 

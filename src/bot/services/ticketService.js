@@ -4,7 +4,7 @@ const logger = require('../../core/logger');
 const { generateHTML } = require('../utils/transcript');
 
 class TicketService {
-    static async createTicket(guild, user, categoryType) {
+    static async createTicket(guild, user, categoryType, customReason = null) {
         try {
             // Check DB for existing open ticket
             const existingTicket = db.prepare("SELECT * FROM tickets WHERE user_id = ? AND status = 'open' AND guild_id = ?").get(user.id, guild.id);
@@ -23,7 +23,7 @@ class TicketService {
 
             // Determine Category
             const customCat = categories.find(c => c.value === categoryType);
-            const formattedCategory = customCat ? customCat.label : (categoryType || '一般支援');
+            const formattedCategory = customCat ? customCat.label : (categoryType === 'other' ? '其他 (Other)' : (categoryType || '一般支援'));
 
             // Permissions
             const permissionOverwrites = [
@@ -59,9 +59,13 @@ class TicketService {
                 .run(ticketChannel.id, guild.id, user.id, categoryType);
 
             // Send Welcome Message
+            const description = customReason
+                ? `您好 ${user}，感謝您的聯繫。工作人員會儘快為您服務。\n\n**類別:** ${formattedCategory}\n**敘述:** ${customReason}`
+                : `您好 ${user}，感謝您的聯繫。工作人員會儘快為您服務。\n\n**類別:** ${formattedCategory}`;
+
             const embed = new EmbedBuilder()
                 .setTitle(`🎫 工單：${formattedCategory}`)
-                .setDescription(`您好 ${user}，感謝您的聯繫。工作人員會儘快為您服務。\n\n**類別:** ${formattedCategory}`)
+                .setDescription(description)
                 .setColor('#5865F2')
                 .setTimestamp();
 

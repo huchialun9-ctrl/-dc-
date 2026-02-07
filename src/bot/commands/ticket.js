@@ -77,7 +77,8 @@ module.exports = {
                 : [
                     { label: '一般支援', description: '通用的問題諮詢', value: 'general' },
                     { label: '技術回報', description: '錯誤或技術問題報修', value: 'tech' },
-                    { label: '檢舉投訴', description: '舉報違規行為', value: 'report' }
+                    { label: '檢舉投訴', description: '舉報違規行為', value: 'report' },
+                    { label: '其他', description: '自定義敘述您的問題', value: 'other' }
                 ];
 
             const select = new StringSelectMenuBuilder()
