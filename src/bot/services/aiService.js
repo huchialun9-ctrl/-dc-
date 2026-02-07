@@ -18,10 +18,13 @@ const init = () => {
 /**
  * Parses a natural language description of a Discord server into a structured JSON.
  * @param {string} description 
+ * @param {Object} settings Optional settings (language, template)
  * @returns {Promise<Object>}
  */
-const parseServerStructure = async (description) => {
+const parseServerStructure = async (description, settings = {}) => {
     if (!openai) return { error: "AI 系統尚未設定 (API Key Missing)" };
+
+    const { language = 'Traditional Chinese', template = '' } = settings;
 
     try {
         const response = await openai.chat.completions.create({
@@ -45,7 +48,9 @@ const parseServerStructure = async (description) => {
                     Rules:
                     1. Channel types must be 'text' or 'voice'.
                     2. Use lowercase with hyphens for channel names (standard Discord practice).
-                    3. Strictly output JSON only.`
+                    3. Output names and content in ${language}.
+                    ${template ? `4. Follow this text template/style: ${template}` : ''}
+                    5. Strictly output JSON only.`
                 },
                 {
                     role: "user",

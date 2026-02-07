@@ -65,11 +65,20 @@ router.get('/session-check', (req, res) => {
 
 // Generate structure from AI
 router.get('/generate-structure', isAuthenticated, async (req, res) => {
-    const { description } = req.query;
+    const { description, guildId } = req.query;
     if (!description) return res.status(400).json({ error: 'Description is required' });
 
     try {
-        const structure = await aiService.parseServerStructure(description);
+        let settings = {};
+        if (guildId) {
+            const GuildSettings = require('../../models/GuildSettings');
+            settings = await GuildSettings.findOne({ guildId }) || {};
+        }
+
+        const structure = await aiService.parseServerStructure(description, {
+            language: settings.language,
+            template: settings.template
+        });
         res.json(structure);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -106,6 +115,62 @@ router.post('/execute-build', isAuthenticated, async (req, res) => {
         });
 
         res.json({ message: 'Build started in background', success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Get/Update Guild Settings (Language, Template)
+router.get('/settings/:guildId', isAuthenticated, async (req, res) => {
+    const { guildId } = req.params;
+    try {
+        const GuildSettings = require('../../models/GuildSettings');
+        let settings = await GuildSettings.findOne({ guildId });
+        if (!settings) {
+            settings = await GuildSettings.create({ guildId });
+        }
+        res.json(settings);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/settings/:guildId', isAuthenticated, async (req, res) => {
+    const { guildId } = req.params;
+    const { language, template } = req.body;
+    try {
+        const GuildSettings = require('../../models/GuildSettings');
+        const update = {};
+        if (language) update.language = language;
+        if (template !== undefined) update.template = template;
+
+        const settings = await GuildSettings.findOneAndUpdate(
+            { guildId },
+            update,
+            { upsert: true, new: true }
+        );
+        res.json(settings);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Check bot status and permissions in a guild
+router.get('/guild-status/:guildId', isAuthenticated, async (req, res) => {
+    const { guildId } = req.params;
+    try {
+        const guild = client.guilds.cache.get(guildId);
+        if (!guild) return res.json({ botPresent: false });
+
+        const botMember = await guild.members.fetchMe();
+        const hasAdmin = botMember.permissions.has('Administrator');
+
+        res.json({
+            botPresent: true,
+            hasAdmin,
+            memberCount: guild.memberCount,
+            name: guild.name
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

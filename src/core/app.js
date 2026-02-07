@@ -6,10 +6,10 @@ const path = require('path');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
-const { connectDB } = require('../database/mongo');
+const { connectDB, getIsConnected } = require('../database/mongo');
+const User = require('../models/User');
 const mongoose = require('mongoose');
 const logger = require('./logger');
-const db = require('../database/db'); // SQLite (Keep for legacy/existing features if needed)
 
 // Initialize App
 const app = express();
@@ -92,19 +92,24 @@ passport.use(new DiscordStrategy({
     permissions: 8
 }, async (accessToken, refreshToken, profile, done) => {
     try {
-        // Upsert User to SQLite (Fallback/Metadata)
-        const stmt = db.prepare(`
-            INSERT INTO users (id, username, avatar, last_login) 
-            VALUES (?, ?, ?, CURRENT_TIMESTAMP)
-            ON CONFLICT(id) DO UPDATE SET 
-            username = excluded.username, 
-            avatar = excluded.avatar, 
-            last_login = CURRENT_TIMESTAMP
-        `);
-        stmt.run(profile.id, profile.username, profile.avatar);
+        // Upsert User to MongoDB if connected
+        if (getIsConnected()) {
+            await User.findOneAndUpdate(
+                { id: profile.id },
+                {
+                    username: profile.username,
+                    avatar: profile.avatar,
+                    guilds: profile.guilds,
+                    lastLogin: new Date()
+                },
+                { upsert: true, new: true }
+            );
+            console.log(`[AUTH DEBUG] User ${profile.username} persisted to MongoDB`);
+        }
         return done(null, profile);
     } catch (err) {
-        return done(err, null);
+        console.error(`[AUTH DEBUG] Error in strategy: ${err.message}`);
+        return done(null, profile); // Continue even if DB fail to not block login
     }
 }));
 
@@ -129,32 +134,14 @@ app.use('/auth', require('../web/routes/auth'));
 app.use('/api', require('../web/routes/api'));
 
 
-// Health Check & DB Status
-app.get('/health', (req, res) => {
-    try {
-        const tables = [
-            'users', 'tickets', 'settings', 'activity_logs',
-            'custom_commands', 'levels', 'economy', 'giveaways'
-        ];
-        const status = {};
-
-        tables.forEach(table => {
-            try {
-                const count = db.prepare(`SELECT count(*) as count FROM ${table}`).get();
-                status[table] = { exists: true, count: count.count };
-            } catch (e) {
-                status[table] = { exists: false, error: e.message };
-            }
-        });
-
-        res.json({
-            status: 'ok',
-            uptime: process.uptime(),
-            db: status
-        });
-    } catch (err) {
-        res.status(500).json({ status: 'error', message: err.message });
-    }
+// Health Check & Status
+app.get('/health', async (req, res) => {
+    res.json({
+        status: 'ok',
+        uptime: process.uptime(),
+        database: getIsConnected() ? 'connected' : 'disconnected',
+        environment: process.env.NODE_ENV || 'development'
+    });
 });
 
 // Error Handler

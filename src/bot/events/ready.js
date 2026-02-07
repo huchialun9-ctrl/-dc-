@@ -9,9 +9,9 @@ module.exports = {
 
         // Rotating Presence
         const statuses = [
-            { state: '為民服務中', type: ActivityType.Custom },
-            { name: 'VCT', type: ActivityType.Playing },
-            { name: 'Valorant', type: ActivityType.Playing }
+            { state: 'AI 伺服器建構中', type: ActivityType.Custom },
+            { name: 'AI Server Manager', type: ActivityType.Playing },
+            { name: 'GPT-4o Orchestrator', type: ActivityType.Playing }
         ];
 
         let i = 0;
@@ -27,15 +27,5 @@ module.exports = {
             });
             i = (i + 1) % statuses.length;
         }, 10000);
-
-        // Initialize Services
-        if (client.giveawayService) {
-            client.giveawayService.init();
-            logger.info('GiveawayService initialized.');
-        }
-
-        if (client.earthquakeService) {
-            client.earthquakeService.init();
-        }
     },
 };

@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, PermissionFlagsBits, ChannelType } = require('discord.js');
-const db = require('../../database/db');
+const GuildSettings = require('../../models/GuildSettings');
+const mongo = require('../../database/mongo');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -13,12 +14,16 @@ module.exports = {
                 .setRequired(true)),
 
     async execute(interaction) {
+        if (!mongo.getIsConnected()) return interaction.reply({ content: '資料庫未連線。', ephemeral: true });
+
         const channel = interaction.options.getChannel('channel');
 
         try {
-            // Update settings
-            const stmt = db.prepare('INSERT INTO settings (guild_id, ai_channel_id, ai_chat_enabled) VALUES (?, ?, 1) ON CONFLICT(guild_id) DO UPDATE SET ai_channel_id = ?, ai_chat_enabled = 1');
-            stmt.run(interaction.guild.id, channel.id, channel.id);
+            await GuildSettings.findOneAndUpdate(
+                { guildId: interaction.guild.id },
+                { 'ai.channelId': channel.id, 'ai.enabled': true },
+                { upsert: true }
+            );
 
             await interaction.reply({
                 content: `✅ **設定完成！**\n現在 AI 對話已綁定至 ${channel}，且只有在該頻道 **提及 (Tag)** 機器人才會回應。`,
