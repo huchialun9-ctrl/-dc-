@@ -6,3 +6,4 @@ database.sqlite
 logs/
 test-db.js
 database.sqlite*
+*.db
