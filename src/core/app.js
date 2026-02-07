@@ -54,8 +54,8 @@ app.use('/dashboard', (req, res) => {
 // Session
 const sessionConfig = {
     secret: process.env.SESSION_SECRET || 'dev_secret',
-    resave: false,
-    saveUninitialized: false,
+    resave: true, // Force session to be saved back to the store
+    saveUninitialized: true, // Force a session that is "uninitialized" to be saved to the store
     name: 'vx6.sid',
     cookie: {
         secure: process.env.NODE_ENV === 'production',
@@ -82,7 +82,8 @@ passport.use(new DiscordStrategy({
     scope: ['identify', 'guilds']
 }, async (accessToken, refreshToken, profile, done) => {
     try {
-        logger.info(`Auth Attempt: ${profile.id} (${profile.username})`);
+        console.log(`[AUTH DEBUG] Strategy triggered for: ${profile.username}`);
+        console.log(`[AUTH DEBUG] Profile guilds count: ${profile.guilds ? profile.guilds.length : 'NONE'}`);
 
         // Upsert User to Database (SQLite for user session/metadata)
         const stmt = db.prepare(`
@@ -97,7 +98,7 @@ passport.use(new DiscordStrategy({
 
         return done(null, profile);
     } catch (err) {
-        logger.error(`Auth Callback Error: ${err.message}`);
+        console.error(`[AUTH DEBUG] Error in strategy: ${err.message}`);
         return done(err, null);
     }
 }));
@@ -105,9 +106,9 @@ passport.use(new DiscordStrategy({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Logging Middleware
+// Logging Middleware & Session Monitor
 app.use((req, res, next) => {
-    logger.info(`${req.method} ${req.url} - ${req.ip}`);
+    console.log(`[LOG] ${req.method} ${req.url} - Auth: ${req.isAuthenticated()} - SessionID: ${req.sessionID}`);
     next();
 });
 

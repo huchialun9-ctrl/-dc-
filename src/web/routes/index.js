@@ -12,9 +12,13 @@ router.get('/health', (req, res) => {
 });
 
 // OAuth2 Callback Route
-router.get('/callback', passport.authenticate('discord', {
+router.get('/callback', (req, res, next) => {
+    console.log('[AUTH DEBUG] Reached /callback');
+    next();
+}, passport.authenticate('discord', {
     failureRedirect: '/dashboard'
 }), (req, res) => {
+    console.log(`[AUTH DEBUG] Callback success for user: ${req.user?.username}`);
     res.redirect('/dashboard');
 });
 
