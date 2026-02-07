@@ -5,7 +5,6 @@
   "scripts": {
     "start": "node server.js",
     "build": "cd src/web/dashboard && npm install && npm run build",
-    "postinstall": "cd src/web/dashboard && npm install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
