@@ -196,3 +196,9 @@
 {"level":"info","message":"Logged in as VX6 Tool#9755","timestamp":"2026-02-07 08:34:28"}
 {"level":"info","message":"GiveawayService initialized.","timestamp":"2026-02-07 08:34:28"}
 {"level":"info","message":"EarthquakeService started (Polling CWA API).","timestamp":"2026-02-07 08:34:28"}
+{"level":"warn","message":"⚠️ MONGODB_URI is missing. Database features will be unavailable.","timestamp":"2026-02-07 18:43:13"}
+{"level":"warn","message":"⚠️ Using MemoryStore for sessions (DB missing or misconfigured)","timestamp":"2026-02-07 18:43:13"}
+{"level":"info","message":"✅ AI (OpenAI/OpenRouter) Service Initialized","timestamp":"2026-02-07 18:43:14"}
+{"level":"info","message":"🚀 Web Server running on port 8000","timestamp":"2026-02-07 18:43:14"}
+{"level":"info","message":"✅ Bot logged in as VX6 Tool#9755","timestamp":"2026-02-07 18:43:15"}
+{"level":"info","message":"Logged in as VX6 Tool#9755","timestamp":"2026-02-07 18:43:15"}
