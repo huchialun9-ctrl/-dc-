@@ -14,13 +14,24 @@ const isAuthenticated = (req, res, next) => {
 // Get guilds where user has Manage Server permission and bot is present
 router.get('/guilds', isAuthenticated, async (req, res) => {
     try {
-        const userGuilds = req.user.guilds;
-        const manageableGuilds = userGuilds.filter(g => (g.permissions & 0x20) === 0x20 || (g.permissions & 0x8) === 0x8);
+        const userGuilds = req.user.guilds || [];
+        console.log(`[DEBUG] Fetching guilds for user: ${req.user.username} (${req.user.id})`);
+        console.log(`[DEBUG] Total guilds found in session: ${userGuilds.length}`);
+
+        const manageableGuilds = userGuilds.filter(g => {
+            const perms = Number(g.permissions);
+            const canManage = (perms & 0x20) === 0x20 || (perms & 0x8) === 0x8;
+            return canManage;
+        });
+
+        console.log(`[DEBUG] Manageable guilds: ${manageableGuilds.length}`);
 
         const guildsWithBot = manageableGuilds.map(g => {
             const guild = client.guilds.cache.get(g.id);
             return {
-                ...g,
+                id: g.id,
+                name: g.name,
+                icon: g.icon,
                 botPresent: !!guild,
                 iconUrl: g.icon ? `https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png` : null
             };
@@ -28,6 +39,7 @@ router.get('/guilds', isAuthenticated, async (req, res) => {
 
         res.json(guildsWithBot);
     } catch (error) {
+        console.error('[API ERROR] /guilds:', error);
         res.status(500).json({ error: error.message });
     }
 });
