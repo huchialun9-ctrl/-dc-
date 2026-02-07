@@ -142,12 +142,24 @@ module.exports = {
             const sub = interaction.options.getSubcommand();
             if (sub === 'staff') {
                 const role = interaction.options.getRole('role');
-                db.prepare('UPDATE settings SET ticket_support_role_id = ?, updated_at = CURRENT_TIMESTAMP WHERE guild_id = ?').run(role.id, interaction.guildId);
+                db.prepare(`
+                    INSERT INTO settings (guild_id, ticket_support_role_id, updated_at) 
+                    VALUES (?, ?, CURRENT_TIMESTAMP)
+                    ON CONFLICT(guild_id) DO UPDATE SET 
+                    ticket_support_role_id = excluded.ticket_support_role_id, 
+                    updated_at = CURRENT_TIMESTAMP
+                `).run(interaction.guildId, role.id);
                 embed.setTitle('👮 客服身分組已設定').setDescription(`現在只有持有 ${role} 身分組的人員可以查看與領取工單。`);
             }
             if (sub === 'logs') {
                 const channel = interaction.options.getChannel('channel');
-                db.prepare('UPDATE settings SET log_channel_id = ?, updated_at = CURRENT_TIMESTAMP WHERE guild_id = ?').run(channel.id, interaction.guildId);
+                db.prepare(`
+                    INSERT INTO settings (guild_id, log_channel_id, updated_at) 
+                    VALUES (?, ?, CURRENT_TIMESTAMP)
+                    ON CONFLICT(guild_id) DO UPDATE SET 
+                    log_channel_id = excluded.log_channel_id, 
+                    updated_at = CURRENT_TIMESTAMP
+                `).run(interaction.guildId, channel.id);
                 embed.setTitle('📜 工單日誌頻道已設定').setDescription(`所有的工單對話紀錄 (Transcripts) 將發送至 ${channel}。`);
             }
         }

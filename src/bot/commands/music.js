@@ -57,7 +57,7 @@ module.exports = {
                 });
 
                 // Apply default volume from settings
-                if (settings.music_volume !== undefined) {
+                if (settings && settings.music_volume !== undefined) {
                     setTimeout(() => {
                         const activeQueue = distube.getQueue(guild);
                         if (activeQueue) activeQueue.setVolume(settings.music_volume);

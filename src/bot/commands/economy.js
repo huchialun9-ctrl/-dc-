@@ -55,9 +55,9 @@ module.exports = {
                 return interaction.reply({ content: t('bot.economy_daily_cooldown', lang).replace('{time}', timeStr), ephemeral: true });
             }
 
-            const dailyAmount = settings.economy_daily || 100;
-            const startBalance = settings.economy_start_balance || 0;
-            const reward = dailyAmount;
+            const dailyAmount = settings ? settings.economy_daily : 100;
+            const startBalance = settings ? settings.economy_start_balance : 0;
+            const reward = dailyAmount || 100;
 
             if (data) {
                 db.prepare('UPDATE economy SET balance = balance + ?, last_daily = ? WHERE user_id = ? AND guild_id = ?')
