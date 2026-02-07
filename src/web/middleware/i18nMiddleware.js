@@ -2,10 +2,18 @@ const fs = require('fs');
 const path = require('path');
 
 const localesPath = path.join(__dirname, '../locales');
-const locales = {
-    zh: JSON.parse(fs.readFileSync(path.join(localesPath, 'zh.json'), 'utf8')),
-    en: JSON.parse(fs.readFileSync(path.join(localesPath, 'en.json'), 'utf8'))
-};
+let locales = { zh: {}, en: {} };
+
+try {
+    if (fs.existsSync(path.join(localesPath, 'zh.json'))) {
+        locales.zh = JSON.parse(fs.readFileSync(path.join(localesPath, 'zh.json'), 'utf8'));
+    }
+    if (fs.existsSync(path.join(localesPath, 'en.json'))) {
+        locales.en = JSON.parse(fs.readFileSync(path.join(localesPath, 'en.json'), 'utf8'));
+    }
+} catch (e) {
+    console.warn('⚠️ Localization files missing or corrupted. i18n features will use fallbacks.');
+}
 
 module.exports = (req, res, next) => {
     // Get lang from cookie or default to 'zh'
