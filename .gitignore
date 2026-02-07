@@ -7,3 +7,6 @@ logs/
 test-db.js
 database.sqlite*
 *.db
+
+# Frontend Build
+src/web/dashboard/dist
