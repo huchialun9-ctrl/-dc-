@@ -6,7 +6,7 @@ const path = require('path');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
-const connectDB = require('../database/mongo');
+const { connectDB } = require('../database/mongo');
 const logger = require('./logger');
 const db = require('../database/db'); // SQLite (Keep for legacy/existing features if needed)
 
