@@ -377,22 +377,69 @@ const App = () => {
                         {isBuilding ? 'Building...' : <Play className="w-4 h-4 fill-current" />} Apply
                       </button>
                     </div>
-                    <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 custom-scrollbar">
-                      {structure.categories?.map((cat, idx) => (
-                        <div key={idx} className="bg-discord-dark rounded-xl p-4 border border-white/5">
-                          <div className="flex items-center gap-2 text-gray-400 text-[10px] font-black uppercase mb-3 tracking-widest px-1">
-                            <ChevronRight className="w-3 h-3" /> {cat.name}
+                    <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-8 custom-scrollbar">
+                      {/* Roles Selection */}
+                      {structure.roles && structure.roles.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-2 text-discord-blurple text-[10px] font-black uppercase mb-3 tracking-widest px-1">
+                            <ShieldCheck className="w-3 h-3" /> Roles to Create
                           </div>
-                          <div className="flex flex-col gap-1.5">
-                            {cat.channels?.map((chan, cIdx) => (
-                              <div key={cIdx} className="flex items-center gap-2 px-2 py-1.5 text-sm text-gray-300 hover:bg-white/5 rounded transition-colors group">
-                                {chan.type === 'voice' ? <Volume2 className="w-4 h-4 opacity-50 group-hover:opacity-100" /> : <Hash className="w-4 h-4 opacity-50 group-hover:opacity-100" />}
-                                {chan.name}
+                          <div className="flex flex-wrap gap-2">
+                            {structure.roles.map((role, rIdx) => (
+                              <div key={rIdx} className="flex items-center gap-1.5 px-3 py-1.5 bg-discord-dark rounded-full border border-white/10 text-xs font-bold" style={{ color: role.color }}>
+                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: role.color }} />
+                                {role.name}
                               </div>
                             ))}
                           </div>
                         </div>
-                      ))}
+                      )}
+
+                      {/* Rules Selection */}
+                      {structure.rules && structure.rules.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-2 text-discord-yellow text-[10px] font-black uppercase mb-3 tracking-widest px-1">
+                            <FileText className="w-3 h-3" /> Server Rules
+                          </div>
+                          <div className="bg-discord-dark rounded-xl p-4 border border-white/5 flex flex-col gap-2">
+                            {structure.rules.map((rule, ruIdx) => (
+                              <div key={ruIdx} className="text-xs text-gray-400 flex gap-2">
+                                <span className="text-discord-yellow/50 font-bold">{ruIdx + 1}.</span>
+                                {rule}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Structure Selection */}
+                      <div>
+                        <div className="flex items-center gap-2 text-gray-500 text-[10px] font-black uppercase mb-3 tracking-widest px-1">
+                          <Layers className="w-3 h-3" /> Channel Structure
+                        </div>
+                        <div className="flex flex-col gap-4">
+                          {structure.categories?.map((cat, idx) => (
+                            <div key={idx} className="bg-discord-dark rounded-xl p-4 border border-white/5">
+                              <div className="flex items-center gap-2 text-gray-400 text-[10px] font-black uppercase mb-2 tracking-widest px-1">
+                                <ChevronRight className="w-2 h-2" /> {cat.name}
+                              </div>
+                              <div className="flex flex-col gap-1">
+                                {cat.channels?.map((chan, cIdx) => (
+                                  <div key={cIdx} className="flex flex-col px-2 py-1.5 rounded transition-colors group">
+                                    <div className="flex items-center gap-2 text-sm text-gray-300">
+                                      {chan.type === 'voice' ? <Volume2 className="w-4 h-4 opacity-50" /> : <Hash className="w-4 h-4 opacity-50" />}
+                                      {chan.name}
+                                    </div>
+                                    {chan.topic && (
+                                      <div className="text-[10px] text-gray-500 ml-6 italic truncate">{chan.topic}</div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </motion.div>
                 )}

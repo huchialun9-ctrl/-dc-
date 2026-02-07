@@ -6,3 +6,7 @@
 {"level":"error","message":"Interaction Error: Interaction has already been acknowledged.","timestamp":"2026-02-06 11:25:14"}
 {"level":"error","message":"Interaction Error: Unknown interaction","timestamp":"2026-02-06 11:25:24"}
 {"level":"error","message":"Interaction Error: Interaction has already been acknowledged.","timestamp":"2026-02-06 11:25:49"}
+{"level":"error","message":"!!! WEB ERROR !!!","timestamp":"2026-02-07 18:53:52"}
+{"level":"error","message":"Path: /callback?code=mock123456","timestamp":"2026-02-07 18:53:52"}
+{"level":"error","message":"Error: Invalid \"code\" in request.","timestamp":"2026-02-07 18:53:52"}
+{"level":"error","message":"TokenError: Invalid \"code\" in request.\n    at OAuth2Strategy.parseErrorResponse (/Users/jianyufang/Documents/bot/node_modules/passport-oauth2/lib/strategy.js:373:12)\n    at OAuth2Strategy._createOAuthError (/Users/jianyufang/Documents/bot/node_modules/passport-oauth2/lib/strategy.js:420:16)\n    at /Users/jianyufang/Documents/bot/node_modules/passport-oauth2/lib/strategy.js:177:45\n    at /Users/jianyufang/Documents/bot/node_modules/oauth/lib/oauth2.js:196:18\n    at passBackControl (/Users/jianyufang/Documents/bot/node_modules/oauth/lib/oauth2.js:132:9)\n    at IncomingMessage.<anonymous> (/Users/jianyufang/Documents/bot/node_modules/oauth/lib/oauth2.js:157:7)\n    at IncomingMessage.emit (node:events:530:35)\n    at endReadableNT (node:internal/streams/readable:1698:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","timestamp":"2026-02-07 18:53:52"}

@@ -39,18 +39,24 @@ const parseServerStructure = async (description, settings = {}) => {
                         {
                           "name": "Category Name",
                           "channels": [
-                            { "name": "channel-name", "type": "text" },
+                            { "name": "channel-name", "type": "text", "topic": "Brief channel description" },
                             { "name": "voice-channel", "type": "voice" }
                           ]
                         }
-                      ]
+                      ],
+                      "roles": [
+                        { "name": "Role Name", "color": "#HEXCLR", "hoist": true }
+                      ],
+                      "rules": ["Rule 1", "Rule 2"],
+                      "welcomeMessage": "Custom greeting"
                     }
                     Rules:
                     1. Channel types must be 'text' or 'voice'.
-                    2. Use lowercase with hyphens for channel names (standard Discord practice).
+                    2. Use lowercase with hyphens for channel names.
                     3. Output names and content in ${language}.
-                    ${template ? `4. Follow this text template/style: ${template}` : ''}
-                    5. Strictly output JSON only.`
+                    4. Role colors should be hexadecimal.
+                    ${template ? `5. Follow this text template/style: ${template}` : ''}
+                    6. Strictly output JSON only.`
                 },
                 {
                     role: "user",
