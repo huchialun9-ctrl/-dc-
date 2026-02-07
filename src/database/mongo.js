@@ -7,7 +7,7 @@ const connectDB = async () => {
     const uri = process.env.MONGODB_URI;
     if (!uri) {
         logger.warn('⚠️ MONGODB_URI is missing. Database features will be unavailable.');
-        return;
+        return false;
     }
 
     if (uri.includes('localhost') || uri.includes('127.0.0.1')) {
@@ -15,15 +15,17 @@ const connectDB = async () => {
     }
 
     try {
-        const conn = await mongoose.connect(uri, {
-            serverSelectionTimeoutMS: 5000, // 5 seconds instead of 30
-            autoIndex: true, // Auto-create indexes
-            bufferCommands: false // Fail fast if not connected
+        await mongoose.connect(uri, {
+            serverSelectionTimeoutMS: 5000,
+            autoIndex: true,
+            bufferCommands: false
         });
         isConnected = true;
-        logger.info(`✅ MongoDB Connected: ${conn.connection.host}`);
+        logger.info(`✅ MongoDB Connected successfully`);
+        return true;
     } catch (error) {
-        logger.error(`❌ MongoDB Connection Error (${uri}): ${error.message}`);
+        logger.error(`❌ MongoDB Connection Failed: ${error.message}`);
+        return false;
     }
 };
 

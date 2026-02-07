@@ -15,12 +15,12 @@ const db = require('../database/db'); // SQLite (Keep for legacy/existing featur
 const app = express();
 
 // Set Mongoose Global Config
-mongoose.set('bufferCommands', false); // Fail fast if DB is disconnected
+mongoose.set('bufferCommands', false);
 
-// Connect to MongoDB
+// Connect to MongoDB (Fire and forget, but handled in mongo.js)
 connectDB();
 
-// Trust Proxy (Required for Railway/Heroku behind load balancer)
+// Trust Proxy
 app.set('trust proxy', 1);
 
 // Security Middleware
@@ -35,12 +35,6 @@ app.use(helmet({
         }
     }
 }));
-
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per windowMs
-});
-app.use(limiter);
 
 // Standard Middleware
 app.use(express.json());
@@ -61,36 +55,34 @@ const sessionConfig = {
         secure: true,
         httpOnly: true,
         sameSite: 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 1 week
+        maxAge: 7 * 24 * 60 * 60 * 1000
     }
 };
 
-if (process.env.MONGODB_URI) {
-    sessionConfig.store = MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI,
-        collectionName: 'sessions',
-        ttl: 14 * 24 * 60 * 60 // 14 days
-    });
-} else {
-    logger.warn('⚠️ Using MemoryStore for sessions. Login status might be unstable.');
-}
+// Robust Session Store Selection
+const uri = process.env.MONGODB_URI;
+const isProd = process.env.NODE_ENV === 'production';
+const isLocalUri = uri && (uri.includes('localhost') || uri.includes('127.0.0.1'));
 
-if (process.env.NODE_ENV === 'production') {
-    logger.info('Production mode detected. Secure cookies disabled.');
+if (uri && !(isProd && isLocalUri)) {
+    sessionConfig.store = MongoStore.create({
+        mongoUrl: uri,
+        collectionName: 'sessions',
+        ttl: 14 * 24 * 60 * 60,
+        autoRemove: 'native'
+    });
+    logger.info('✅ Initialized MongoStore for sessions');
+} else {
+    logger.warn('⚠️ Using MemoryStore for sessions (DB missing or misconfigured)');
 }
 
 app.use(session(sessionConfig));
+app.use(passport.initialize());
+app.use(passport.session());
 
-// Passport Config
-passport.serializeUser((user, done) => {
-    console.log(`[AUTH DEBUG] Serializing user: ${user.id}`);
-    done(null, user);
-});
-
-passport.deserializeUser((obj, done) => {
-    console.log(`[AUTH DEBUG] Deserializing user: ${obj.id}`);
-    done(null, obj);
-});
+// Passport Serialization
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
 
 passport.use(new DiscordStrategy({
     clientID: process.env.CLIENT_ID,
@@ -100,10 +92,7 @@ passport.use(new DiscordStrategy({
     permissions: 8
 }, async (accessToken, refreshToken, profile, done) => {
     try {
-        console.log(`[AUTH DEBUG] Strategy triggered for: ${profile.username}`);
-        console.log(`[AUTH DEBUG] Profile guilds count: ${profile.guilds ? profile.guilds.length : 'NONE'}`);
-
-        // Upsert User to Database (SQLite for user session/metadata)
+        // Upsert User to SQLite (Fallback/Metadata)
         const stmt = db.prepare(`
             INSERT INTO users (id, username, avatar, last_login) 
             VALUES (?, ?, ?, CURRENT_TIMESTAMP)
@@ -113,20 +102,17 @@ passport.use(new DiscordStrategy({
             last_login = CURRENT_TIMESTAMP
         `);
         stmt.run(profile.id, profile.username, profile.avatar);
-
         return done(null, profile);
     } catch (err) {
-        console.error(`[AUTH DEBUG] Error in strategy: ${err.message}`);
         return done(err, null);
     }
 }));
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Logging Middleware & Session Monitor
+// Logging Middleware
 app.use((req, res, next) => {
-    console.log(`[LOG] ${req.method} ${req.url} - Auth: ${req.isAuthenticated()} - SessionID: ${req.sessionID}`);
+    if (req.url !== '/health') {
+        console.log(`[LOG] ${req.method} ${req.url} - Auth: ${req.isAuthenticated()}`);
+    }
     next();
 });
 

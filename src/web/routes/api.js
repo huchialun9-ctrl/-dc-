@@ -90,11 +90,14 @@ router.post('/execute-build', isAuthenticated, async (req, res) => {
             if (result.success && mongo.getIsConnected()) {
                 try {
                     // Update implementation status if DB is available
+                    const GuildConfig = require('../../models/GuildConfig');
                     const config = await GuildConfig.findOne({ guildId });
                     if (config) {
                         const latest = config.structures[config.structures.length - 1];
-                        latest.implemented = true;
-                        await config.save();
+                        if (latest) {
+                            latest.implemented = true;
+                            await config.save();
+                        }
                     }
                 } catch (e) {
                     console.error('Failed to update build status in DB:', e);
