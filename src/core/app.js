@@ -47,7 +47,7 @@ app.use(require('../web/middleware/i18nMiddleware'));
 // Serve Dashboard
 const dashboardPath = path.join(__dirname, '../web/dashboard/dist');
 app.use('/dashboard', express.static(dashboardPath));
-app.get('/dashboard/:path*', (req, res) => {
+app.use('/dashboard', (req, res) => {
     res.sendFile(path.join(dashboardPath, 'index.html'));
 });
 
