@@ -15,16 +15,11 @@ const isAuthenticated = (req, res, next) => {
 router.get('/guilds', isAuthenticated, async (req, res) => {
     try {
         const userGuilds = req.user.guilds || [];
-        console.log(`[DEBUG] Fetching guilds for user: ${req.user.username} (${req.user.id})`);
-        console.log(`[DEBUG] Total guilds found in session: ${userGuilds.length}`);
-
         const manageableGuilds = userGuilds.filter(g => {
             const perms = Number(g.permissions);
             const canManage = (perms & 0x20) === 0x20 || (perms & 0x8) === 0x8;
             return canManage;
         });
-
-        console.log(`[DEBUG] Manageable guilds: ${manageableGuilds.length}`);
 
         const guildsWithBot = manageableGuilds.map(g => {
             const guild = client.guilds.cache.get(g.id);
@@ -42,6 +37,11 @@ router.get('/guilds', isAuthenticated, async (req, res) => {
         console.error('[API ERROR] /guilds:', error);
         res.status(500).json({ error: error.message });
     }
+});
+
+// Debug: Get current user profile
+router.get('/user', isAuthenticated, (req, res) => {
+    res.json(req.user);
 });
 
 // Generate structure from AI
