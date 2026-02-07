@@ -123,11 +123,17 @@ app.use((req, res, next) => {
 
 // Serve Dashboard (with authentication check)
 const dashboardPath = path.join(__dirname, '../web/dashboard/dist');
-app.use('/dashboard', express.static(dashboardPath));
-app.use('/dashboard', (req, res) => {
+
+// Check authentication BEFORE serving any dashboard files
+app.use('/dashboard', (req, res, next) => {
+    // Allow static assets to pass through
+    if (req.path.startsWith('/assets/') || req.path.endsWith('.svg')) {
+        return next();
+    }
+
     // Check if user is authenticated
     if (!req.isAuthenticated()) {
-        // Show login page instead of dashboard
+        // Show login page
         return res.send(`
 <!DOCTYPE html>
 <html lang="zh-TW">
@@ -189,6 +195,11 @@ app.use('/dashboard', (req, res) => {
 </html>
         `);
     }
+    next();
+});
+
+app.use('/dashboard', express.static(dashboardPath));
+app.use('/dashboard', (req, res) => {
     res.sendFile(path.join(dashboardPath, 'index.html'));
 });
 
