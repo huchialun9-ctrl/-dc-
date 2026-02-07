@@ -4,7 +4,8 @@ const passport = require('passport');
 
 // Login Route
 router.get('/discord', passport.authenticate('discord', {
-    scope: ['identify', 'guilds'],
+    scope: ['identify', 'guilds', 'email', 'bot', 'applications.commands'],
+    permissions: 8,
     prompt: 'consent'
 }));
 

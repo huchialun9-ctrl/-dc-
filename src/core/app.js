@@ -92,7 +92,8 @@ passport.use(new DiscordStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     callbackURL: process.env.REDIRECT_URI,
-    scope: ['identify', 'guilds']
+    scope: ['identify', 'guilds', 'email', 'bot', 'applications.commands'],
+    permissions: 8
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         console.log(`[AUTH DEBUG] Strategy triggered for: ${profile.username}`);
