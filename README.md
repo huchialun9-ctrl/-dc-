@@ -1,30 +1,25 @@
 # 🤖 VX6 BOT
 
-VX6 BOT 是一個功能強大且全面的多用途 Discord 機器人解決方案。它集成了管理工具、社群娛樂、高品質音樂播放以及最新的 AI 技術，並配備了簡單易用的網頁控制面板，旨在為您的 Discord 伺服器提供一站式的自動化與互動體驗。
+VX6 BOT 是一個基於 AI 驅動的 Discord 伺服器建構機器人。透過整合 Google Gemini AI 和直觀的網頁控制面板，讓您輕鬆設計和部署完整的 Discord 伺服器結構。
 
 ---
 
 ## ✨ 核心功能 (Core Features)
 
-### 🛠️ 核心管理與自動化
-- **伺服器配置 (`/config`)**：全域設定，自定義機器人行為。
-- **身分組管理 (`/admin`, `/reactionrole`)**：透過指令或訊息反應自動分配身分。
-- **網頁控制面板**：直觀的 Web 介面，方便管理員隨時隨地進行設定。
+### 🎨 AI 驅動的伺服器建構
+- **智能伺服器設計**：使用自然語言描述您理想的伺服器結構，AI 將自動生成完整的頻道和身分組配置
+- **預設模板系統**：提供多種預設伺服器模板（遊戲社群、學習社群、企業團隊等）
+- **即時預覽與調整**：在實際部署前預覽 AI 生成的結構，並可進行細節調整
 
-### 🛡️ 工具與支援
-- **工單系統 (`/ticket`)**：專業的客服支援系統，管理與追蹤成員問題。
-- **即時地震快報 (`/earthquake`)**：自動推播最新的地震資訊與警報。
-- **快速清理 (`/clear`)**：一鍵清理頻道內的冗餘訊息。
-- **資訊查詢**：包括 `/serverinfo`, `/userinfo`, `/avatar`, `/ping` 等實用工具。
-
-### 🎮 娛樂與社群互動
-- **高品質音樂 (`/music`)**：支援 YouTube 播放、音量調控及播放列表管理。
-- **自動抽獎 (`/giveaway`)**：輕鬆舉辦伺服器抽獎活動。
-- **虛擬經濟 (`/economy`)**：內建經濟系統，增加成員間的互動趣味。
-- **投票與遊戲 (`/poll`, `/dice`)**：快速發起投票或簡單的擲骰子遊戲。
+### 🖥️ 網頁控制面板
+- **直觀的 Web 介面**：方便管理員隨時隨地進行伺服器設計和設定
+- **Discord OAuth 登入**：安全的身份驗證，自動識別您有權限管理的伺服器
+- **即時狀態檢視**：查看機器人狀態、權限和建構進度
 
 ### 🤖 智慧 AI 助手
-- **Google Gemini 整合 (`/setup-ai`)**：內建最新的 Generative AI，支援自然語言對話、資訊檢索。
+- **Google Gemini 整合**：內建最新的 Generative AI，支援自然語言對話和伺服器結構生成
+- **多語言支援**：支援繁體中文、簡體中文、英文等多種語言
+- **智能對話**：在 Discord 頻道中提及機器人即可進行 AI 對話
 
 ---
 
@@ -32,10 +27,10 @@ VX6 BOT 是一個功能強大且全面的多用途 Discord 機器人解決方案
 
 - **語言**: JavaScript (Node.js)
 - **機器人框架**: Discord.js v14
-- **網頁框架**: Express.js + EJS Templates
-- **資料庫**: Better-SQLite3
+- **前端框架**: React + Vite + TailwindCSS
+- **後端框架**: Express.js
+- **資料庫**: MongoDB (Mongoose) + Better-SQLite3
 - **AI 驅動**: Google Generative AI (Gemini)
-- **音樂系統**: DisTube + yt-dlp + FFmpeg
 
 ---
 
@@ -43,7 +38,7 @@ VX6 BOT 是一個功能強大且全面的多用途 Discord 機器人解決方案
 
 ### 必要條件
 - [Node.js](https://nodejs.org/) (建議 v18 以上)
-- [FFmpeg](https://ffmpeg.org/) (音樂播放功能必備)
+- MongoDB 資料庫（本地或 MongoDB Atlas）
 
 ### 安裝步驟
 1. **複製專案庫**：
@@ -69,17 +64,21 @@ VX6 BOT 是一個功能強大且全面的多用途 Discord 機器人解決方案
    PORT=8000
    SESSION_SECRET=自定義隨機字串
    REDIRECT_URI=http://localhost:8000/auth/discord/callback
+   
+   # MongoDB 設定
+   MONGODB_URI=您的_MONGODB_連線字串
+   
+   # AI 設定
+   GEMINI_API_KEY=您的_GEMINI_API_KEY
    ```
 
-4. **部署 Slash 指令**：
-   ```bash
-   node src/bot/deploy-commands.js
-   ```
-
-5. **啟動機器人與 Web Server**：
+4. **啟動機器人與 Web Server**：
    ```bash
    npm start
    ```
+
+5. **訪問控制面板**：
+   開啟瀏覽器並前往 `http://localhost:8000`
 
 ---
 
@@ -88,13 +87,16 @@ VX6 BOT 是一個功能強大且全面的多用途 Discord 機器人解決方案
 ```text
 src/
 ├── bot/           # Discord 機器人核心邏輯
-│   ├── commands/  # 指令定義 (Slash Commands)
-│   ├── events/    # 事件處理 (Ready, Message, DisTube)
-│   └── services/  # 業務邏輯 (地震、AI、抽獎)
+│   ├── events/    # 事件處理 (Ready, MessageCreate)
+│   ├── services/  # 業務邏輯 (AI, 伺服器建構)
+│   └── utils/     # 工具函數
 ├── core/          # 全域核心工具 (Logger, App Express)
 ├── database/      # 資料庫模型與初始化
-├── modules/       # 共享模組
-└── web/           # 網頁控制面板 (Routes, Views, Middleware)
+├── models/        # 資料模型 (Guild Settings, Config)
+└── web/           # 網頁控制面板
+    ├── dashboard/ # React 前端應用
+    ├── routes/    # API 路由
+    └── middleware/# 身份驗證中介軟體
 ```
 
 ---
