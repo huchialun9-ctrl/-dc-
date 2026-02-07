@@ -138,8 +138,13 @@ module.exports = {
                 categories = categories.filter(c => c.value !== id);
                 categories.push({ value: id, label, description: desc });
 
-                db.prepare('UPDATE settings SET ticket_categories = ?, updated_at = CURRENT_TIMESTAMP WHERE guild_id = ?')
-                    .run(JSON.stringify(categories), interaction.guildId);
+                db.prepare(`
+                    INSERT INTO settings (guild_id, ticket_categories, updated_at) 
+                    VALUES (?, ?, CURRENT_TIMESTAMP)
+                    ON CONFLICT(guild_id) DO UPDATE SET 
+                    ticket_categories = excluded.ticket_categories, 
+                    updated_at = CURRENT_TIMESTAMP
+                `).run(interaction.guildId, JSON.stringify(categories));
 
                 return interaction.reply({ content: `✅ 已新增分類：**${label}** (${id})`, ephemeral: true });
             }
@@ -148,8 +153,13 @@ module.exports = {
                 const id = interaction.options.getString('id');
                 const newCats = categories.filter(c => c.value !== id);
 
-                db.prepare('UPDATE settings SET ticket_categories = ?, updated_at = CURRENT_TIMESTAMP WHERE guild_id = ?')
-                    .run(JSON.stringify(newCats), interaction.guildId);
+                db.prepare(`
+                    INSERT INTO settings (guild_id, ticket_categories, updated_at) 
+                    VALUES (?, ?, CURRENT_TIMESTAMP)
+                    ON CONFLICT(guild_id) DO UPDATE SET 
+                    ticket_categories = excluded.ticket_categories, 
+                    updated_at = CURRENT_TIMESTAMP
+                `).run(interaction.guildId, JSON.stringify(newCats));
 
                 return interaction.reply({ content: `✅ 已移除分類：\`${id}\``, ephemeral: true });
             }

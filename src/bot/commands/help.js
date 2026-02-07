@@ -21,8 +21,8 @@ module.exports = {
 
         // Define Categories
         const categories = {
-            admin: { name: '🛠️ 核心管理', commands: ['config', 'setup', 'setup-ai', 'admin', 'reactionrole'] },
-            tools: { name: '🛡️ 工具與管理', commands: ['clear', 'close', 'say', 'voice', 'panel'] },
+            admin: { name: '🛠️ 核心管理', commands: ['config', 'setup-ai', 'admin', 'reactionrole'] },
+            tools: { name: '🛡️ 工具與管理', commands: ['ticket', 'clear', 'say', 'voice', 'panel'] },
             fun: { name: '🎮 娛樂與互動', commands: ['economy', 'music', 'giveaway', 'dice', 'poll', 'earthquake'] },
             info: { name: 'ℹ️ 資訊與回饋', commands: ['help', 'ping', 'serverinfo', 'userinfo', 'avatar', 'donate'] }
         };

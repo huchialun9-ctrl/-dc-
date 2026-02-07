@@ -18,10 +18,21 @@ const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
     try {
         console.log('Started refreshing application (/) commands.');
 
-        // Registers commands globally. For faster updates during dev, use applicationGuildCommands
+        // 1. Fetch existing commands to identify protected Entry Points
+        const existingCommands = await rest.get(
+            Routes.applicationCommands(process.env.CLIENT_ID)
+        );
+
+        const entryPointCommands = existingCommands.filter(cmd => cmd.type === 4);
+        console.log(`Found ${entryPointCommands.length} protected Entry Point commands.`);
+
+        // 2. Merge protected commands with new commands
+        const finalCommands = [...commands, ...entryPointCommands];
+
+        // 3. Register all commands
         await rest.put(
             Routes.applicationCommands(process.env.CLIENT_ID),
-            { body: commands },
+            { body: finalCommands },
         );
 
         console.log('Successfully reloaded application (/) commands.');
