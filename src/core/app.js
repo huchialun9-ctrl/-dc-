@@ -190,6 +190,14 @@ app.use('/dashboard', (req, res, next) => {
             </svg>
             使用 Discord 登入
         </a>
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+            <a href="https://github.com/huchialun9-ctrl/-dc-" target="_blank" rel="noopener" style="color: #4a5568; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.2s;">
+                📦 GitHub
+            </a>
+            <a href="https://github.com/huchialun9-ctrl/-dc-#readme" target="_blank" rel="noopener" style="color: #4a5568; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.2s;">
+                📖 使用文檔
+            </a>
+        </div>
     </div>
 </body>
 </html>
