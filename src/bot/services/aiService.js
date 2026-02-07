@@ -36,6 +36,7 @@ const parseServerStructure = async (description, settings = {}) => {
         console.log('[aiService] Making API request to OpenAI/OpenRouter...');
         const response = await openai.chat.completions.create({
             model: "openai/gpt-4o",
+            max_tokens: 3000, // Limit to prevent quota issues
             messages: [
                 {
                     role: "system",
