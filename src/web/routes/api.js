@@ -68,6 +68,8 @@ router.get('/generate-structure', isAuthenticated, async (req, res) => {
     const { description, guildId } = req.query;
     if (!description) return res.status(400).json({ error: 'Description is required' });
 
+    console.log('[AI Generation Request]', { description, guildId });
+
     try {
         let settings = {};
         if (guildId) {
@@ -75,12 +77,22 @@ router.get('/generate-structure', isAuthenticated, async (req, res) => {
             settings = await GuildSettings.findOne({ guildId }) || {};
         }
 
+        console.log('[AI Settings]', { language: settings.language, template: settings.template });
+
         const structure = await aiService.parseServerStructure(description, {
             language: settings.language,
             template: settings.template
         });
+
+        console.log('[AI Response]', { hasError: !!structure.error, structure });
+
         res.json(structure);
     } catch (error) {
+        console.error('[AI Generation Error - Catch Block]', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+        });
         res.status(500).json({ error: error.message });
     }
 });

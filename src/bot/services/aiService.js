@@ -22,11 +22,18 @@ const init = () => {
  * @returns {Promise<Object>}
  */
 const parseServerStructure = async (description, settings = {}) => {
-    if (!openai) return { error: "AI 系統尚未設定 (API Key Missing)" };
+    console.log('[aiService.parseServerStructure] Called', { description, settings, openaiInitialized: !!openai });
+
+    if (!openai) {
+        const error = "AI 系統尚未設定 (API Key Missing)";
+        console.error('[aiService] OpenAI client not initialized');
+        return { error };
+    }
 
     const { language = 'Traditional Chinese', template = '' } = settings;
 
     try {
+        console.log('[aiService] Making API request to OpenAI/OpenRouter...');
         const response = await openai.chat.completions.create({
             model: "openai/gpt-4o",
             messages: [
@@ -66,8 +73,17 @@ const parseServerStructure = async (description, settings = {}) => {
             response_format: { type: "json_object" }
         });
 
+        console.log('[aiService] API request successful');
         return JSON.parse(response.choices[0].message.content);
     } catch (error) {
+        console.error('[aiService] API Error Details:', {
+            message: error.message,
+            status: error.status,
+            type: error.type,
+            code: error.code,
+            responseData: error.response?.data,
+            stack: error.stack
+        });
         logger.error(`AI Parsing Error: ${error.message}`);
         return { error: error.message };
     }
