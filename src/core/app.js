@@ -59,7 +59,7 @@ const sessionConfig = {
     name: 'vx6.sid',
     proxy: true, // Required for Railway/Proxies
     cookie: {
-        secure: true, // Re-enable secure but with proxy: true
+        secure: false, // Set to false to test if proxy is stripping secure cookies
         httpOnly: true,
         sameSite: 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000 // 1 week
