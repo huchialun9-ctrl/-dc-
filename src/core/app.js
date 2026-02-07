@@ -6,11 +6,15 @@ const path = require('path');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
+const connectDB = require('../database/mongo');
 const logger = require('./logger');
-const db = require('../database/db');
+const db = require('../database/db'); // SQLite (Keep for legacy/existing features if needed)
 
 // Initialize App
 const app = express();
+
+// Connect to MongoDB
+connectDB();
 
 // Trust Proxy (Required for Railway/Heroku behind load balancer)
 app.set('trust proxy', 1);
@@ -38,11 +42,14 @@ app.use(limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-// Static files
-const publicPath = path.join(__dirname, '../web/public');
-console.log('Serving static files from:', publicPath);
-app.use(express.static(publicPath));
 app.use(require('../web/middleware/i18nMiddleware'));
+
+// Serve Dashboard
+const dashboardPath = path.join(__dirname, '../web/dashboard/dist');
+app.use('/dashboard', express.static(dashboardPath));
+app.get('/dashboard/*', (req, res) => {
+    res.sendFile(path.join(dashboardPath, 'index.html'));
+});
 
 // Session
 const sessionConfig = {
@@ -77,7 +84,7 @@ passport.use(new DiscordStrategy({
     try {
         logger.info(`Auth Attempt: ${profile.id} (${profile.username})`);
 
-        // Upsert User to Database
+        // Upsert User to Database (SQLite for user session/metadata)
         const stmt = db.prepare(`
             INSERT INTO users (id, username, avatar, last_login) 
             VALUES (?, ?, ?, CURRENT_TIMESTAMP)
@@ -88,26 +95,15 @@ passport.use(new DiscordStrategy({
         `);
         stmt.run(profile.id, profile.username, profile.avatar);
 
-        // Log Activity
-        const logStmt = db.prepare('INSERT INTO activity_logs (user_id, action, details) VALUES (?, ?, ?)');
-        logStmt.run(profile.id, 'LOGIN', `Logged in via Discord`);
-
-        logger.info(`Auth Success: ${profile.id}`);
-
         return done(null, profile);
     } catch (err) {
         logger.error(`Auth Callback Error: ${err.message}`);
-        console.error(err); // Full stack trace to console
         return done(err, null);
     }
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-// View Engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '../web/views'));
 
 // Logging Middleware
 app.use((req, res, next) => {
@@ -118,6 +114,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/', require('../web/routes/index'));
 app.use('/auth', require('../web/routes/auth'));
+app.use('/api', require('../web/routes/api'));
 
 
 // Health Check & DB Status
@@ -155,7 +152,7 @@ app.use((err, req, res, next) => {
     logger.error(`Error: ${err.message}`);
     logger.error(err.stack);
     console.error(err);
-    res.status(500).render('error', { error: err.message || 'Internal Server Error' });
+    res.status(500).json({ error: err.message || 'Internal Server Error' });
 });
 
 module.exports = app;

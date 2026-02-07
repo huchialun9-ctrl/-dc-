@@ -137,3 +137,62 @@
 {"level":"info","message":"✅ Database table initialized: Voice Channels","timestamp":"2026-02-07 07:58:58"}
 {"level":"info","message":"✅ Database table initialized: Earthquake Subs","timestamp":"2026-02-07 07:58:58"}
 {"level":"info","message":"Running database migrations...","timestamp":"2026-02-07 07:58:58"}
+{"level":"info","message":"✅ Database table initialized: Users","timestamp":"2026-02-07 08:04:46"}
+{"level":"info","message":"✅ Database table initialized: Tickets","timestamp":"2026-02-07 08:04:46"}
+{"level":"info","message":"✅ Database table initialized: Settings","timestamp":"2026-02-07 08:04:46"}
+{"level":"info","message":"✅ Database table initialized: Activity Logs","timestamp":"2026-02-07 08:04:46"}
+{"level":"info","message":"✅ Database table initialized: Custom Commands","timestamp":"2026-02-07 08:04:46"}
+{"level":"info","message":"✅ Database table initialized: Levels","timestamp":"2026-02-07 08:04:46"}
+{"level":"info","message":"✅ Database table initialized: Transcripts","timestamp":"2026-02-07 08:04:46"}
+{"level":"info","message":"✅ Database table initialized: Economy","timestamp":"2026-02-07 08:04:46"}
+{"level":"info","message":"✅ Database table initialized: Giveaways","timestamp":"2026-02-07 08:04:46"}
+{"level":"info","message":"✅ Database table initialized: Voice Master","timestamp":"2026-02-07 08:04:46"}
+{"level":"info","message":"✅ Database table initialized: Voice Channels","timestamp":"2026-02-07 08:04:46"}
+{"level":"info","message":"✅ Database table initialized: Earthquake Subs","timestamp":"2026-02-07 08:04:46"}
+{"level":"info","message":"Running database migrations...","timestamp":"2026-02-07 08:04:46"}
+{"level":"info","message":"✅ Database table initialized: Users","timestamp":"2026-02-07 08:07:26"}
+{"level":"info","message":"✅ Database table initialized: Tickets","timestamp":"2026-02-07 08:07:26"}
+{"level":"info","message":"✅ Database table initialized: Settings","timestamp":"2026-02-07 08:07:26"}
+{"level":"info","message":"✅ Database table initialized: Activity Logs","timestamp":"2026-02-07 08:07:26"}
+{"level":"info","message":"✅ Database table initialized: Custom Commands","timestamp":"2026-02-07 08:07:26"}
+{"level":"info","message":"✅ Database table initialized: Levels","timestamp":"2026-02-07 08:07:26"}
+{"level":"info","message":"✅ Database table initialized: Transcripts","timestamp":"2026-02-07 08:07:26"}
+{"level":"info","message":"✅ Database table initialized: Economy","timestamp":"2026-02-07 08:07:26"}
+{"level":"info","message":"✅ Database table initialized: Giveaways","timestamp":"2026-02-07 08:07:26"}
+{"level":"info","message":"✅ Database table initialized: Voice Master","timestamp":"2026-02-07 08:07:26"}
+{"level":"info","message":"✅ Database table initialized: Voice Channels","timestamp":"2026-02-07 08:07:26"}
+{"level":"info","message":"✅ Database table initialized: Earthquake Subs","timestamp":"2026-02-07 08:07:26"}
+{"level":"info","message":"Running database migrations...","timestamp":"2026-02-07 08:07:26"}
+{"level":"info","message":"✅ Database table initialized: Users","timestamp":"2026-02-07 08:13:38"}
+{"level":"info","message":"✅ Database table initialized: Tickets","timestamp":"2026-02-07 08:13:38"}
+{"level":"info","message":"✅ Database table initialized: Settings","timestamp":"2026-02-07 08:13:38"}
+{"level":"info","message":"✅ Database table initialized: Activity Logs","timestamp":"2026-02-07 08:13:38"}
+{"level":"info","message":"✅ Database table initialized: Custom Commands","timestamp":"2026-02-07 08:13:38"}
+{"level":"info","message":"✅ Database table initialized: Levels","timestamp":"2026-02-07 08:13:38"}
+{"level":"info","message":"✅ Database table initialized: Transcripts","timestamp":"2026-02-07 08:13:38"}
+{"level":"info","message":"✅ Database table initialized: Economy","timestamp":"2026-02-07 08:13:38"}
+{"level":"info","message":"✅ Database table initialized: Giveaways","timestamp":"2026-02-07 08:13:38"}
+{"level":"info","message":"✅ Database table initialized: Voice Master","timestamp":"2026-02-07 08:13:38"}
+{"level":"info","message":"✅ Database table initialized: Voice Channels","timestamp":"2026-02-07 08:13:38"}
+{"level":"info","message":"✅ Database table initialized: Earthquake Subs","timestamp":"2026-02-07 08:13:38"}
+{"level":"info","message":"Running database migrations...","timestamp":"2026-02-07 08:13:38"}
+{"level":"info","message":"✅ Database table initialized: Users","timestamp":"2026-02-07 08:34:25"}
+{"level":"info","message":"✅ Database table initialized: Tickets","timestamp":"2026-02-07 08:34:25"}
+{"level":"info","message":"✅ Database table initialized: Settings","timestamp":"2026-02-07 08:34:25"}
+{"level":"info","message":"✅ Database table initialized: Activity Logs","timestamp":"2026-02-07 08:34:25"}
+{"level":"info","message":"✅ Database table initialized: Custom Commands","timestamp":"2026-02-07 08:34:25"}
+{"level":"info","message":"✅ Database table initialized: Levels","timestamp":"2026-02-07 08:34:25"}
+{"level":"info","message":"✅ Database table initialized: Transcripts","timestamp":"2026-02-07 08:34:25"}
+{"level":"info","message":"✅ Database table initialized: Economy","timestamp":"2026-02-07 08:34:25"}
+{"level":"info","message":"✅ Database table initialized: Giveaways","timestamp":"2026-02-07 08:34:25"}
+{"level":"info","message":"✅ Database table initialized: Voice Master","timestamp":"2026-02-07 08:34:25"}
+{"level":"info","message":"✅ Database table initialized: Voice Channels","timestamp":"2026-02-07 08:34:25"}
+{"level":"info","message":"✅ Database table initialized: Earthquake Subs","timestamp":"2026-02-07 08:34:25"}
+{"level":"info","message":"Running database migrations...","timestamp":"2026-02-07 08:34:25"}
+{"level":"info","message":"✅ AI (Gemini) Service Initialized","timestamp":"2026-02-07 08:34:26"}
+{"level":"warn","message":"⚠️ cookies.json not found! YouTube playback may be restricted.","timestamp":"2026-02-07 08:34:26"}
+{"level":"info","message":"🚀 Web Server running on port 8000","timestamp":"2026-02-07 08:34:26"}
+{"level":"info","message":"✅ Bot logged in as VX6 Tool#9755","timestamp":"2026-02-07 08:34:28"}
+{"level":"info","message":"Logged in as VX6 Tool#9755","timestamp":"2026-02-07 08:34:28"}
+{"level":"info","message":"GiveawayService initialized.","timestamp":"2026-02-07 08:34:28"}
+{"level":"info","message":"EarthquakeService started (Polling CWA API).","timestamp":"2026-02-07 08:34:28"}
