@@ -68,16 +68,23 @@ router.get('/generate-structure', isAuthenticated, async (req, res) => {
     const { description, guildId } = req.query;
     if (!description) return res.status(400).json({ error: 'Description is required' });
 
-    console.log('[AI Generation Request]', { description, guildId });
+    console.log('[AI Generation Request]', { description, guildId, dbConnected: mongo.getIsConnected() });
 
     try {
         let settings = {};
-        if (guildId) {
-            const GuildSettings = require('../../models/GuildSettings');
-            settings = await GuildSettings.findOne({ guildId }) || {};
-        }
 
-        console.log('[AI Settings]', { language: settings.language, template: settings.template });
+        // Only query GuildSettings if database is connected
+        if (guildId && mongo.getIsConnected()) {
+            try {
+                const GuildSettings = require('../../models/GuildSettings');
+                settings = await GuildSettings.findOne({ guildId }) || {};
+                console.log('[AI Settings] Loaded from database', { language: settings.language, template: settings.template });
+            } catch (dbError) {
+                console.warn('[AI Settings] Database query failed, using defaults', { error: dbError.message });
+            }
+        } else {
+            console.log('[AI Settings] Using defaults (DB not connected or no guildId)');
+        }
 
         const structure = await aiService.parseServerStructure(description, {
             language: settings.language,
@@ -135,6 +142,12 @@ router.post('/execute-build', isAuthenticated, async (req, res) => {
 // Get/Update Guild Settings (Language, Template)
 router.get('/settings/:guildId', isAuthenticated, async (req, res) => {
     const { guildId } = req.params;
+
+    // Return defaults if database is not connected
+    if (!mongo.getIsConnected()) {
+        return res.json({ guildId, language: 'Traditional Chinese', template: '' });
+    }
+
     try {
         const GuildSettings = require('../../models/GuildSettings');
         let settings = await GuildSettings.findOne({ guildId });
@@ -150,6 +163,13 @@ router.get('/settings/:guildId', isAuthenticated, async (req, res) => {
 router.post('/settings/:guildId', isAuthenticated, async (req, res) => {
     const { guildId } = req.params;
     const { language, template } = req.body;
+
+    // Return success with current values if database is not connected
+    if (!mongo.getIsConnected()) {
+        console.warn('[Settings] Cannot save to database - DB not connected');
+        return res.json({ guildId, language, template, warning: 'Settings not persisted (database unavailable)' });
+    }
+
     try {
         const GuildSettings = require('../../models/GuildSettings');
         const update = {};
