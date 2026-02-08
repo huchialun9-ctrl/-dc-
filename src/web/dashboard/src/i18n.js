@@ -1,9 +1,9 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import enTranslation from '../locales/en.json';
-import zhTWTranslation from '../locales/zh-TW.json';
-import jaTranslation from '../locales/ja.json';
-import koTranslation from '../locales/ko.json';
+import enTranslation from './locales/en.json';
+import zhTWTranslation from './locales/zh-TW.json';
+import jaTranslation from './locales/ja.json';
+import koTranslation from './locales/ko.json';
 
 // Initialize i18next
 i18n
