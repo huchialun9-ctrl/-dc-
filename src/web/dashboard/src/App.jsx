@@ -273,6 +273,40 @@ const App = () => {
     }));
   };
 
+  const handleBatchExecute = async (selectedGuilds, structure) => {
+    const results = [];
+
+    for (const guildId of selectedGuilds) {
+      try {
+        await axios.post('/api/execute-build', {
+          guildId,
+          structure,
+        });
+        results.push({
+          guildId,
+          status: 'success',
+          message: t('batch.successful'),
+        });
+      } catch (error) {
+        results.push({
+          guildId,
+          status: 'error',
+          message: error.response?.data?.error || t('status.buildFailed'),
+        });
+      }
+    }
+
+    return results;
+  };
+
+  // Listen for remote changes from collaboration
+  useEffect(() => {
+    if (remoteChanges && remoteChanges.changes) {
+      setStructure(remoteChanges.changes);
+      addNotification('info', `Structure updated by another user`);
+    }
+  }, [remoteChanges, addNotification]);
+
   if (loading && !user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
