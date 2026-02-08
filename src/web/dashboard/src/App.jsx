@@ -18,7 +18,9 @@ import OnboardingTour from './components/OnboardingTour';
 import ProgressBar from './components/ProgressBar';
 import TagManager from './components/TagManager';
 import TagBadge from './components/TagBadge';
+import BatchOperationPanel from './components/BatchOperationPanel';
 import useKeyboard from './hooks/useKeyboard';
+import useCollaboration from './hooks/useCollaboration';
 import { useFocusVisible } from './utils/focusManager';
 
 const App = () => {
@@ -44,6 +46,13 @@ const App = () => {
   const [buildProgress, setBuildProgress] = useState({ progress: 0, status: 'idle', message: '' });
   const [tags, setTags] = useState([]);
   const [tagManagerOpen, setTagManagerOpen] = useState(false);
+  const [batchOperationOpen, setBatchOperationOpen] = useState(false);
+
+  // Collaboration hook
+  const { isConnected, activeUsers, remoteChanges, sendUpdate } = useCollaboration(
+    selectedGuild?.id,
+    user?.id
+  );
 
   // Initialize focus-visible for keyboard navigation
   useEffect(() => {
@@ -332,6 +341,15 @@ const App = () => {
         tags={tags}
         onCreateTag={handleCreateTag}
         onDeleteTag={handleDeleteTag}
+      />
+
+      {/* Batch Operation Panel */}
+      <BatchOperationPanel
+        isOpen={batchOperationOpen}
+        onClose={() => setBatchOperationOpen(false)}
+        guilds={guilds}
+        structure={structure}
+        onExecute={handleBatchExecute}
       />
 
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex overflow-hidden">

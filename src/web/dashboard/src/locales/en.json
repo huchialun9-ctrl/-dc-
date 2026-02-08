@@ -123,5 +123,17 @@
         "noTags": "No tags yet. Create one to organize your channels!",
         "addTag": "Add tag",
         "manageTags": "Manage tags"
+    },
+    "batch": {
+        "title": "Batch Operation",
+        "description": "Apply the same structure to multiple servers at once",
+        "selectServers": "Select servers",
+        "selectAll": "Select all",
+        "deselectAll": "Deselect all",
+        "execute": "Execute",
+        "executing": "Executing batch operation...",
+        "executingDesc": "Applying structure to {{count}} server(s)",
+        "results": "Execution Results",
+        "successful": "successful"
     }
 }

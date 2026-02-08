@@ -123,5 +123,17 @@
         "noTags": "尚無標籤。建立一個來組織您的頻道！",
         "addTag": "加入標籤",
         "manageTags": "管理標籤"
+    },
+    "batch": {
+        "title": "批次操作",
+        "description": "一次將相同結構套用到多個伺服器",
+        "selectServers": "選擇伺服器",
+        "selectAll": "全選",
+        "deselectAll": "取消全選",
+        "execute": "執行",
+        "executing": "正在執行批次操作...",
+        "executingDesc": "正在將結構套用到 {{count}} 個伺服器",
+        "results": "執行結果",
+        "successful": "成功"
     }
 }
