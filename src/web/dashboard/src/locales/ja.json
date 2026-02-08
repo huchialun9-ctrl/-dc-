@@ -1,0 +1,78 @@
+{
+    "common": {
+        "login": "ログイン",
+        "logout": "ログアウト",
+        "settings": "設定",
+        "save": "変更を保存",
+        "cancel": "キャンセル",
+        "delete": "削除",
+        "edit": "編集",
+        "close": "閉じる",
+        "search": "検索",
+        "loading": "読み込み中...",
+        "saving": "保存中...",
+        "building": "構築中..."
+    },
+    "dashboard": {
+        "title": "ボットダッシュボード",
+        "selectServer": "サーバーを選択",
+        "aiArchitect": "AI アーキテクト",
+        "noServerSelected": "開始するにはサーバーを選択してください",
+        "welcomeBack": "おかえりなさい",
+        "loginDescription": "Discordでログインしてサーバーを管理し、AI構造を構築します。"
+    },
+    "ai": {
+        "hello": "こんにちは！私は **{{serverName}}** のAIアーキテクトです。今日はどのようにサーバー構造の設計をお手伝いできますか？",
+        "generating": "リクエストに基づいて潜在的な構造を生成しました。右側でプレビューできます。適用しますか？",
+        "error": "申し訳ございません。構造の生成中にエラーが発生しました。",
+        "templateApplied": "「{{templateName}}」テンプレートを適用しました！右側でプレビューし、準備ができたら適用をクリックしてください。",
+        "descriptionPlaceholder": "{{serverName}} のサーバー構造を説明してください..."
+    },
+    "settings": {
+        "title": "設定",
+        "localization": "ローカライゼーション",
+        "quickTemplates": "クイックテンプレート",
+        "quickTemplatesDesc": "プリセットテンプレートを選択してサーバーを素早く構築",
+        "textTemplate": "テキストテンプレート",
+        "textTemplateDesc": "カテゴリとチャンネルの命名時にAIが従うべきカスタムトーンまたはプレフィックスを設定します。",
+        "textTemplatePlaceholder": "例：正式な名前を使用、絵文字を避ける、または常に特定のプレフィックスを含めるなど...",
+        "systemDefaultLanguage": "システムデフォルト言語"
+    },
+    "preview": {
+        "title": "プレビュー",
+        "apply": "適用",
+        "rolesToCreate": "作成するロール",
+        "serverRules": "サーバールール",
+        "channelStructure": "チャンネル構造"
+    },
+    "status": {
+        "adminGranted": "管理者権限が付与されました",
+        "adminMissing": "管理者権限がありません",
+        "constructing": "あなたの世界を構築中...",
+        "constructingDesc": "AIは現在 **{{serverName}}** でカテゴリ、テキストチャンネル、ボイスルームを編成しています。",
+        "optimizationInProgress": "最適化進行中",
+        "buildStarted": "構築が開始されました！Discordサーバーが生き生きと動き出すのをご覧ください。",
+        "buildFailed": "構築の開始に失敗しました。",
+        "settingsSaved": "設定が正常に保存されました！",
+        "settingsFailed": "設定の保存に失敗しました。"
+    },
+    "notifications": {
+        "title": "通知",
+        "markAllRead": "すべて既読にする",
+        "clearAll": "すべてクリア",
+        "noNotifications": "通知はありません",
+        "success": "成功",
+        "error": "注意が必要"
+    },
+    "theme": {
+        "light": "ライトモード",
+        "dark": "ダークモード",
+        "toggle": "テーマを切り替え"
+    },
+    "languages": {
+        "en": "English",
+        "zh-TW": "繁體中文",
+        "ja": "日本語",
+        "ko": "한국어"
+    }
+}

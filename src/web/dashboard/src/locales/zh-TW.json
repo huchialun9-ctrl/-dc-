@@ -1,0 +1,78 @@
+{
+    "common": {
+        "login": "登入",
+        "logout": "登出",
+        "settings": "設定",
+        "save": "儲存變更",
+        "cancel": "取消",
+        "delete": "刪除",
+        "edit": "編輯",
+        "close": "關閉",
+        "search": "搜尋",
+        "loading": "載入中...",
+        "saving": "儲存中...",
+        "building": "建構中..."
+    },
+    "dashboard": {
+        "title": "機器人控制面板",
+        "selectServer": "選擇伺服器",
+        "aiArchitect": "AI 建築師",
+        "noServerSelected": "請選擇一個伺服器以開始",
+        "welcomeBack": "歡迎回來",
+        "loginDescription": "使用 Discord 登入以管理您的伺服器並建立 AI 結構。"
+    },
+    "ai": {
+        "hello": "你好！我是 **{{serverName}}** 的 AI 建築師。今天我可以如何幫助您設計伺服器結構？",
+        "generating": "我已根據您的要求生成了一個潛在結構。您可以在右側預覽。您想要套用它嗎？",
+        "error": "抱歉，生成結構時遇到錯誤。",
+        "templateApplied": "已套用「{{templateName}}」模板！您可以在右側預覽，準備好後點擊套用。",
+        "descriptionPlaceholder": "為 {{serverName}} 描述您的伺服器結構..."
+    },
+    "settings": {
+        "title": "設定",
+        "localization": "本地化",
+        "quickTemplates": "快速模板",
+        "quickTemplatesDesc": "選擇預設模板快速建立伺服器",
+        "textTemplate": "文字模板",
+        "textTemplateDesc": "設定 AI 在命名分類和頻道時應遵循的自訂語氣或前綴。",
+        "textTemplatePlaceholder": "例如：使用正式名稱、避免表情符號，或始終包含特定前綴...",
+        "systemDefaultLanguage": "系統預設語言"
+    },
+    "preview": {
+        "title": "預覽",
+        "apply": "套用",
+        "rolesToCreate": "要建立的身分組",
+        "serverRules": "伺服器規則",
+        "channelStructure": "頻道結構"
+    },
+    "status": {
+        "adminGranted": "已授予管理員權限",
+        "adminMissing": "缺少管理員權限",
+        "constructing": "正在建構您的世界...",
+        "constructingDesc": "AI 正在 **{{serverName}}** 中編排分類、文字頻道和語音頻道。",
+        "optimizationInProgress": "最佳化進行中",
+        "buildStarted": "建構已開始！觀看您的 Discord 伺服器活躍起來。",
+        "buildFailed": "建構啟動失敗。",
+        "settingsSaved": "設定已成功儲存！",
+        "settingsFailed": "儲存設定失敗。"
+    },
+    "notifications": {
+        "title": "通知",
+        "markAllRead": "全部標記為已讀",
+        "clearAll": "清除全部",
+        "noNotifications": "沒有通知",
+        "success": "成功",
+        "error": "需要注意"
+    },
+    "theme": {
+        "light": "淺色模式",
+        "dark": "深色模式",
+        "toggle": "切換主題"
+    },
+    "languages": {
+        "en": "English",
+        "zh-TW": "繁體中文",
+        "ja": "日本語",
+        "ko": "한국어"
+    }
+}

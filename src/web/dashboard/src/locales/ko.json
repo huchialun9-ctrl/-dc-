@@ -1,0 +1,78 @@
+{
+    "common": {
+        "login": "로그인",
+        "logout": "로그아웃",
+        "settings": "설정",
+        "save": "변경 사항 저장",
+        "cancel": "취소",
+        "delete": "삭제",
+        "edit": "편집",
+        "close": "닫기",
+        "search": "검색",
+        "loading": "로딩 중...",
+        "saving": "저장 중...",
+        "building": "구축 중..."
+    },
+    "dashboard": {
+        "title": "봇 대시보드",
+        "selectServer": "서버 선택",
+        "aiArchitect": "AI 설계자",
+        "noServerSelected": "시작하려면 서버를 선택하세요",
+        "welcomeBack": "환영합니다",
+        "loginDescription": "Discord로 로그인하여 서버를 관리하고 AI 구조를 구축하세요."
+    },
+    "ai": {
+        "hello": "안녕하세요! 저는 **{{serverName}}**의 AI 설계자입니다. 오늘 서버 구조 설계를 어떻게 도와드릴까요?",
+        "generating": "요청에 따라 잠재적인 구조를 생성했습니다. 오른쪽에서 미리보기할 수 있습니다. 적용하시겠습니까?",
+        "error": "죄송합니다. 구조 생성 중 오류가 발생했습니다.",
+        "templateApplied": "\"{{templateName}}\" 템플릿이 적용되었습니다! 오른쪽에서 미리보기하고 준비가 되면 적용을 클릭하세요.",
+        "descriptionPlaceholder": "{{serverName}}의 서버 구조를 설명하세요..."
+    },
+    "settings": {
+        "title": "설정",
+        "localization": "현지화",
+        "quickTemplates": "빠른 템플릿",
+        "quickTemplatesDesc": "프리셋 템플릿을 선택하여 서버를 빠르게 구축",
+        "textTemplate": "텍스트 템플릿",
+        "textTemplateDesc": "카테고리와 채널 이름을 지을 때 AI가 따라야 할 사용자 지정 톤 또는 접두사를 설정합니다.",
+        "textTemplatePlaceholder": "예: 공식적인 이름 사용, 이모지 피하기, 또는 항상 특정 접두사 포함 등...",
+        "systemDefaultLanguage": "시스템 기본 언어"
+    },
+    "preview": {
+        "title": "미리보기",
+        "apply": "적용",
+        "rolesToCreate": "생성할 역할",
+        "serverRules": "서버 규칙",
+        "channelStructure": "채널 구조"
+    },
+    "status": {
+        "adminGranted": "관리자 권한 부여됨",
+        "adminMissing": "관리자 권한 없음",
+        "constructing": "당신의 세계를 구축 중...",
+        "constructingDesc": "AI가 현재 **{{serverName}}**에서 카테고리, 텍스트 채널 및 음성 룸을 구성하고 있습니다.",
+        "optimizationInProgress": "최적화 진행 중",
+        "buildStarted": "구축이 시작되었습니다! Discord 서버가 생생하게 살아나는 것을 지켜보세요.",
+        "buildFailed": "구축 시작에 실패했습니다.",
+        "settingsSaved": "설정이 성공적으로 저장되었습니다!",
+        "settingsFailed": "설정 저장에 실패했습니다."
+    },
+    "notifications": {
+        "title": "알림",
+        "markAllRead": "모두 읽음으로 표시",
+        "clearAll": "모두 지우기",
+        "noNotifications": "알림 없음",
+        "success": "성공",
+        "error": "주의 필요"
+    },
+    "theme": {
+        "light": "라이트 모드",
+        "dark": "다크 모드",
+        "toggle": "테마 전환"
+    },
+    "languages": {
+        "en": "English",
+        "zh-TW": "繁體中文",
+        "ja": "日本語",
+        "ko": "한국어"
+    }
+}

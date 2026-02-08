@@ -1,0 +1,78 @@
+{
+    "common": {
+        "login": "Login",
+        "logout": "Sign Out",
+        "settings": "Settings",
+        "save": "Save Changes",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "close": "Close",
+        "search": "Search",
+        "loading": "Loading...",
+        "saving": "Saving...",
+        "building": "Building..."
+    },
+    "dashboard": {
+        "title": "Bot Dashboard",
+        "selectServer": "Select Server",
+        "aiArchitect": "AI Architect",
+        "noServerSelected": "Please select a server to begin",
+        "welcomeBack": "Welcome Back",
+        "loginDescription": "Login with Discord to manage your servers and build AI structures."
+    },
+    "ai": {
+        "hello": "Hello! I'm your AI architect for **{{serverName}}**. How can I help you structure your server today?",
+        "generating": "I've generated a potential structure based on your request. You can preview it on the right. Would you like to apply it?",
+        "error": "Sorry, I encountered an error while generating the structure.",
+        "templateApplied": "Applied \"{{templateName}}\" template! You can preview it on the right and click Apply when ready.",
+        "descriptionPlaceholder": "Describe your server structure for {{serverName}}..."
+    },
+    "settings": {
+        "title": "Settings",
+        "localization": "Localization",
+        "quickTemplates": "Quick Templates",
+        "quickTemplatesDesc": "Choose a preset template to quickly build your server",
+        "textTemplate": "Text Template",
+        "textTemplateDesc": "Set a custom tone or prefix that the AI should follow when naming categories and channels.",
+        "textTemplatePlaceholder": "e.g. Use formal names, avoid emojis, or always include a specific prefix...",
+        "systemDefaultLanguage": "System default language"
+    },
+    "preview": {
+        "title": "Preview",
+        "apply": "Apply",
+        "rolesToCreate": "Roles to Create",
+        "serverRules": "Server Rules",
+        "channelStructure": "Channel Structure"
+    },
+    "status": {
+        "adminGranted": "ADMIN PERMISSIONS GRANTED",
+        "adminMissing": "ADMIN PERMISSIONS MISSING",
+        "constructing": "Constructing your World...",
+        "constructingDesc": "The AI is currently orchestrating categories, text channels, and voice rooms in **{{serverName}}**.",
+        "optimizationInProgress": "Optimization in progress",
+        "buildStarted": "Construction started! Watch your Discord server come to life.",
+        "buildFailed": "Construction failed to start.",
+        "settingsSaved": "Settings saved successfully!",
+        "settingsFailed": "Failed to save settings."
+    },
+    "notifications": {
+        "title": "Notifications",
+        "markAllRead": "Mark all as read",
+        "clearAll": "Clear all",
+        "noNotifications": "No notifications",
+        "success": "Success",
+        "error": "Attention Needed"
+    },
+    "theme": {
+        "light": "Light Mode",
+        "dark": "Dark Mode",
+        "toggle": "Toggle Theme"
+    },
+    "languages": {
+        "en": "English",
+        "zh-TW": "Traditional Chinese",
+        "ja": "Japanese",
+        "ko": "Korean"
+    }
+}
