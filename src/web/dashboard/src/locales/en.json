@@ -112,5 +112,16 @@
             "title": "Apply Changes",
             "content": "When you're satisfied with the structure, click this button to apply it to your Discord server!"
         }
+    },
+    "tags": {
+        "title": "Tag Manager",
+        "createNew": "Create New Tag",
+        "namePlaceholder": "Tag name...",
+        "create": "Create",
+        "selectColor": "Select color",
+        "existingTags": "Your Tags",
+        "noTags": "No tags yet. Create one to organize your channels!",
+        "addTag": "Add tag",
+        "manageTags": "Manage tags"
     }
 }

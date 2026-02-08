@@ -112,5 +112,16 @@
             "title": "套用變更",
             "content": "當您對結構滿意時，點擊此按鈕將其套用到您的 Discord 伺服器！"
         }
+    },
+    "tags": {
+        "title": "標籤管理器",
+        "createNew": "建立新標籤",
+        "namePlaceholder": "標籤名稱...",
+        "create": "建立",
+        "selectColor": "選擇顏色",
+        "existingTags": "您的標籤",
+        "noTags": "尚無標籤。建立一個來組織您的頻道！",
+        "addTag": "加入標籤",
+        "manageTags": "管理標籤"
     }
 }

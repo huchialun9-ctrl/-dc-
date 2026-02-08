@@ -16,7 +16,10 @@ import DraggableChannelList from './components/DraggableChannelList';
 import KeyboardShortcutsPanel from './components/KeyboardShortcutsPanel';
 import OnboardingTour from './components/OnboardingTour';
 import ProgressBar from './components/ProgressBar';
+import TagManager from './components/TagManager';
+import TagBadge from './components/TagBadge';
 import useKeyboard from './hooks/useKeyboard';
+import { useFocusVisible } from './utils/focusManager';
 
 const App = () => {
   const { t, i18n } = useTranslation();
@@ -39,6 +42,14 @@ const App = () => {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [buildProgress, setBuildProgress] = useState({ progress: 0, status: 'idle', message: '' });
+  const [tags, setTags] = useState([]);
+  const [tagManagerOpen, setTagManagerOpen] = useState(false);
+
+  // Initialize focus-visible for keyboard navigation
+  useEffect(() => {
+    const cleanup = useFocusVisible();
+    return cleanup;
+  }, []);
 
   // Keyboard shortcuts
   useKeyboard({
@@ -234,6 +245,25 @@ const App = () => {
     }));
   };
 
+  const handleCreateTag = (tag) => {
+    setTags(prev => [...prev, tag]);
+  };
+
+  const handleDeleteTag = (tagId) => {
+    setTags(prev => prev.filter(tag => tag.id !== tagId));
+    // Also remove tag from any channels that have it
+    setStructure(prev => ({
+      ...prev,
+      categories: prev.categories?.map(cat => ({
+        ...cat,
+        channels: cat.channels?.map(ch => ({
+          ...ch,
+          tags: ch.tags?.filter(id => id !== tagId) || [],
+        })),
+      })),
+    }));
+  };
+
   if (loading && !user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -293,6 +323,15 @@ const App = () => {
         progress={buildProgress.progress}
         status={buildProgress.status}
         message={buildProgress.message}
+      />
+
+      {/* Tag Manager */}
+      <TagManager
+        isOpen={tagManagerOpen}
+        onClose={() => setTagManagerOpen(false)}
+        tags={tags}
+        onCreateTag={handleCreateTag}
+        onDeleteTag={handleDeleteTag}
       />
 
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex overflow-hidden">
