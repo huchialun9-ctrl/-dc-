@@ -13,6 +13,9 @@ import LanguageSelector from './components/LanguageSelector';
 import NotificationCenter from './components/NotificationCenter';
 import CommandPalette from './components/CommandPalette';
 import DraggableChannelList from './components/DraggableChannelList';
+import KeyboardShortcutsPanel from './components/KeyboardShortcutsPanel';
+import OnboardingTour from './components/OnboardingTour';
+import ProgressBar from './components/ProgressBar';
 import useKeyboard from './hooks/useKeyboard';
 
 const App = () => {
@@ -34,6 +37,8 @@ const App = () => {
   const [templates, setTemplates] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [buildProgress, setBuildProgress] = useState({ progress: 0, status: 'idle', message: '' });
 
   // Keyboard shortcuts
   useKeyboard({
@@ -44,6 +49,10 @@ const App = () => {
     'ctrl+b': (e) => {
       e.preventDefault();
       setSidebarOpen(prev => !prev);
+    },
+    'ctrl+/': (e) => {
+      e.preventDefault();
+      setShortcutsOpen(true);
     },
   });
 
@@ -165,18 +174,56 @@ const App = () => {
     if (!selectedGuild || !structure) return;
     setIsBuilding(true);
     setStatus(null);
+
+    // Initialize progress
+    setBuildProgress({ progress: 0, status: 'preparing', message: t('status.constructing') });
+
     try {
+      // Simulate progress animation
+      const progressSteps = [
+        { progress: 20, message: 'Creating categories...' },
+        { progress: 40, message: 'Setting up text channels...' },
+        { progress: 60, message: 'Configuring voice channels...' },
+        { progress: 80, message: 'Assigning roles...' },
+        { progress: 100, message: 'Finalizing structure...' },
+      ];
+
+      let currentStep = 0;
+      const progressInterval = setInterval(() => {
+        if (currentStep < progressSteps.length) {
+          setBuildProgress({
+            progress: progressSteps[currentStep].progress,
+            status: 'building',
+            message: progressSteps[currentStep].message,
+          });
+          currentStep++;
+        } else {
+          clearInterval(progressInterval);
+        }
+      }, 800);
+
       await axios.post('/api/execute-build', {
         guildId: selectedGuild.id,
         structure: structure
       });
-      setStatus({ type: 'success', message: 'Construction started! Watch your Discord server come to life.' });
-      // Simulate real-time progress for 5 seconds
-      setTimeout(() => setIsBuilding(false), 5000);
+
+      // Success
+      setTimeout(() => {
+        setBuildProgress({ progress: 100, status: 'success', message: t('status.buildStarted') });
+        setStatus({ type: 'success', message: t('status.buildStarted') });
+        setTimeout(() => {
+          setBuildProgress({ progress: 0, status: 'idle', message: '' });
+          setIsBuilding(false);
+        }, 2000);
+      }, 4000);
     } catch (err) {
       console.error('Execution failed', err);
-      setStatus({ type: 'error', message: 'Construction failed to start.' });
-      setIsBuilding(false);
+      setBuildProgress({ progress: 0, status: 'error', message: t('status.buildFailed') });
+      setStatus({ type: 'error', message: t('status.buildFailed') });
+      setTimeout(() => {
+        setBuildProgress({ progress: 0, status: 'idle', message: '' });
+        setIsBuilding(false);
+      }, 3000);
     }
   };
 
@@ -230,6 +277,22 @@ const App = () => {
         selectedGuild={selectedGuild}
         onSelectGuild={setSelectedGuild}
         onNavigate={setActiveTab}
+      />
+
+      {/* Keyboard Shortcuts Panel */}
+      <KeyboardShortcutsPanel
+        isOpen={shortcutsOpen}
+        onClose={() => setShortcutsOpen(false)}
+      />
+
+      {/* Onboarding Tour */}
+      <OnboardingTour />
+
+      {/* Progress Bar */}
+      <ProgressBar
+        progress={buildProgress.progress}
+        status={buildProgress.status}
+        message={buildProgress.message}
       />
 
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex overflow-hidden">

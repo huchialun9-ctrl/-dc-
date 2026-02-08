@@ -74,5 +74,43 @@
         "zh-TW": "繁體中文",
         "ja": "日本語",
         "ko": "한국어"
+    },
+    "shortcuts": {
+        "title": "鍵盤快捷鍵",
+        "description": "使用這些快捷鍵提升您的生產力",
+        "navigation": "導航",
+        "general": "一般",
+        "editing": "編輯",
+        "openSearch": "開啟全域搜尋",
+        "toggleSidebar": "切換側邊欄",
+        "showShortcuts": "顯示鍵盤快捷鍵",
+        "closeDialog": "關閉對話框/面板",
+        "focusNext": "焦點移至下一元素",
+        "focusPrevious": "焦點移至上一元素",
+        "confirmSelect": "確認/選擇",
+        "saveChanges": "儲存變更",
+        "footer": "隨時按下以查看快捷鍵"
+    },
+    "onboarding": {
+        "skip": "跳過導覽",
+        "previous": "上一步",
+        "next": "下一步",
+        "finish": "開始使用！",
+        "step1": {
+            "title": "歡迎使用 AI 機器人控制面板",
+            "content": "這是您的伺服器列表。選擇一個伺服器開始使用 AI 設計其結構。"
+        },
+        "step2": {
+            "title": "與 AI 對話",
+            "content": "在這裡描述您想要的伺服器結構。AI 會理解並為您生成頻道、身分組和規則。"
+        },
+        "step3": {
+            "title": "預覽與自訂",
+            "content": "在這裡檢視 AI 生成的結構。您可以在套用前拖拽重新排序頻道。"
+        },
+        "step4": {
+            "title": "套用變更",
+            "content": "當您對結構滿意時，點擊此按鈕將其套用到您的 Discord 伺服器！"
+        }
     }
 }

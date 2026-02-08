@@ -74,5 +74,43 @@
         "zh-TW": "Traditional Chinese",
         "ja": "Japanese",
         "ko": "Korean"
+    },
+    "shortcuts": {
+        "title": "Keyboard Shortcuts",
+        "description": "Boost your productivity with these shortcuts",
+        "navigation": "Navigation",
+        "general": "General",
+        "editing": "Editing",
+        "openSearch": "Open global search",
+        "toggleSidebar": "Toggle sidebar",
+        "showShortcuts": "Show keyboard shortcuts",
+        "closeDialog": "Close dialog/panel",
+        "focusNext": "Focus next element",
+        "focusPrevious": "Focus previous element",
+        "confirmSelect": "Confirm/Select",
+        "saveChanges": "Save changes",
+        "footer": "Press anytime to view shortcuts"
+    },
+    "onboarding": {
+        "skip": "Skip tour",
+        "previous": "Previous",
+        "next": "Next",
+        "finish": "Get started!",
+        "step1": {
+            "title": "Welcome to AI Bot Dashboard",
+            "content": "This is your server list. Select a server to start designing its structure with AI."
+        },
+        "step2": {
+            "title": "Chat with AI",
+            "content": "Describe your desired server structure here. The AI will understand and generate channels, roles, and rules for you."
+        },
+        "step3": {
+            "title": "Preview & Customize",
+            "content": "Review the AI-generated structure here. You can drag & drop to reorder channels before applying."
+        },
+        "step4": {
+            "title": "Apply Changes",
+            "content": "When you're satisfied with the structure, click this button to apply it to your Discord server!"
+        }
     }
 }
